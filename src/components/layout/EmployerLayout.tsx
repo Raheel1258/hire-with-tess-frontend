@@ -13,7 +13,7 @@ export default function EmployerLayout({
       <header className="flex justify-between items-center p-6 text-white">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <Link href="/">
-            <h1 className="text-xl font-semibold text-black">Hirewithtess</h1>
+            <h1 className="text-xl font-semibold text-black">Hirewithtess demonstrate changes</h1>
           </Link>
           <nav className="flex gap-4">
             {/*Route sign up button to /signUp page when sing up page is completed */}
