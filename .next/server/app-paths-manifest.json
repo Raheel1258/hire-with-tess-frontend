@@ -1,0 +1,7 @@
+{
+  "/_not-found/page": "app/_not-found/page.js",
+  "/favicon.ico/route": "app/favicon.ico/route.js",
+  "/interview/generate-link/[jobId]/page": "app/interview/generate-link/[jobId]/page.js",
+  "/interview/job-details/[jobId]/page": "app/interview/job-details/[jobId]/page.js",
+  "/interview/review/[jobId]/page": "app/interview/review/[jobId]/page.js"
+}

@@ -87,9 +87,6 @@ export default function InterviewForm() {
         useCard={false}
       >
         <div className="flex flex-col ">
-          {/* <h1 className="font-roboto font-semibold text-[20px] leading-[30px] text-left">
-    AI Powered Response
-  </h1> */}
           <div className="flex items-start mt-4">
             <Image
               src="/images/AIAvatar.png"

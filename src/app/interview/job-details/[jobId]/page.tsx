@@ -14,6 +14,7 @@ import { Check, Pencil } from "lucide-react";
 import { useSkillStore } from "@/store/Employer/InputStore";
 import { useParams } from "next/navigation";
 import { useUpdateJob } from "@/Routes/Client/hook/PUT/UpdateJobDetails.hook";
+import { useRouter } from "next/navigation";
 
 export default function InterviewForm() {
   const { jobDescription } = useHomeStore();
@@ -21,6 +22,7 @@ export default function InterviewForm() {
 
   const { jobId } = useParams<{ jobId: string }>();
   const generateMutation = useUpdateJob();
+  const router = useRouter();
 
   const form = useForm<FormValidator>({
     resolver: zodResolver(customformSchema),
@@ -45,6 +47,30 @@ export default function InterviewForm() {
       salary: data.salary,
       currency: data.currency,
     });
+  };
+
+  const handleReviewClick = async () => {
+    const isValid = await form.trigger(); // validate form
+    if (!isValid) return;
+
+    const formData = form.getValues();
+
+    generateMutation.mutate(
+      {
+        job_description: formData.jobDescription,
+        job_title: formData.jobTitle,
+        job_type: formData.jobType,
+        company_name: formData.companyName,
+        location: formData.location,
+        salary: formData.salary,
+        currency: formData.currency,
+      },
+      {
+        onSuccess: () => {
+          router.push(`/interview/review/${jobId}`);
+        },
+      }
+    );
   };
 
   const handleEditDescription = () => {
@@ -173,13 +199,6 @@ export default function InterviewForm() {
                   </FormItem>
                 )}
               />
-              <Button
-                className="cursor-pointer"
-                type="submit"
-                disabled={generateMutation.isPending}
-              >
-                Save Details
-              </Button>
               <div className="flex justify-end sm:justify-end items-center gap-4">
                 <Link href={`/interview/generate-questions/${jobId}`}>
                   <Button
@@ -193,6 +212,8 @@ export default function InterviewForm() {
                 <Link href={`/interview/review/${jobId}`}>
                   <Button
                     type="submit"
+                    disabled={generateMutation.isPending || !jobId}
+                    onClick={handleReviewClick}
                     className="w-full sm:w-auto cursor-pointer"
                   >
                     <Image

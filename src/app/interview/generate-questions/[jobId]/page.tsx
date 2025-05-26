@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import GenerateQuestionResponse from "@/Routes/Client/hook/POST/GenerateQuestion.hook";
 import { useEffect, useRef } from "react";
-import { Check, CirclePlus, Loader2, Pencil, X } from "lucide-react";
+import { Check, CirclePlus, Pencil, X } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import useUpdateJobQuestion from "@/Routes/Client/hook/PUT/UpdateJobQuestion.hook";
 import { useSkillStore } from "@/store/Employer/InputStore";
@@ -13,6 +13,7 @@ import { useQuestionStore } from "@/store/Employer/questionStore";
 import Image from "next/image";
 import UseRegenerateQuestionHook from "@/Routes/Client/hook/POST/RegenerateQuestion.hook";
 import QuestionType from "@/Types/Employer/question.type";
+import { Skeleton } from "@mui/material";
 
 export default function Questionnaire() {
   const { jobId } = useParams<{ jobId: string }>();
@@ -126,78 +127,92 @@ export default function Questionnaire() {
             AI Powered Questions:
           </h2>
           <ul className="space-y-4 w-full">
-            {/* {Aiquestions.length === 0 ? (
-              <div className="flex items-center justify-center">
-                <Loader2 className="animate-spin text-blue-500" />
-              </div>
-            ) : (
-              <div className="flex items-center justify-center">
-                <h1>hello</h1>
-              </div>
-            )} */}
-
-            {editedQuestions?.map((question: QuestionType, index: number) => {
-              const isEditing = editableQuestionIndex === index;
-              const aiQuestionText = Aiquestions[index]?.text || "";
-              const hasChanged = question.text !== aiQuestionText;
-
-              return (
-                <li key={index} className="flex items-center gap-4 w-full">
-                  <Image
-                    src="/images/AIAvatar.png"
-                    alt="bot"
-                    width={40}
-                    height={40}
-                  />
-                  <div className="relative w-full">
-                    {isEditing ? (
-                      <Textarea
-                        value={question.text}
-                        onChange={(e) =>
-                          handleTextChange(index, e.target.value)
-                        }
-                        className="w-full h-[38px] sm:h-[100px] rounded-[14px] border text-black bg-white p-2"
-                        autoFocus
-                      />
-                    ) : (
-                      <div className="relative">
-                        <p className="w-full h-[68px] rounded-[14px] border-1 text-black bg-white p-2 flex items-center">
-                          <span className="text-base font-semibold">
-                            {index + 1}.
-                          </span>
-                          {question.text}
-                        </p>
-                      </div>
-                    )}
-
-                    {isEditing ? (
-                      hasChanged ? (
-                        <Check
-                          size={18}
-                          color="green"
-                          onClick={saveChanges}
-                          className="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer"
-                        />
-                      ) : (
-                        <X
-                          size={18}
-                          color="orange"
-                          onClick={cancelEditing}
-                          className="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer"
-                        />
-                      )
-                    ) : (
-                      <Pencil
-                        size={18}
-                        color="#718096"
-                        onClick={() => startEditing(index)}
-                        className="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer"
-                      />
-                    )}
-                  </div>
+            {Aiquestions.length === 0 ? (
+              <>
+                <li className="flex items-center gap-4 w-full">
+                  <Skeleton className="w-[40px] h-[40px] rounded-full" />
+                  <Skeleton className="flex-1 h-[68px] rounded-[14px]" />
                 </li>
-              );
-            })}
+                <li className="flex items-center gap-4 w-full">
+                  <Skeleton className="w-[40px] h-[40px] rounded-full" />
+                  <Skeleton className="flex-1 h-[68px] rounded-[14px]" />
+                </li>
+                <li className="flex items-center gap-4 w-full">
+                  <Skeleton className="w-[40px] h-[40px] rounded-full" />
+                  <Skeleton className="flex-1 h-[68px] rounded-[14px]" />
+                </li>
+              </>
+            ) : (
+              <>
+                {editedQuestions?.map(
+                  (question: QuestionType, index: number) => {
+                    const isEditing = editableQuestionIndex === index;
+                    const aiQuestionText = Aiquestions[index]?.text || "";
+                    const hasChanged = question.text !== aiQuestionText;
+
+                    return (
+                      <li
+                        key={index}
+                        className="flex items-center gap-4 w-full"
+                      >
+                        <Image
+                          src="/images/AIAvatar.png"
+                          alt="bot"
+                          width={40}
+                          height={40}
+                        />
+                        <div className="relative w-full">
+                          {isEditing ? (
+                            <Textarea
+                              value={question.text}
+                              onChange={(e) =>
+                                handleTextChange(index, e.target.value)
+                              }
+                              className="w-full h-[38px] sm:h-[100px] rounded-[14px] border text-black bg-white p-2"
+                              autoFocus
+                            />
+                          ) : (
+                            <div className="relative">
+                              <p className="w-full h-[68px] rounded-[14px] border-1 text-black bg-white p-2 flex items-center">
+                                <span className="text-base font-semibold">
+                                  {index + 1}.
+                                </span>
+                                {question.text}
+                              </p>
+                            </div>
+                          )}
+
+                          {isEditing ? (
+                            hasChanged ? (
+                              <Check
+                                size={18}
+                                color="green"
+                                onClick={saveChanges}
+                                className="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer"
+                              />
+                            ) : (
+                              <X
+                                size={18}
+                                color="orange"
+                                onClick={cancelEditing}
+                                className="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer"
+                              />
+                            )
+                          ) : (
+                            <Pencil
+                              size={18}
+                              color="#718096"
+                              onClick={() => startEditing(index)}
+                              className="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer"
+                            />
+                          )}
+                        </div>
+                      </li>
+                    );
+                  }
+                )}
+              </>
+            )}
 
             {manualQuestion && (
               <div className="flex items-center gap-4 w-full">
