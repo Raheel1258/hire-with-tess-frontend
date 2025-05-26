@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import SignupForm from '../interview/component/signupform';
 import Image from 'next/image';
 import React from 'react';
-import useGoogleLoginHook from '@/hooks/GoogleLogin.hook';
+import useGoogleLoginHook from '@/Routes/Client/hook/POST/GoogleLogin.hook';
 import { GoogleOAuthProvider, useGoogleLogin } from '@react-oauth/google';
 import useHomeStore from '@/store/Employer/home.store';
 

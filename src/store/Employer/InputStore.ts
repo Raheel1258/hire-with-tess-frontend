@@ -3,12 +3,19 @@ import { devtools, persist } from 'zustand/middleware';
 
 interface SkillState {
   skills: string[];
+  responsbility: string;
+  requirment: string
+
   isEditDescription: boolean;
   isEditable: boolean;
   isEditSkill: boolean;
   questions: string[];
   editableQuestionIndex: number | null;
   cancel: boolean;
+
+  setIseditableSkill: (value: string[]) => void;
+  setIseditableResponsibility: (value: string) => void;
+  setIseditableRequirment: (value: string) => void;
 
   setCancel: (value: boolean) => void;
   setIsEditableDescription: (value: boolean) => void;
@@ -25,33 +32,42 @@ interface SkillState {
 
 export const useSkillStore = create<SkillState>()(
   devtools(
-    persist((set) => ({
-      skills: [],
-      isEditable: false,
-      isEditSkill: false,
-      isEditDescription: false,
+    persist(
+      (set) => ({
 
-      questions: [],
-      editableQuestionIndex: null,
-      cancel: false,
+        skills: [],
+        requirment: "",
+        responsbility: "",
 
-      setCancel: (value: boolean) => set({ cancel: value }),
-      setIsEditableDescription: (value) => set({ isEditDescription: value }),
-      setIsEditable: (value) => set({ isEditable: value }),
-      setIsEditableSkill: (value) => set({ isEditSkill: value }),
+        isEditable: false,
+        isEditSkill: false,
+        isEditDescription: false,
 
-      setSkills: (value) => set({ skills: value }),
-      removeSkills: (indexToRemove) =>
-        set((state) => ({
-          skills: state.skills.filter((_, index) => index !== indexToRemove),
-        })),
-      setQuestions: (value) => set({ questions: value }),
-      setEditableQuestionIndex: (index) => set({ editableQuestionIndex: index }),
-      updateQuestion: (index, value) =>
-        set((state) => ({
-          questions: state.questions.map((cq, i) => (i === index ? value : cq)),
-        })),
-    })),
+        questions: [],
+        editableQuestionIndex: null,
+        cancel: false,
+
+        setIseditableRequirment: (value) => ({ requirment: value }),
+        setIseditableResponsibility: (value) => ({ responsbility: value }),
+        setIseditableSkill: (value) => ({ skills: value }),
+
+        setCancel: (value) => set({ cancel: value }),
+        setIsEditableDescription: (value) => set({ isEditDescription: value }),
+        setIsEditable: (value) => set({ isEditable: value }),
+        setIsEditableSkill: (value) => set({ isEditSkill: value }),
+
+        setSkills: (value) => set({ skills: value }),
+        removeSkills: (indexToRemove) =>
+          set((state) => ({
+            skills: state.skills.filter((_, index) => index !== indexToRemove),
+          })),
+        setQuestions: (value) => set({ questions: value }),
+        setEditableQuestionIndex: (index) => set({ editableQuestionIndex: index }),
+        updateQuestion: (index, value) =>
+          set((state) => ({
+            questions: state.questions.map((cq, i) => (i === index ? value : cq)),
+          })),
+      })),
     {
       name: 'skill-storage',
     }

@@ -6,7 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import useSignupMutation from '@/hooks/SignUP.hook';
+import useSignupMutation from '@/Routes/Client/hook/POST/SignUP.hook';
 import { Button } from '@/components/ui/button';
 import CustomInputForm from '@/app/interview/component/customformInput';
 

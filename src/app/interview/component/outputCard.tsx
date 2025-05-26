@@ -1,12 +1,16 @@
-import React, { useState } from 'react';
+'use client';
+
+import React from 'react';
 import { Card } from '@/components/ui/card';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Check, Pencil, X } from 'lucide-react';
-import { useSkillStore } from '@/store/Employer/InputStore';
-import useResReqHook from '@/hooks/UpdateResReq.hook';
-import { toast } from 'sonner';
 import { Input } from '@/components/ui/input';
+import { toast } from 'sonner';
+
+import { useSkillStore } from '@/store/Employer/InputStore';
+import useResReqHook from '@/Routes/Client/hook/PUT/UpdateResReq.hook';
+import useHomeStore from '@/store/Employer/home.store';
 
 interface OutputCardProps {
   res: string[];
@@ -20,14 +24,12 @@ interface OutputCardProps {
   containerPadding?: string;
   cardPadding?: string;
   onGenerateClick?: () => void;
-  items?: string[];
-  onRemove?: (index: number) => void;
 }
 
 export default function OutputCard({
-  res = [],
-  req = [],
-  skill = [],
+  res=[],
+  req=[],
+  skill=[],
   avatarSrc = '/images/AIAvatar.png',
   buttonText = 'Generate',
   showAvatar = true,
@@ -37,69 +39,71 @@ export default function OutputCard({
   containerPadding = 'px-8',
   onGenerateClick,
 }: OutputCardProps) {
-  const [skills, setSkills] = useState<string[]>(skill);
-  const [editedRes, setEditedRes] = useState<string>(res.join('\n'));
-  const [editedReq, setEditedReq] = useState<string>(req.join('\n'));
-
   const ReqResMutation = useResReqHook();
-  // const { jobDescription, jobTitle, jobType, companyName, salary, location, currency } =
-  //   useHomeStore();
-
   const { isEditable, setIsEditable } = useSkillStore();
+  const {
+    skills,
+    setSkills,
+    requirements,
+    setRequirements,
+    responsibilities,
+    setResponsibilities,
+  } = useHomeStore();
 
-  const deleteSkill = (index: number) => {
-    setSkills((prev) => prev.filter((_, i) => i !== index));
-  };
+  const isUnchanged =
+    JSON.stringify(responsibilities) === JSON.stringify(res) &&
+    JSON.stringify(requirements) === JSON.stringify(req) &&
+    JSON.stringify(skills) === JSON.stringify(skill);
 
-  const cancelEditing = () => {
-    setEditedRes(res.join('\n'));
-    setEditedReq(req.join('\n'));
+  const handleCancel = () => {
+    setResponsibilities(res);
+    setRequirements(req);
     setSkills(skill);
     setIsEditable(false);
   };
 
-  const EnableEdit = () => setIsEditable(true);
-
-  const SaveEditedText = () => {
-    const updatedRes = editedRes
+  const handleSave = () => {
+    const updatedResponsibilities = responsibilities
       .split('\n')
-      .map((line) => line.trim())
-      .filter((line) => line !== '');
-    const updatedReq = editedReq
-      .split('\n')
-      .map((line) => line.trim())
-      .filter((line) => line !== '');
+      .map(line => line.trim())
+      .filter(Boolean);
 
-    if (
-      updatedRes.join('\n') === res.join('\n') &&
-      updatedReq.join('\n') === req.join('\n') &&
-      JSON.stringify(skills) === JSON.stringify(skill)
-    ) {
+    const updatedRequirements = requirements
+      .split('\n')
+      .map(line => line.trim())
+      .filter(Boolean);
+
+    if (isUnchanged) {
       toast.info('No changes made.');
       return;
     }
+
     ReqResMutation.mutate({
       data: {
-        // job_description: jobDescription,
-        // job_title: jobTitle,
-        // job_type: jobType,
-        // company_name: companyName,
-        // location: location,
-        // salary: salary,
-        // currency: currency,
-        skills: skills,
-        responsibilities: updatedRes,
-        requirements: updatedReq,
+        skills,
+        responsibilities: updatedResponsibilities,
+        requirements: updatedRequirements,
       },
     });
+
     setIsEditable(false);
   };
 
+  const handleSkillChange = (value: string, index: number) => {
+    const updated = [...skills];
+    updated[index] = value;
+    setSkills(updated);
+  };
+
+  const handleDeleteSkill = (index: number) => {
+    setSkills(skills.filter((_, i) => i !== index));
+  };
+
   return (
-    <div className={`flex flex-col gap-4  ${containerPadding}`}>
+    <div className={`flex flex-col gap-4 ${containerPadding}`}>
       {showHeading && (
         <h1 className="font-roboto font-semibold text-[20px] leading-[30px]">
-          Ai Powered Response
+          AI Powered Response
         </h1>
       )}
 
@@ -107,84 +111,51 @@ export default function OutputCard({
         {showAvatar && (
           <Image src={avatarSrc} alt="bot" width={40} height={40} className="shrink-0" />
         )}
-        <Card className={`${cardPadding} w-full rounded-2xl`}>
-          <div className="text-left">
+
+        <Card className={`w-full rounded-2xl ${cardPadding}`}>
+          <div className="text-left space-y-6">
             {res.length > 0 && (
-              <div className="mb-4">
-                <div className="flex flex-row justify-between">
-                  <h3 className="font-normal font-openSans  text-[14px] leading-[24px] text-black">
-                    Responsibilities
-                  </h3>
+              <div>
+                <div className="flex justify-between items-center mb-2">
+                  <h3 className="text-[14px] font-openSans text-black">Responsibilities</h3>
                   {!isEditable ? (
                     showEditIcon && (
-                      <Pencil
-                        size={18}
-                        color="#718096"
-                        style={{ cursor: 'pointer' }}
-                        onClick={EnableEdit}
-                      />
+                      <Pencil size={18} color="#718096" onClick={() => setIsEditable(true)} className="cursor-pointer" />
                     )
+                  ) : isUnchanged ? (
+                    <X size={18} color="orange" onClick={handleCancel} className="cursor-pointer" />
                   ) : (
-                    <div className="flex gap-2">
-                      {editedRes.trim() === res.join('\n').trim() &&
-                      editedReq.trim() === req.join('\n').trim() &&
-                      JSON.stringify(skills) === JSON.stringify(skill) ? (
-                        <X
-                          size={18}
-                          color="orange"
-                          style={{ cursor: 'pointer' }}
-                          onClick={cancelEditing}
-                        />
-                      ) : (
-                        <Check
-                          size={18}
-                          color="green"
-                          style={{ cursor: 'pointer' }}
-                          onClick={SaveEditedText}
-                        />
-                      )}
-                    </div>
+                    <Check size={18} color="green" onClick={handleSave} className="cursor-pointer" />
                   )}
                 </div>
 
                 {!isEditable ? (
-                  <ul className="list-disc pl-5 font-normal font-openSans  text-[14px] leading-[24px] text-black">
-                    {editedRes
-                      .split('\n')
-                      .filter((line) => line.trim())
-                      .map((item, index) => (
-                        <li key={index}>{item}</li>
-                      ))}
+                  <ul className="list-disc pl-5 text-[14px] font-openSans text-black">
+                    {res.map((item, idx) => <li key={idx}>{item}</li>)}
                   </ul>
                 ) : (
                   <textarea
-                    value={editedRes}
-                    onChange={(e) => setEditedRes(e.target.value)}
-                    className="w-full p-2 border rounded-md h-40 resize-none font-normal font-openSans  text-[14px] leading-[24px]"
+                  value={responsibilities.join('\n')}
+                  onChange={e => setResponsibilities(e.target.value.split('\n'))}
+                    className="w-full h-40 p-2 border rounded-md resize-none font-openSans text-[14px]"
                   />
                 )}
               </div>
             )}
 
+            {/* Requirements */}
             {req.length > 0 && (
-              <div className="mb-4">
-                <h3 className="font-normal font-openSans  text-[14px] leading-[24px] text-black">
-                  Requirements
-                </h3>
+              <div>
+                <h3 className="text-[14px] font-openSans text-black mb-2">Requirements</h3>
                 {!isEditable ? (
-                  <ul className="list-disc pl-5 font-normal font-openSans  text-[14px] leading-[24px] text-black">
-                    {editedReq
-                      .split('\n')
-                      .filter((line) => line.trim())
-                      .map((item, index) => (
-                        <li key={index}>{item}</li>
-                      ))}
+                  <ul className="list-disc pl-5 text-[14px] font-openSans text-black">
+                    {req.map((item, idx) => <li key={idx}>{item}</li>)}
                   </ul>
                 ) : (
                   <textarea
-                    value={editedReq}
-                    onChange={(e) => setEditedReq(e.target.value)}
-                    className="w-full p-2 border rounded-md h-40 font-normal font-openSans  text-[14px] leading-[24px] resize-none"
+                    value={requirements.join('\n')}
+                    onChange={e => setRequirements(e.target.value.split('\n'))}
+                    className="w-full h-40 p-2 border rounded-md resize-none font-openSans text-[14px]"
                   />
                 )}
               </div>
@@ -193,41 +164,29 @@ export default function OutputCard({
         </Card>
       </div>
 
+      {/* Skills */}
       {skills.length > 0 && (
         <div className="flex items-start gap-4">
           {showAvatar && (
-            <Image
-              src={avatarSrc}
-              alt="bot"
-              width={40}
-              height={40}
-              className="shrink-0"
-            />
+            <Image src={avatarSrc} alt="bot" width={40} height={40} className="shrink-0" />
           )}
 
           <div className="flex flex-wrap gap-2">
             {skills.map((item, index) => (
               <div key={index} className="relative w-full sm:w-auto">
-                {!isEditable ? (
-                  <Input
-                    value={item}
-                    readOnly
-                    className="w-full sm:w-auto pr-10 border-[#E2E8F0] rounded-3xl text-black cursor-not-allowed font-openSans"
-                  />
-                ) : (
-                  <>
-                    <Input
-                      value={item}
-                      // readOnly
-                      className="w-full sm:w-auto pr-10 border-[#E2E8F0] rounded-3xl text-black cursor-not-allowed font-openSans"
-                    />
-                    <button
-                      onClick={() => deleteSkill(index)}
-                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
-                    >
-                      <X size={18} />
-                    </button>
-                  </>
+                <Input
+                  value={item}
+                  readOnly={!isEditable}
+                  onChange={(e) => handleSkillChange(e.target.value, index)}
+                  className="pr-10 border-[#E2E8F0] rounded-3xl text-black font-openSans"
+                />
+                {isEditable && (
+                  <button
+                    onClick={() => handleDeleteSkill(index)}
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                  >
+                    <X size={18} />
+                  </button>
                 )}
               </div>
             ))}
@@ -235,11 +194,9 @@ export default function OutputCard({
         </div>
       )}
 
+      {/* Generate Button */}
       {onGenerateClick && (
-        <Button
-          onClick={onGenerateClick}
-          className="w-full sm:w-auto flex items-center gap-2"
-        >
+        <Button onClick={onGenerateClick} className="w-full sm:w-auto flex items-center gap-2">
           {buttonText}
         </Button>
       )}

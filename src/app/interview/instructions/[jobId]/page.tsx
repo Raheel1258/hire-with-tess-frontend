@@ -2,7 +2,7 @@
 import InterviewLayout from '@/components/layout/InterviewLayout';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import FetchQuestions from '@/hooks/FetchQuestions.hook';
+import FetchQuestions from '@/Routes/Client/hook/GET/FetchQuestions.hook';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 

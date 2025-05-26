@@ -1,7 +1,7 @@
 'use client';
 
 import { useRecordingStore } from '@/store/candidate/Recording.store';
-import FetchQuestions from '@/hooks/FetchQuestions.hook';
+import FetchQuestions from '@/Routes/Client/hook/GET/FetchQuestions.hook';
 import InterviewLayout from '@/components/layout/InterviewLayout';
 import { useParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';

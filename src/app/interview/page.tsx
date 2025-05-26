@@ -1,283 +1,226 @@
-'use client';
-import { Card } from '@/components/ui/card';
-import { Form, FormField, FormItem } from '@/components/ui/form';
-import { Button } from '@/components/ui/button';
-import React, { useEffect, useRef } from 'react';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import { customformSchema, FormValidator } from '@/schema/customform.schema';
-import Image from 'next/image';
-import useHomeStore from '@/store/Employer/home.store';
-import Link from 'next/link';
-import OutputCard from './component/outputCard';
-import NoQuestion from './component/emptycard';
-import GenerateResponse from '@/hooks/GenerateResponse.hook';
-import InterviewLayout from '@/components/layout/InterviewLayout';
-import CustomInputForm from '@/app/interview/component/customformInput';
-import { Check, Pencil } from 'lucide-react';
-import { useSkillStore } from '@/store/Employer/InputStore';
-import useGenerateResponse from '@/hooks/generateResponse.hook';
-import GenerateQuestionResponse from '@/hooks/GenerateQuestion.hook';
+"use client";
+import React, { useRef } from "react";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import Image from "next/image";
+import Link from "next/link";
+import { Pencil, X, Check } from "lucide-react";
+import InterviewLayout from "@/components/layout/InterviewLayout";
+import useHomeStore from "@/store/Employer/home.store";
+import { useSkillStore } from "@/store/Employer/InputStore";
+import { useSearchParams } from "next/navigation";
+import useResReqHook from "@/Routes/Client/hook/PUT/UpdateResReq.hook";
+import { Textarea } from "@/components/ui/textarea";
+import { useForm } from "react-hook-form";
 
 export default function InterviewForm() {
-  // const { jobDescription, jobTitle, jobType, companyName, location, salary } =
-  //   useHomeStore();
+  const searchParams = useSearchParams();
+  const jobId = searchParams.get("job_id");
 
-  const jobrequirements = useHomeStore((state) => state.requirements )
-  const jobresponsibilities = useHomeStore((state) => state.responsibilities )
-  const skills = useHomeStore((state) => state.skills )
-//  const {requirements,responsibilities,skills} = useHomeStore();
+  const ref = useRef<HTMLFormElement>(null);
+  const ReqResMutation = useResReqHook();
+  const { isEditable, setIsEditable } = useSkillStore();
+  const {
+    skills,
+    setSkills,
+    requirements,
+    setRequirements,
+    responsibilities,
+    setResponsibilities,
+  } = useHomeStore();
 
-  const jobId = useHomeStore((state) => state.jobId);
+  const handleCancel = () => {
+    setIsEditable(false);
+  };
 
-  const questionMutation = GenerateQuestionResponse();
+  const initialData = useRef({
+    skills: [...skills],
+    responsibilities: [...responsibilities],
+    requirements: [...requirements],
+  });
 
-  // const { isEditDescription, setIsEditableDescription } = useSkillStore();
+  const isArrayEqual = (a: string[], b: string[]) =>
+    a.length === b.length && a.every((v, i) => v === b[i]);
 
-  // const form = useForm<FormValidator>({
-  //   resolver: zodResolver(customformSchema),
-  //   defaultValues: {
-  //     jobDescription: jobDescription || '',
-  //     jobTitle: jobTitle || '',
-  //     jobType: jobType || '',
-  //     companyName: companyName || '',
-  //     location: location || '',
-  //     salary: salary || '',
-  //   },
-  // });
-  // const ref = useRef<HTMLFormElement>(null);
-  // const generateMutation = GenerateResponse();
+  const dataChanged = !(
+    isArrayEqual(skills, initialData.current.skills) &&
+    isArrayEqual(requirements, initialData.current.requirements) &&
+    isArrayEqual(responsibilities, initialData.current.responsibilities)
+  );
 
-  // const onSubmit = async (data: FormValidator) => {
-  //   generateMutation.mutate({
-  //     job_description: data.jobDescription,
-  //     job_title: data.jobTitle,
-  //     job_type: data.jobType,
-  //     company_name: data.companyName,
-  //     location: data.location,
-  //     salary: data.salary,
-  //     currency: data.currency,
-  //   });
-  // };
+  const updateValue = () => {
+    ReqResMutation.mutate({
+      data: {
+        skills,
+        responsibilities,
+        requirements,
+      },
+    });
 
+    initialData.current = {
+      skills: [...skills],
+      responsibilities: [...responsibilities],
+      requirements: [...requirements],
+    };
 
-  // const handleEditDescription = () => {
-  //   setIsEditableDescription(true);
-  // };
+    setIsEditable(false);
+  };
 
-  // const UpdateJobDescription = () => {
-  //   setIsEditableDescription(false);
-  // };
+  const handleSkillChange = (value: string, index: number) => {
+    const updated = [...skills];
+    updated[index] = value;
+    setSkills(updated);
+  };
+
+  const handleDeleteSkill = (index: number) => {
+    setSkills(skills.filter((_, i) => i !== index));
+  };
 
   return (
     <>
       <InterviewLayout
-      description='Your AI-powered Job breakdown — sharp, clear, and ready to impress.'
-      showGoogleLogin={false} useCard={false}>
-        {/* <div className=" text-center pt-10 pb-10 w-full ">
-          <Form {...form}>
-            <form
-              onSubmit={form.handleSubmit(onSubmit)}
-              ref={ref}
-              className="space-y-8 px-4"
-            >
-              <FormField
-                control={form.control}
-                name="jobDescription"
-                render={({ field }) => (
-                  <FormItem>
-                    <CustomInputForm
-                      {...field}
-                      name="jobDescription"
-                      label="Position Overview"
-                      type="textarea"
-                      placeholder="Position Overview here"
-                      readOnly={!isEditDescription}
-                      icon={
-                        isEditDescription ? (
-                          <Check
-                            size={16}
-                            color="green"
-                            strokeWidth={0.75}
-                            style={{ cursor: 'pointer' }}
-                            onClick={UpdateJobDescription}
-                          />
-                        ) : (
+        showStepper={true}
+        currentStep={1}
+        description="Your AI-powered Job breakdown — sharp, clear, and ready to impress."
+        showGoogleLogin={false}
+        useCard={false}
+      >
+        <div className="flex flex-col ">
+          {/* <h1 className="font-roboto font-semibold text-[20px] leading-[30px] text-left">
+    AI Powered Response
+  </h1> */}
+          <div className="flex items-start mt-4">
+            <Image
+              src="/images/AIAvatar.png"
+              alt="bot"
+              width={40}
+              height={40}
+              className="shrink-0"
+            />
+
+            <Card className="w-full rounded-2xl p-4 sm:p-6 ml-4">
+              <form ref={ref}>
+                <div className="text-left space-y-6">
+                  {responsibilities.length > 0 && (
+                    <div>
+                      <div className="flex justify-between items-center mb-2">
+                        <h3 className="text-[14px] font-openSans text-black">
+                          Responsibilities
+                        </h3>
+                        {!isEditable ? (
                           <Pencil
                             size={18}
                             color="#718096"
-                            style={{ cursor: 'pointer' }}
-                            onClick={handleEditDescription}
+                            onClick={() => setIsEditable(true)}
+                            className="cursor-pointer"
                           />
-                        )
-                      }
-                    />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="jobTitle"
-                render={({ field }) => (
-                  <FormItem>
-                    <CustomInputForm
-                      {...field}
-                      name="jobTitle"
-                      label="Job Title"
-                      placeholder="Job Title here"
-                    />
-                  </FormItem>
-                )}
-              />
+                        ) : !dataChanged ? (
+                          <X
+                            size={18}
+                            color="orange"
+                            onClick={handleCancel}
+                            className="cursor-pointer"
+                          />
+                        ) : (
+                          <Check
+                            size={18}
+                            color="green"
+                            onClick={updateValue}
+                            className="cursor-pointer"
+                          />
+                        )}
+                      </div>
+                      {!isEditable ? (
+                        <ul className="list-disc pl-5 text-[14px] font-openSans text-black">
+                          {responsibilities.map((item, idx) => (
+                            <li key={idx}>{item}</li>
+                          ))}
+                        </ul>
+                      ) : (
+                        <Textarea
+                          value={responsibilities.join("\n")}
+                          onChange={(e) =>
+                            setResponsibilities(e.target.value.split("\n"))
+                          }
+                          className="w-full h-40 p-2 border rounded-xl resize-none font-openSans text-[14px]"
+                        />
+                      )}
+                    </div>
+                  )}
+                  <div>
+                    <h3 className="text-[14px] font-openSans text-black mb-2">
+                      Requirements
+                    </h3>
+                    {!isEditable ? (
+                      <ul className="list-disc pl-5 text-[14px] font-openSans text-black">
+                        {requirements.map((item, idx) => (
+                          <li key={idx}>{item}</li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <Textarea
+                        value={requirements.join("\n")}
+                        onChange={(e) =>
+                          setRequirements(e.target.value.split("\n"))
+                        }
+                        className="w-full h-40 p-2 border rounded-xl resize-none font-openSans text-[14px]"
+                      />
+                    )}
+                  </div>
+                </div>
+              </form>
+            </Card>
+          </div>
+        </div>
 
-              <FormField
-                control={form.control}
-                name="jobType"
-                render={({ field }) => (
-                  <CustomInputForm
-                    {...field}
-                    name="jobType"
-                    label="Job Type"
-                    jobTypeName="jobType"
+        {skills.length > 0 && (
+          <div className="flex items-start gap-4 mt-6">
+            <Image
+              src="/images/AIAvatar.png"
+              alt="bot"
+              width={40}
+              height={40}
+              className="shrink-0"
+            />
+            <div className="flex flex-wrap gap-2">
+              {skills.map((item, index) => (
+                <div key={index} className="relative w-full sm:w-auto">
+                  <Input
+                    value={item}
+                    readOnly={!isEditable}
+                    onChange={(e) => handleSkillChange(e.target.value, index)}
+                    className="pr-10 border-[#E2E8F0] rounded-3xl text-black font-openSans"
                   />
-                )}
-              />
+                  {isEditable && (
+                    <button
+                      onClick={() => handleDeleteSkill(index)}
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                    >
+                      <X size={18} />
+                    </button>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
-              <FormField
-                control={form.control}
-                name="companyName"
-                render={({ field }) => (
-                  <FormItem>
-                    <CustomInputForm
-                      {...field}
-                      name="companyName"
-                      label="Company Name"
-                      placeholder="Company Name here"
-                    />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="location"
-                render={({ field }) => (
-                  <FormItem>
-                    <CustomInputForm
-                      {...field}
-                      name="location"
-                      label="Location "
-                      placeholder="Location here"
-                    />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="salary"
-                render={() => (
-                  <FormItem>
-                    <CustomInputForm
-                      name="salary"
-                      currencyName="currency"
-                      label="Salary"
-                      placeholder="Enter salary here"
-                      type="number"
-                    />
-                  </FormItem>
-                )}
-              />
-
-              <Button
-                className="cursor-pointer"
-                disabled={generateMutation.isPending}
-                type="submit"
-              >
-                <Image src="/images/Vector.png" alt="alt" width={20} height={20} />
-                {generateMutation.isPending ? 'Generating.....' : 'Generate'}
-              </Button>
-            </form>
-          </Form>
-        </div> */}
-         {/* <div className=" sm:p-18 p-6 "> */}
-        {/* <Card className="  w-full rounded-4xl shadow-xl "> */}
-          {/* {responseData ? ( */}
-            <>
-              <OutputCard
-              
-                req={jobrequirements }
-                res={jobresponsibilities}
-                skill={skills }
-              />
-
-              {/* <div className="my-2 flex justify-center">
-                <Button
-                  disabled={generateMutation.isPending}
-                  onClick={() => onSubmit(form.getValues())}
-                  className="bg-transparent text-black hover:text-white  border border-gray-400 hover:border-none rounded-2xl flex items-center justify-center"
-                >
-                  {generateMutation.isPending
-                    ? 'Regenerating.....'
-                    : 'Regenerate response'}
-                </Button>
-              </div> */}
-            </>
-          {/* ) : 
-          (
-            <NoQuestion />
-          )
-          } */}
-        {/* </Card> */}
-      {/* </div> */}
-      </InterviewLayout>
-      {/* <div className=" sm:p-18 p-6 ">
-        <Card className="  w-full rounded-4xl shadow-xl ">
-          {responseData ? (
-            <>
-              <OutputCard
-                req={responseData.requirements || []}
-                res={responseData.responsibilities || []}
-                skill={responseData.skills || []}
-              />
-
-              <div className="my-2 flex justify-center">
-                <Button
-                  disabled={generateMutation.isPending}
-                  onClick={() => onSubmit(form.getValues())}
-                  className="bg-transparent text-black hover:text-white  border border-gray-400 hover:border-none rounded-2xl flex items-center justify-center"
-                >
-                  {generateMutation.isPending
-                    ? 'Regenerating.....'
-                    : 'Regenerate response'}
-                </Button>
-              </div>
-            </>
-          ) : (
-            <NoQuestion />
-          )}
-        </Card>
-      </div> */}
-
-      {/* {responseData ? ( */}
-        <div className="flex justify-end mr-16  sm:justify-end items-center mt-6 mb-4 sm:mr-18 gap-4">
+        <div className="flex justify-end items-center mt-6 gap-4 mb-0">
           <Link href="/">
             <Button
-              variant={'secondary'}
-              className=" sm:w-auto cursor-pointer"
+              variant="secondary"
               type="button"
+              className="cursor-pointer"
             >
               Cancel
             </Button>
           </Link>
           <Link href={`/interview/generate-questions/${jobId}`}>
-            <Button type="submit" className="w-full sm:w-auto cursor-pointer">
-            Generate Question
-            </Button>
+            <Button className="cursor-pointer">Generate Question</Button>
           </Link>
         </div>
-      {/* ) : (
-        <div className="flex justify-end mr-16  sm:justify-end items-center mt-6 mb-4 sm:mr-18 gap-4"></div>
-      )} */}
+      </InterviewLayout>
     </>
   );
 }

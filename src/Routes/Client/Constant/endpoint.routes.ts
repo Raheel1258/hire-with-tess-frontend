@@ -2,12 +2,13 @@ export const APIEndpoint = {
   // JOB Management
   GENERATE_JOB_DETAILS: `/api/v1/generate-job-details/`,
   GENERATE_QUESTION: (job_id: string) => `/api/v1/generate-questions/${job_id}`,
+  REGENERATE_QUESTION:(job_id:string) => `/api/v1/add-question-from-list/${job_id}`,
 
   GET_JOB_DETAILS: (job_id: string) => `/api/v1/job/${job_id}`,
   GET_INTERVIEW_LINK: (job_id: string) => `/api/v1/generate-interview-link/${job_id}`,
 
   // Update Job Details
-  UPDATE_JOB_DETAILS: (job_id: string) => `/api/v1/generate-job-details/${job_id}`,
+  UPDATE_JOB_DETAILS: (job_id: string) => `/api/v1/update-job-details/${job_id}`,
   UPDATE_JOB_QUESTIONS: (job_id: string) => `/api/v1/update-questions/${job_id}`,
   UPDATE_RES_REQ: (job_id: string) => `/api/v1/job/${job_id}`,
 
