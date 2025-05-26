@@ -3,7 +3,7 @@ import EmployerLayout from '@/components/layout/EmployerLayout';
 import useHomeStore from '@/store/Employer/home.store';
 import Placeholder from './interview/component/placeholder';
 import React from 'react';
-import useGenerateResponse from '@/hooks/generateResponse.hook';
+import useGenerateResponse from '@/hooks/generateResponse1.hook';
 
 
 export default function Home() {

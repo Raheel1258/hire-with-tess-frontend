@@ -11,12 +11,12 @@ import useHomeStore from '@/store/Employer/home.store';
 import Link from 'next/link';
 import OutputCard from './component/outputCard';
 import NoQuestion from './component/emptycard';
-import GenerateResponse from '@/hooks/GenerateResponse.hook';
+import GenerateResponse from '@/hooks/generateResponse1.hook';
 import InterviewLayout from '@/components/layout/InterviewLayout';
 import CustomInputForm from '@/app/interview/component/customformInput';
 import { Check, Pencil } from 'lucide-react';
 import { useSkillStore } from '@/store/Employer/InputStore';
-import useGenerateResponse from '@/hooks/generateResponse.hook';
+import useGenerateResponse from '@/hooks/generateResponse1.hook';
 import GenerateQuestionResponse from '@/hooks/GenerateQuestion.hook';
 
 export default function InterviewForm() {
