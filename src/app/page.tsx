@@ -1,10 +1,9 @@
-'use client';
-import EmployerLayout from '@/components/layout/EmployerLayout';
-import useHomeStore from '@/store/Employer/home.store';
-import Placeholder from './interview/component/placeholder';
-import React from 'react';
-import useGenerateResponse from '@/Routes/Client/hook/POST/GenerateResponse.hook';
-
+"use client";
+import EmployerLayout from "@/components/layout/EmployerLayout";
+import useHomeStore from "@/store/Employer/home.store";
+import Placeholder from "./interview/component/placeholder";
+import React from "react";
+import useGenerateResponse from "@/Routes/Client/hook/POST/GenerateResponse.hook";
 
 export default function Home() {
   const { jobDescription, setJobDescription } = useHomeStore();
@@ -20,7 +19,6 @@ export default function Home() {
     generateMutation.mutate({
       job_description: jobDescription,
     });
-
   };
 
   return (
@@ -33,8 +31,8 @@ export default function Home() {
         </div>
 
         <p className="text-black font-open-sans  text-center mb-12 mt-8 sm:mb-6 text-sm sm:text-base md:text-lg leading-relaxed">
-          Easily generate a shareable link for candidates to complete their AI-powered
-          interview anytime, anywhere. No scheduling required.
+          Easily generate a shareable link for candidates to complete their
+          AI-powered interview anytime, anywhere. No scheduling required.
         </p>
 
         <div className="w-full max-w-2xl mx-auto">
@@ -42,11 +40,9 @@ export default function Home() {
             onChange={handleChange}
             onSubmit={onSubmit}
             isLoading={generateMutation.isPending}
-            />
+          />
         </div>
       </div>
     </EmployerLayout>
   );
 }
-
-
