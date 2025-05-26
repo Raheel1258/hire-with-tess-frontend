@@ -1,1 +1,3 @@
-npm test
+#!/bin/sh
+. "$HOME/.nvm/nvm.sh"
+nvm use

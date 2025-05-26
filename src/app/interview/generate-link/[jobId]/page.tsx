@@ -1,26 +1,17 @@
-'use client';
-import InterviewLayout from '@/components/layout/InterviewLayout';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Copy, Download, Share2 } from 'lucide-react';
-import useFetchInterviewLink from '@/hooks/FetchInterviewLink.hook';
-import { toast } from 'sonner';
-import SocialShare from '@/app/interview/component/share';
-import { useToggleStore } from '@/store/Employer/Toggle.store';
-import QRCode from 'react-qr-code';
-import { useParams } from 'next/navigation';
-import { cn } from '@/lib/utils';
-import { useEffect } from 'react';
-import EmployeeAuthStore from '@/store/Auth/auth.store';
+"use client";
+import InterviewLayout from "@/components/layout/InterviewLayout";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Copy, Download, Share2 } from "lucide-react";
+import { toast } from "sonner";
+import SocialShare from "@/app/interview/component/share";
+import { useToggleStore } from "@/store/Employer/Toggle.store";
+import QRCode from "react-qr-code";
+import { cn } from "@/lib/utils";
 
 export default function GenerateLink() {
-
-  const params = useParams();
-  const jobId = params?.jobId as string;
-
-  const { data: InterviewData, isLoading } = useFetchInterviewLink(jobId);
-  console.log("Link", InterviewData?.interview_link);
-
+  const interviewLink = useToggleStore((state) => state.interviewLink);
+  const qrCode = useToggleStore((state) => state.qrCode);
 
   const {
     copied,
@@ -32,22 +23,22 @@ export default function GenerateLink() {
   } = useToggleStore();
 
   const handleCopy = () => {
-    if (!InterviewData?.interview_link) return;
-    navigator.clipboard.writeText(InterviewData?.interview_link);
-    setCopied('Link copied to clipboard!');
-    toast('Link copied to clipboard!');
-    setTimeout(() => setCopied(''), 2000);
+    if (!interviewLink) return;
+    navigator.clipboard.writeText(interviewLink);
+    setCopied("Link copied to clipboard!");
+    toast("Link copied to clipboard!");
+    setTimeout(() => setCopied(""), 2000);
   };
 
   const handleDownloadQR = () => {
-    if (!InterviewData?.qr_code_base64) return;
-    const link = document.createElement('a');
-    link.href = `data:image/png;base64,${InterviewData.qr_code_base64}`;
-    link.download = 'QR_Code.png';
+    if (!interviewLink) return;
+    const link = document.createElement("a");
+    link.href = `data:image/png;base64,${interviewLink}`;
+    link.download = "QR_Code.png";
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-    toast.success('QR Code downloaded successfully!');
+    toast.success("QR Code downloaded successfully!");
   };
 
   const toggleShareOptions = () => {
@@ -63,7 +54,7 @@ export default function GenerateLink() {
       description="Share the Interview link with candidates and start collecting responses"
       subtitleClassName="font-roboto font-bold text-[34px] mt-6 text-center"
       descriptionClassName="font-roboto font-normal text-[18px] mt-4 text-[#6F6C90] text-center"
-      currentStep={4}
+      currentStep={5}
       useCard={false}
     >
       <div className="mt-8 flex flex-col sm:w-[384px] mx-auto px-4 mb-8">
@@ -76,17 +67,21 @@ export default function GenerateLink() {
 
         <div className="flex flex-row gap-3 items-center w-full sm:w-[400px] mt-6 relative">
           <Input
-            value={isLoading ? "Generating Interview Link..." : InterviewData?.interview_link || "No link available"}
+            value={
+              !interviewLink
+                ? "Generating Interview Link..."
+                : interviewLink || "No link available"
+            }
             readOnly
             onClick={() => {
-              if (!isLoading && InterviewData?.interview_link) {
-                window.open(InterviewData.interview_link, '_blank');
+              if (interviewLink) {
+                window.open(interviewLink, "_blank");
               }
             }}
-            disabled={isLoading || !InterviewData?.interview_link}
+            disabled={!interviewLink}
             className={cn(
               "w-full h-[65px] border border-gray-300 rounded-[14px] px-4 pr-14 text-ellipsis overflow-hidden truncate",
-              isLoading || !InterviewData?.interview_link
+              !interviewLink
                 ? "cursor-not-allowed text-gray-400 underline"
                 : "cursor-pointer text-[#4A3AFF] underline"
             )}
@@ -98,7 +93,10 @@ export default function GenerateLink() {
             className="absolute right-16 top-1/2 transform -translate-y-1/2 p-2 hover:bg-transparent"
             onClick={handleCopy}
           >
-            <Copy size={20} className={copied ? 'text-blue-500' : 'text-gray-600'} />
+            <Copy
+              size={20}
+              className={copied ? "text-blue-500" : "text-gray-600"}
+            />
           </Button>
 
           <div className="ml-2">
@@ -112,7 +110,7 @@ export default function GenerateLink() {
         {showShareOptions && (
           <div className="mt-4">
             <SocialShare
-              url={InterviewData?.interview_link}
+              url={interviewLink}
               title="Share Interview Link with Candidate"
             />
           </div>
@@ -131,30 +129,26 @@ export default function GenerateLink() {
             Candidates can scan this QR Code to access the interview
           </p>
 
-
           {/* QR Code Image */}
-          {isLoading ? (
+          {!interviewLink ? (
             <div className="w-[200px] h-[200px] bg-gray-100 animate-pulse rounded-md mt-4 mx-auto" />
           ) : (
-            InterviewData?.qr_code_base64 && (
+            interviewLink && (
               <div className="w-[200px] h-[200px] bg-white flex items-center justify-center rounded-md mt-4 shadow-xl mx-auto">
                 <QRCode
                   className="w-[200px] h-[200px] shadow-lg p-4"
                   width={216}
                   height={222}
-                  // value={InterviewData.qr_code_base64 }
-                  value={InterviewData?.interview_link || ''}
+                  value={interviewLink || ""}
                 />
               </div>
             )
-
           )}
-
 
           <div className="flex flex-row items-center justify-center">
             <button
               onClick={handleDownloadQR}
-              disabled={!InterviewData?.interview_link}
+              disabled={!interviewLink}
               className="flex items-center justify-center gap-2 sm:gap-3 font-roboto text-[14px] sm:text-[16px] md:text-[18px] font-bold w-[90%] sm:w-[180px] md:w-[212px] h-[50px] sm:h-[60px] md:h-[65px] rounded-[14px] bg-[#1E4B8E] mt-8 sm:mt-11 text-white px-4 sm:px-6"
             >
               <Download className="w-4 h-4 sm:w-5 sm:h-5" /> Download
@@ -169,7 +163,7 @@ export default function GenerateLink() {
           {showQrSharedOptions && (
             <div className="mt-4">
               <SocialShare
-                url={InterviewData?.interview_link}
+                url={interviewLink}
                 title="Share Interview Link with Candidate"
               />
             </div>

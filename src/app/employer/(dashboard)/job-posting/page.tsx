@@ -61,7 +61,7 @@ export default function JobPosting() {
     item?.shortlisted_stats?.shortlist_ratio,
     item?.job_type,
     new Date(item.created_at).toLocaleDateString(),
-    new Date(item?.expiry_date).toLocaleDateString(),
+    item?.expiry_date
   ]);
 
   return (

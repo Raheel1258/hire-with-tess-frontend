@@ -4,7 +4,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { useEffect, useState } from 'react';
 
-import FetchQuestions from '@/hooks/FetchQuestions.hook';
+import FetchQuestions from '@/Routes/Client/hook/GET/FetchQuestions.hook';
 import Stepper from '@/app/interview/component/stepper';
 import SpeechRecordingInput from '@/app/interview/component/SpeechToTextInput';
 import { Skeleton } from '@/components/ui/skeleton';

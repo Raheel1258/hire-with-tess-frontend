@@ -1,6 +1,7 @@
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import React from 'react';
+import { Loader } from 'lucide-react';
 
 export default function Placeholder({
   onChange,
@@ -32,7 +33,17 @@ export default function Placeholder({
                     transform -translate-y-1/2 h-8 sm:h-[50px] md:h-[60px] w-[80px] sm:w-[100px] md:w-[120px]
                     bg-orange-400 text-white px-2 sm:px-4 py-1.5 rounded-full text-xs sm:text-sm md:text-base"
         >
-          {isLoading ? 'Generating...' : 'Generate'}
+          {isLoading ? (
+            <div className="flex items-center justify-center gap-1 text-white">
+              <span className="animate-bounce [animation-delay:-0.3s]">•</span>
+              <span className="animate-bounce [animation-delay:-0.15s]">•</span>
+              <span className="animate-bounce">•</span>
+
+            </div>
+          ) : (
+            'Generate'
+          )}
+
         </Button>
       </form>
     </div>

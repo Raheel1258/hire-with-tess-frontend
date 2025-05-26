@@ -1,54 +1,47 @@
-'use client';
-import InterviewLayout from '@/components/layout/InterviewLayout';
-import { Button } from '@/components/ui/button';
-import OutputCard from '@/app/interview/component/outputCard';
-import FetchJobDetails from '@/hooks/FetchJobDetails.hook';
-import FetchQuestions from '@/hooks/FetchQuestions.hook';
-import { Form, FormControl, FormField, FormItem } from '@/components/ui/form';
-import { customformSchema } from '@/schema/customform.schema';
-import { useRef, useEffect } from 'react';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
-import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import Signup from '@/app/signup/page';
-import CustomInputForm from '@/app/interview/component/customformInput';
-import { useRouter } from 'next/navigation';
-import { useParams } from 'next/navigation';
-import Link from 'next/link';
-import EmployeeAuthStore from '@/store/Auth/auth.store';
-import { getAuthCookie, getAuthToken } from '@/Utils/Providers/auth';
-import useFetchInterviewLink from '@/hooks/FetchInterviewLink.hook';
-
+"use client";
+import InterviewLayout from "@/components/layout/InterviewLayout";
+import { Button } from "@/components/ui/button";
+import OutputCard from "@/app/interview/component/outputCard";
+import FetchJobDetails from "@/Routes/Client/hook/GET/FetchJobDetails.hook";
+import FetchQuestions from "@/Routes/Client/hook/GET/FetchQuestions.hook";
+import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
+import { customformSchema } from "@/schema/customform.schema";
+import { useRef, useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import Signup from "@/app/signup/page";
+import CustomInputForm from "@/app/interview/component/customformInput";
+import { useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
+import Link from "next/link";
+import { getAuthCookie, getAuthToken } from "@/Utils/Providers/auth";
 
 export default function InterviewReview() {
-
-  const params = useParams();
-  const jobId = params?.jobId as string;
-
-  const access_token = EmployeeAuthStore.getState().accessToken;
+  const { jobId } = useParams<{ jobId: string }>();
+  const ref = useRef<HTMLFormElement>(null);
+  const router = useRouter();
+  const accessToken = getAuthToken() || getAuthCookie();
 
   const jobDetailsQuery = FetchJobDetails(jobId);
-
   const jobData = jobDetailsQuery?.data || {};
   const { data } = FetchQuestions(jobId);
 
   const form = useForm<z.infer<typeof customformSchema>>({});
   const { setValue } = form;
 
-  const ref = useRef<HTMLFormElement>(null);
-  const router = useRouter();
-
-  const accessToken = getAuthToken() || getAuthCookie();
-  const { data: InterviewData } = useFetchInterviewLink(jobId);
- 
-
   useEffect(() => {
     if (jobData) {
-      setValue('jobTitle', jobData.job_title || '');
-      setValue('jobType', jobData.job_type || '');
-      setValue('companyName', jobData.company_name || '');
-      setValue('location', jobData.location || '');
-      setValue('salary', jobData.salary || '');
+      setValue("jobTitle", jobData.job_title || "");
+      setValue("jobType", jobData.job_type || "");
+      setValue("companyName", jobData.company_name || "");
+      setValue("location", jobData.location || "");
+      setValue("salary", jobData.salary || "");
     }
   }, [jobData, setValue]);
 
@@ -60,13 +53,12 @@ export default function InterviewReview() {
     }
   }, [data?.questions, setValue]);
 
-
   return (
     <InterviewLayout
       subtitle="Review Your AI-Generated Interview"
       description="Take a final look before sharing it with candidates. You can edit or regenerate questions if needed."
       showStepper={true}
-      currentStep={3}
+      currentStep={4}
       showGoogleLogin={false}
       useCard={false}
     >
@@ -144,7 +136,7 @@ export default function InterviewReview() {
                 <FormItem>
                   <CustomInputForm
                     name="salary"
-                    currencyName={jobData.currency || 'currency'}
+                    currencyName={jobData.currency || "currency"}
                     label="Salary"
                     type="number"
                     readOnly
@@ -169,7 +161,9 @@ export default function InterviewReview() {
           </div>
         )}
         <div className="text-left space-y-2 w-full">
-          <h2 className="text-lg font-semibold mt-4 mb-6">AI Powered Questions:</h2>
+          <h2 className="text-lg font-semibold mt-4 mb-6">
+            AI Powered Questions:
+          </h2>
           <Form {...form}>
             <form>
               {data?.questions.map((question: string, index: number) => (
@@ -199,7 +193,6 @@ export default function InterviewReview() {
             </Button>
           </div>
 
-
           {accessToken ? (
             <Link href={`/interview/generate-link/${jobId}`}>
               <Button className="w-40">Generate Link</Button>
@@ -215,9 +208,6 @@ export default function InterviewReview() {
               </DialogContent>
             </Dialog>
           )}
-
-
-
         </div>
       </div>
     </InterviewLayout>

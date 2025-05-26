@@ -1,26 +1,20 @@
 import Image from 'next/image';
 import { Check, Pencil, X } from 'lucide-react';
 import { useSkillStore } from '@/store/Employer/InputStore';
-import useUpdateJobQuestion from '@/hooks/UpdateJobQuestion.hook';
+import useUpdateJobQuestion from '@/Routes/Client/hook/PUT/UpdateJobQuestion.hook';
 import React, { useState } from 'react';
 import { Textarea } from '@/components/ui/textarea';
+import QuestionProps from '@/Types/Employer/question.type';
 
-interface Response {
-  text: string;
-  type: string;
-}
-
-interface QuestionProps {
-  questions: Response[];
-  showImage?: boolean;
-}
 
 export default function Question({ questions, showImage = true }: QuestionProps) {
+
   const { editableQuestionIndex, setEditableQuestionIndex, setIsEditable } =
     useSkillStore();
-  const [editedQuestion, setEdited] = useState([...questions]);
   const { mutate } = useUpdateJobQuestion();
 
+
+  const [editedQuestion, setEdited] = useState([...questions]);
   const startEditing = (index: number) => {
     setEditableQuestionIndex(index);
     setIsEditable(true);
@@ -40,10 +34,10 @@ export default function Question({ questions, showImage = true }: QuestionProps)
     setIsEditable(false);
   };
 
-  const handleTextChange = (index: number, newText: string) => {
+  const handleTextChange = (index: number, newText: string, newType: string) => {
     setEdited((prev) => {
       const updated = [...prev];
-      updated[index] = { ...updated[index], text: newText };
+      updated[index] = { ...updated[index], text: newText ,type:newType};
       return updated;
     });
   };
@@ -63,13 +57,13 @@ export default function Question({ questions, showImage = true }: QuestionProps)
               )}
               <div className="relative w-full">
                 {isEditing ? (
-                <Textarea
-                value={question.text}
-                onChange={(e) => handleTextChange(index, e.target.value)}
-                className="w-full h-[68px] sm:h-[200px] rounded-[14px] border text-black bg-white p-2"
-                autoFocus
-              />
-              
+                  <Textarea
+                    value={question.text}
+                    onChange={(e) => handleTextChange(index, e.target.value, question.type)}
+                    className="w-full h-[38px] sm:h-[100px] rounded-[14px] border text-black bg-white p-2"
+                    autoFocus
+                  />
+
                 ) : (
                   <p className="w-full h-[68px] rounded-[14px] border-1 text-black bg-white p-2 flex items-center 
                   ">
