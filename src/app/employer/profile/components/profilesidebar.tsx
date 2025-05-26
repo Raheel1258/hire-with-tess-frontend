@@ -1,18 +1,18 @@
-'use client';
+"use client";
 
-import { Ban, Delete, LogOut, Menu } from 'lucide-react';
-import Image from 'next/image';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { usePathname, useRouter } from 'next/navigation';
-import Link from 'next/link';
-import { cn } from '@/lib/utils';
-import { sidebarProfileItem } from '@/app/employer/profile/Constants/profileitem';
-import { useEffect, useState } from 'react';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Button } from '@/components/ui/button';
-import DeleteDialogue from './deletedialogue';
-import LogoutDialogue from './logoutdialogue';
-import UseProfileInfo from '@/Routes/Employer/hooks/GET/profile/profileinfohook';
+import { Ban, Delete, LogOut, Menu } from "lucide-react";
+import Image from "next/image";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { usePathname, useRouter } from "next/navigation";
+import Link from "next/link";
+import { cn } from "@/lib/utils";
+import { sidebarProfileItem } from "@/app/employer/profile/Constants/profileitem";
+import { useEffect, useState } from "react";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Button } from "@/components/ui/button";
+import DeleteDialogue from "./deletedialogue";
+import LogoutDialogue from "./logoutdialogue";
+import UseProfileInfo from "@/Routes/Employer/hooks/GET/profile/Profileinfo.hook";
 
 export default function ProfileSidebar() {
   const pathname = usePathname();
@@ -21,7 +21,7 @@ export default function ProfileSidebar() {
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [isLogout, setIsLogout] = useState(false);
 
-  const {data:profileInfo}  = UseProfileInfo();
+  const { data: profileInfo } = UseProfileInfo();
 
   useEffect(() => {
     setActivePath(pathname);
@@ -39,11 +39,15 @@ export default function ProfileSidebar() {
         (link.route.length > 1 && activePath.includes(link.route));
 
       return (
-        <Link href={link.route} key={link.route} onClick={() => handleClick(link.route)}>
+        <Link
+          href={link.route}
+          key={link.route}
+          onClick={() => handleClick(link.route)}
+        >
           <div
             className={cn(
-              'flex items-center gap-2 p-2 rounded-lg transition-colors cursor-pointer',
-              isSelected && 'bg-[#f7941D] text-white'
+              "flex items-center gap-2 p-2 rounded-lg transition-colors cursor-pointer",
+              isSelected && "bg-[#f7941D] text-white"
             )}
           >
             <div className="relative w-6 h-6">
@@ -51,10 +55,15 @@ export default function ProfileSidebar() {
                 src={link.img}
                 alt="icon"
                 fill
-                className={cn('object-contain', isSelected && 'brightness-0 invert')}
+                className={cn(
+                  "object-contain",
+                  isSelected && "brightness-0 invert"
+                )}
               />
             </div>
-            <p className={cn(isSelected ? 'text-white' : 'text-dark')}>{link.label}</p>
+            <p className={cn(isSelected ? "text-white" : "text-dark")}>
+              {link.label}
+            </p>
           </div>
         </Link>
       );
@@ -70,18 +79,28 @@ export default function ProfileSidebar() {
           <AvatarFallback>{user?.name.slice(0, 2).toUpperCase()}</AvatarFallback> */}
           </Avatar>
           <div className="text-center mt-4">
-            <h1 className="font-semibold text-[#4B4B4B]">{profileInfo?.first_name} {profileInfo?.last_name}</h1>
+            <h1 className="font-semibold text-[#4B4B4B]">
+              {profileInfo?.first_name} {profileInfo?.last_name}
+            </h1>
             <p className="text-sm font-light">Employer</p>
           </div>
           <hr className="my-4 w-full bg-[#1E4B8E] h-[1px]" />
         </div>
-        <nav className="flex flex-col gap-2 text-sm font-light">{renderLinks()}</nav>
+        <nav className="flex flex-col gap-2 text-sm font-light">
+          {renderLinks()}
+        </nav>
         <hr className="my-4 w-full bg-[#1E4B8E] h-[1px]" />
-        <div className='flex flex-col gap-2 mt-2 items-start p-2'>
-          <div onClick={() => setIsDeleteOpen(true)} className='flex flex-row gap-4 cursor-pointer'>
+        <div className="flex flex-col gap-2 mt-2 items-start p-2">
+          <div
+            onClick={() => setIsDeleteOpen(true)}
+            className="flex flex-row gap-4 cursor-pointer"
+          >
             <Ban /> Delete
           </div>
-          <div onClick={() => setIsLogout(true)} className='flex flex-row gap-4 mt-2 cursor-pointer'>
+          <div
+            onClick={() => setIsLogout(true)}
+            className="flex flex-row gap-4 mt-2 cursor-pointer"
+          >
             <LogOut /> Logout
           </div>
         </div>
@@ -105,9 +124,14 @@ export default function ProfileSidebar() {
               </div>
               <hr className="my-4 w-full bg-[#1E4B8E] h-[1px]" />
             </div>
-            <nav className="flex flex-col gap-2 text-sm font-light">{renderLinks()}</nav>
+            <nav className="flex flex-col gap-2 text-sm font-light">
+              {renderLinks()}
+            </nav>
             <hr className="my-4 w-full bg-[#1E4B8E] h-[1px]" />
-            <DeleteDialogue open={isDeleteOpen} onOpenChange={setIsDeleteOpen} />
+            <DeleteDialogue
+              open={isDeleteOpen}
+              onOpenChange={setIsDeleteOpen}
+            />
             <LogoutDialogue open={isLogout} onOpenChange={setIsLogout} />
           </SheetContent>
         </Sheet>

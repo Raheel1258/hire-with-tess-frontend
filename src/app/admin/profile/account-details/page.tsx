@@ -1,37 +1,35 @@
-'use client';
-import CustomInputForm from '@/app/interview/component/customformInput';
-import { Button } from '@/components/ui/button';
-import { FormControl, FormField, FormItem, Form } from '@/components/ui/form';
+"use client";
+import CustomInputForm from "@/app/interview/component/customformInput";
+import { Button } from "@/components/ui/button";
+import { FormControl, FormField, FormItem, Form } from "@/components/ui/form";
 
 import {
   AccountDetailformSchema,
   AccountFormValidator,
-} from '@/schema/accountDetail.schema';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useRef } from 'react';
-import { useForm } from 'react-hook-form';
-import UseProfileInfo from '@/Routes/Employer/hooks/GET/profile/profileinfohook';
+} from "@/schema/accountDetail.schema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useRef } from "react";
+import { useForm } from "react-hook-form";
+import UseProfileInfo from "@/Routes/Employer/hooks/GET/profile/Profileinfo.hook";
 
 export default function UserAccountDetail() {
-
-  const {data:profileInfo} = UseProfileInfo();
+  const { data: profileInfo } = UseProfileInfo();
 
   const form = useForm<AccountFormValidator>({
     resolver: zodResolver(AccountDetailformSchema),
     defaultValues: {
-      firstname: '',
-      lastname: '',
-      organization: '',
-      email: '',
-      password: '',
-      
+      firstname: "",
+      lastname: "",
+      organization: "",
+      email: "",
+      password: "",
     },
   });
 
   const ref = useRef<HTMLFormElement>(null);
 
   const onSubmit = async (data: AccountFormValidator) => {
-    console.log("Profile data",data)
+    console.log("Profile data", data);
     // SignInMutation.mutate({
     //   first_name: data.firstname,
     //   last_name: data.lastname,
