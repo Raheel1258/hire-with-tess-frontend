@@ -16,7 +16,7 @@ import {
   Users,
 } from 'lucide-react';
 
-import useTokenStore from '@/store/Employee/auth.store';
+import useTokenStore from '@/store/Auth/auth.store';
 import React from 'react';
 
 const navItems = [

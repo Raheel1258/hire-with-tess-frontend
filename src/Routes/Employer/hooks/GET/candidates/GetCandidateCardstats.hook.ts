@@ -6,6 +6,5 @@ export default function UseDashboardCandidateCardStats() {
     queryKey: ['candidatestats'],
     queryFn: CandidateCardStats,
     refetchOnWindowFocus: true,
-    refetchInterval: 10000,
   });
 }

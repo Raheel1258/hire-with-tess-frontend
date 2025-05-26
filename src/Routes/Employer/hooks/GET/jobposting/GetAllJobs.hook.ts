@@ -6,6 +6,5 @@ export default function UseGetAllJob() {
     queryKey: ['jobs'],
     queryFn: GetAllJob,
     refetchOnWindowFocus: true,
-    refetchInterval: 10000,
   });
 }

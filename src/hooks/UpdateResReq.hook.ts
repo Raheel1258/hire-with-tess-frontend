@@ -1,5 +1,6 @@
 import { updateResReq } from '@/Routes/Client/Api/api.routes';
-import useHomeStore from '@/store/Employee/home.store';
+import useHomeStore from '@/store/Employer/home.store';
+import UpdateResponse from '@/Types/Employer/Updateresponse';
 import { useMutation } from '@tanstack/react-query';
 export default function useResReqSkillHook() {
   const { jobId } = useHomeStore();
@@ -8,18 +9,7 @@ export default function useResReqSkillHook() {
     mutationFn: ({
       data,
     }: {
-      data: {
-        job_description: string;
-        job_title: string;
-        job_type: string;
-        company_name: string;
-        location: string;
-        salary: string;
-        currency: string;
-        responsibilities: string[];
-        requirements: string[];
-        skills: string[];
-      };
+      data: UpdateResponse
     }) => updateResReq(jobId, data),
   });
 }

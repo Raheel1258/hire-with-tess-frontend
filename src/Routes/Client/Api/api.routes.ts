@@ -1,10 +1,12 @@
 import axios from 'axios';
 import { APIEndpoint } from '@/Routes/Client/Constant/endpoint.routes';
-import { SubmitInterviewPayload } from '@/Types/Employer/useresponse';
-import TypeInterviewLink from '@/Types/Employer/interviewlink.type';
-import EmployeeAuthStore from '@/store/Employee/auth.store';
+import { SubmitInterviewPayload } from '@/Types/EmployerDashboard/useresponse';
+import TypeInterviewLink from '@/Types/EmployerDashboard/interviewlink.type';
+import EmployeeAuthStore from '@/store/Auth/auth.store';
 import { useRecordingStore } from '@/store/candidate/Recording.store';
 import TypeUploadFile from '@/Types/Candidate/uploadfile';
+import AiResponse from '@/Types/EmployerDashboard/airesponse';
+import UpdateResponse from '@/Types/Employer/Updateresponse';
 
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BACKEND_URL,
@@ -13,15 +15,7 @@ const api = axios.create({
   },
 });
 
-export const GenerateJobDetails = async (data: {
-  job_description: string;
-  job_title: string;
-  job_type: string;
-  company_name: string;
-  location: string;
-  salary: string;
-  currency: string;
-}) => {
+export const GenerateJobDetails = async (data: AiResponse) => {
   const response = await api.post(APIEndpoint.GENERATE_JOB_DETAILS, data);
   return response.data;
 };
@@ -66,18 +60,7 @@ export const updateJobQuestions = async (job_id: string, questions: string[]) =>
 //Update Req ,Res & Skill
 export const updateResReq = async (
   job_id: string,
-  data: {
-    job_description: string;
-    job_title: string;
-    job_type: string;
-    company_name: string;
-    location: string;
-    salary: string;
-    currency: string;
-    responsibilities: string[];
-    requirements: string[];
-    skills: string[];
-  },
+  data:UpdateResponse
 ) => {
   const response = await api.put(APIEndpoint.UPDATE_RES_REQ(job_id), data);
   return response.data;

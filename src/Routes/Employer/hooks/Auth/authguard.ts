@@ -9,5 +9,5 @@ export default function useAuthGuard() {
     if (!token) {
       router.push('/login');
     }
-  }, []);
+  }, [router]);
 }

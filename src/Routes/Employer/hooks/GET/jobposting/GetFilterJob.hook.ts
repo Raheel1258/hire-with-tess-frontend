@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { FilteredJob } from '@/Routes/Employer/Api/employer.route';
-import { JobFilterType } from '@/Types/Employer/jobfilter';
+import { JobFilterType } from '@/Types/EmployerDashboard/jobfilter';
 
 export default function UseGetFilteredJob(filters: JobFilterType) {
   return useQuery({

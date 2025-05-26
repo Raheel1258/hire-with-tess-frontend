@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
-import { UpdateInterviewStatusByID } from '../../Api/employer.route';
+import { UpdateInterviewStatusByID } from '@/Routes/Employer/Api/employer.route';
 
 export default function UseUpdateInterviewStatus() {
   const queryClient = useQueryClient();

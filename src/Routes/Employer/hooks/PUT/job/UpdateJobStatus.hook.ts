@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { UpdateJobStatusByID } from '../../Api/employer.route';
+import { UpdateJobStatusByID } from '@/Routes/Employer/Api/employer.route';
 import { toast } from 'sonner';
 
 export default function UseUpdateJobStatus() {

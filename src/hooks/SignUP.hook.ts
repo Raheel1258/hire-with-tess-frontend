@@ -3,7 +3,7 @@ import { SignUp } from '@/Routes/Client/Api/api.routes';
 import { useParams, useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { AxiosError } from 'axios';
-import EmployeeAuthStore from '@/store/Employee/auth.store';
+import EmployeeAuthStore from '@/store/Auth/auth.store';
 
 
 export default function useSignupMutation() {

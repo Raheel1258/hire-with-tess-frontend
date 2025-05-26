@@ -1,7 +1,7 @@
 'use client';
 import Header from '@/app/employer/(dashboard)/components/header';
 import Sidebar from '@/app/employer/(dashboard)/components/sidebar';
-import EmployeeAuthStore from '@/store/Employee/auth.store';
+import EmployeeAuthStore from '@/store/Auth/auth.store';
 import { employeeSidebarLinks } from '../Constant/sidebaritem';
 
 export default function DashboardBussinessLayout({

@@ -5,7 +5,7 @@ import React, { useEffect } from 'react';
 import ReactQueryProvider from '@/Utils/Providers/ReactQueryprovider';
 import CustomToast from '@/app/employer/(dashboard)/components/customtoast';
 import { useRouter } from 'next/navigation';
-import EmployeeAuthStore from '@/store/Employee/auth.store';
+import EmployeeAuthStore from '@/store/Auth/auth.store';
 
 export default function EmployeeRootLayout({ children }: { children: React.ReactNode }) {
   //   const router = useRouter();

@@ -5,7 +5,7 @@ import Image from 'next/image';
 import React from 'react';
 import useGoogleLoginHook from '@/hooks/GoogleLogin.hook';
 import { GoogleOAuthProvider, useGoogleLogin } from '@react-oauth/google';
-import useHomeStore from '@/store/Employee/home.store';
+import useHomeStore from '@/store/Employer/home.store';
 
 export default function Signup() {
   const GoogleLoginMutation = useGoogleLoginHook();
@@ -13,16 +13,16 @@ export default function Signup() {
   const jobId = useHomeStore((state) => state.jobId);
   
   const login = useGoogleLogin({
-    // onSuccess: (codeResponse) => {
-    //   const code = codeResponse.code;
-    //   console.log("code",code)
-    //   window.location.href = `/auth/callback?code=${code}`;
-    // },
-    // onError: () => {
-    //   alert('Google login failed');
-    // },
-    // flow: 'auth-code',
-    // redirect_uri: 'http://localhost:3000/auth/callback',
+    onSuccess: (codeResponse) => {
+      const code = codeResponse.code;
+      console.log("code",code)
+      window.location.href = `/auth/callback?code=${code}`;
+    },
+    onError: () => {
+      alert('Google login failed');
+    },
+    flow: 'auth-code',
+    redirect_uri: 'http://localhost:3000/auth/callback/google',
   });
 
   return (

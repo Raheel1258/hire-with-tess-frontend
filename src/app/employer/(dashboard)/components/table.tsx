@@ -54,7 +54,7 @@ export default function TableComponent({
                 {row.map((cell, cellIndex) => (
                   <TableCell
                     key={cellIndex}
-                    className="font-normal font-open-sans whitespace-nowrap"
+                    className="font-normal font-open-sans whitespace-nowrap "
                   >
                     {cell}
                   </TableCell>

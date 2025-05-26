@@ -5,33 +5,52 @@ import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import { setAuthToken } from '@/Utils/Providers/auth';
 
+
 interface LoginResponse {
   access_token: string;
   token_type: string;
+  role: string;
 }
 
-export default function LoginInMutation() {
+interface LoginPayload {
+  email: string;
+  password: string;
+}
+
+export default function useLoginMutation() {
   const router = useRouter();
 
-  return useMutation<LoginResponse, AxiosError, { email: string; password: string }>({
-    mutationFn: ({ email, password }) => EmployerLogin({ email, password }),
-    onSuccess: async (data) => {
-      if (!data.access_token) {
-        toast.error('You are Not Authenticated');
+  return useMutation<LoginResponse, AxiosError<{ detail?: string }>, LoginPayload>({
+    mutationFn: EmployerLogin,
+    onSuccess: (data) => {
+      const { access_token, role } = data;
+
+      if (!access_token) {
+        toast.error('You are not authenticated.');
         return;
       }
-      setAuthToken(data.access_token);
+      setAuthToken(access_token,role);
+
       toast.success('Sign in successful', {
-        description: 'Welcome back!',
+        description: 'Welcome to Dashboard!',
       });
-      router.push('/employer/home');
-    },    
+
+      switch (role) {
+        case 'admin':
+          router.push('/employer/home');
+          break;
+        case 'superadmin':
+          router.push('/admin/home');
+          break;
+        default:
+          toast.error('Your are Not Allowed');
+          break;
+      }
+    },
     onError: (error) => {
-      const axiosError = error as AxiosError<{ detail: string }>;
-      toast.error('SignIn Failed', {
-        description:
-          axiosError.response?.data?.detail || 'An error occurred during signIn.',
-      });
+      const errorMessage =
+        error.response?.data?.detail || 'An unexpected error occurred during sign-in.';
+      toast.error('Sign-in failed', { description: errorMessage });
     },
   });
 }

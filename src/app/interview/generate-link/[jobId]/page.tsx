@@ -6,12 +6,12 @@ import { Copy, Download, Share2 } from 'lucide-react';
 import useFetchInterviewLink from '@/hooks/FetchInterviewLink.hook';
 import { toast } from 'sonner';
 import SocialShare from '@/app/interview/component/share';
-import { useToggleStore } from '@/store/Employee/Toggle.store';
+import { useToggleStore } from '@/store/Employer/Toggle.store';
 import QRCode from 'react-qr-code';
 import { useParams } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { useEffect } from 'react';
-import EmployeeAuthStore from '@/store/Employee/auth.store';
+import EmployeeAuthStore from '@/store/Auth/auth.store';
 
 export default function GenerateLink() {
 

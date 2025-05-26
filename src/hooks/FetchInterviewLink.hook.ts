@@ -1,6 +1,6 @@
 import { GenerateInterviewLink } from '@/Routes/Client/Api/api.routes';
 import { useQuery } from '@tanstack/react-query';
-import EmployeeAuthStore from '@/store/Employee/auth.store';
+import EmployeeAuthStore from '@/store/Auth/auth.store';
 
 export default function useFetchInterviewLink(job_id: string) {
   const { accessToken } = EmployeeAuthStore();

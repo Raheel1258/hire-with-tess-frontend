@@ -7,14 +7,17 @@ import { Button } from "@/components/ui/button";
 import Videopreviewdialogue from "./videopreviewdialogue";
 import { CirclePlay } from "lucide-react";
 import { useState } from "react";
+import UseUpdateInterviewStatus from "@/Routes/Employer/hooks/PUT/overview/UpdateInterviewStatus.hook";
+import  UserProfileProps  from "@/Types/EmployerDashboard/Dashboard/profile/userprofile.type";
 
-export default function UserProfile({ data }: { data: any }) {
+export default function UserProfile({ data }:any) {
 
   const [openVideoURL, setOpenVideoURL] = useState<string | null>(null);
 
   if (!data) return null;
   const answers = data.answers;
   const questions = Object.keys(answers || {});
+  const updatejobstatus = UseUpdateInterviewStatus();
 
   return (
 
@@ -33,37 +36,65 @@ export default function UserProfile({ data }: { data: any }) {
             )}
           </Avatar>
 
-          <Card className="w-full lg:w-3xl h-auto lg:h-35">
-            <CardContent className="flex flex-col md:flex-row text-[#505050] justify-between gap-2">
-              <div className="flex flex-col text-[14px] font-[roboto] font-bold gap-1">
-                <h1>Name</h1>
-                <h1>Interview Status</h1>
-                <h1>AI Rating</h1>
+          <Card className="w-full lg:w-3xl h-auto">
+            <CardContent className="w-xl flex flex-col md:flex-row text-[#505050] justify-between gap-4 p-4">
+
+              <div className="flex flex-col text-[14px] font-[roboto] font-bold gap-2">
+                <div className="flex flex-col sm:flex-row sm:items-center gap-1">
+                  <h1>Name:</h1>
+                  <h1 className="font-normal sm:ml-2">{data.candidate_name}</h1>
+                </div>
+                <div className="flex flex-col sm:flex-row sm:items-center gap-1">
+                  <h1>Status:</h1>
+                  <h1 className="font-normal sm:ml-2">{data.status}</h1>
+                </div>
+                <div className="flex flex-col sm:flex-row sm:items-center gap-1">
+                  <h1>AI Rating:</h1>
+                  <h1 className="font-normal sm:ml-2">{data.ai_score }</h1>
+                </div>
               </div>
-              <div className="flex flex-col text-[#505050] text-[14px] font-[open Sans] gap-2">
-                <h1>{data.candidate_name}</h1>
-                <h1>{data.status}</h1>
-                <h1>81%</h1>
-              </div>
-              <div className="flex flex-col text-[14px] font-[roboto] font-bold gap-">
-                <h1>Job Applied For</h1>
-                <h1>Interview Date</h1>
-              </div>
-              <div className="flex flex-col text-[#505050] text-[14px] font-[open Sans] gap-2">
-                <h1>{data.job_title}</h1>
-                <h1>{new Date(data.created_at).toLocaleDateString()}</h1>
+
+              <div className="flex flex-col text-[14px] font-[roboto] font-bold gap-2">
+                <div className="flex flex-col sm:flex-row sm:items-center gap-1">
+                  <h1>Applied For:</h1>
+                  <h1 className="font-normal sm:ml-2 truncate">{data.job_title}</h1>
+                </div>
+                <div className="flex flex-col sm:flex-row sm:items-center gap-1">
+                  <h1>Interview Date:</h1>
+                  <h1 className="font-normal sm:ml-2">
+                    {new Date(data.created_at).toLocaleDateString()}
+                  </h1>
+                </div>
               </div>
             </CardContent>
           </Card>
 
-          <div className="flex flex-row lg:flex-col gap-4 items-center justify-center">
-            <Button className="w-full lg:w-50 sm:w-30 bg-[#1E4B8E] hover:bg-[#1E4B8E] cursor-pointer h-[50px] text-white">
-              Hire
+
+          <div className="flex flex-col sm:flex-row lg:flex-col gap-4 items-center justify-center w-full px-4">
+            <Button
+              disabled={updatejobstatus.isPending}
+              onClick={() => updatejobstatus.mutate({
+                interview_id: data.id,
+                status: "hire"
+              })}
+              className="w-full sm:w-1/2 lg:w-40 bg-[#1E4B8E] hover:bg-[#1E4B8E] cursor-pointer h-[50px] text-white"
+            >
+              Shortlisted
             </Button>
-            <Button className="w-full lg:w-50 sm:w-30 bg-[#F55141] hover:bg-[#F55141] cursor-pointer h-[50px] text-white">
+            <Button
+              disabled={updatejobstatus.isPending}
+              onClick={() => updatejobstatus.mutate(
+                {
+                  interview_id: data.id,
+                  status: "reject"
+                })}
+              className="w-full sm:w-1/2 lg:w-40 bg-[#F55141] hover:bg-[#F55141] cursor-pointer h-[50px] text-white"
+            >
               Reject
             </Button>
           </div>
+
+
         </div>
 
         <div className="p-4">
@@ -77,10 +108,10 @@ export default function UserProfile({ data }: { data: any }) {
             const answer = answers[question];
 
             return (
-              <InputBox key={index} label={`Question ${index + 1}`}>
-                <p className="w-full font-normal text-[14px]">{question}</p>
+              <InputBox key={index} label={`Question ${index + 1}`} >
+                <p className="w-full font-normal text-[14px]">{question}</p>            
                 <div className="rounded-full p-3 border mt-6 w-full">
-                  <div className="flex items-center gap-2 w-full">
+                  <div className="flex items-center gap-2 ">
                     {answer?.type === 'audio' && (
                       <Waveform recordedVoiceURL={answer.url} />
                     )}

@@ -108,7 +108,7 @@ export default function CandidatesDetails() {
                     </div>
                   ) : (
                     <FormLabel className="text-[#1E4B8E] border h-10 p-1 rounded ">
-                      Upload Profile Picture
+                      Upload Resume
                     </FormLabel>
                   )}
 

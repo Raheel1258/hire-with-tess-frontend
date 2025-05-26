@@ -11,7 +11,7 @@ import UseProfileInfo from '@/Routes/Employer/hooks/GET/profile/profileinfohook'
 import RedirectToDashboard from '../components/breadcrumb';
 import UseUpdateProfileHook from '@/Routes/Employer/hooks/PUT/profile/updateprofiehook';
 import { UserPen } from 'lucide-react';
-import { useSkillStore } from '@/store/Employee/InputStore';
+import { useSkillStore } from '@/store/Employer/InputStore';
 
 export default function UserAccountDetail() {
   const { data: profileInfo } = UseProfileInfo();

@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import { Check, Pencil, X } from 'lucide-react';
-import { useSkillStore } from '@/store/Employee/InputStore';
+import { useSkillStore } from '@/store/Employer/InputStore';
 import useUpdateJobQuestion from '@/hooks/UpdateJobQuestion.hook';
 import React, { useState } from 'react';
 import { Textarea } from '@/components/ui/textarea';

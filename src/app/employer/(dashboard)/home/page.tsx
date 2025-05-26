@@ -18,44 +18,90 @@ import UserProfile from '../components/candiateprofile';
 import HomeTableTile from '../Constant/hometitle';
 import { Button } from '@/components/ui/button';
 import AnalyzeInterviewHook from '@/Routes/Employer/hooks/POST/analyzeInterview';
+import { Loader } from 'lucide-react';
+import { toast } from 'sonner';
+import Link from 'next/link';
+import OverviewStore from '@/store/EmployeeDashboard/dashboard/overview/overview.store';
+
 
 export default function DashboardHome() {
 
   const { data: interviewCardData } = UseDashboardCardStats();
   const { data: DashboardTableData } = UseGetAllInterview();
-  console.log(DashboardTableData)
-
-
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [selectedCandidate, setSelectedCandidate] = useState(null);
   const Interviewmutation = AnalyzeInterviewHook();
 
+  const {selectedCandidate,analyzingInterviewId,isDialogOpen,setAIResult,setSelectedCandidate
+    ,setAnalyzingInterviewId,setAIReportDialogOpen,setIsDialogOpen,} = OverviewStore();
+
+  const handleButtonClick = () => {
+    window.open('https://hire-with-tess-frontend.vercel.app/', '_blank', 'noopener,noreferrer');
+  };
+
   const DATA =
-  DashboardTableData?.items?.map((item: any) => [
-    <div key={`actions-${item.id}`} className="flex gap-2 items-center">
-      <Eye
-        onClick={() => {
-          setSelectedCandidate(item);
-          setIsDialogOpen(true);
-        }}
-        className="w-5 h-5 text-gray-600 cursor-pointer"
-      />
-      <Button
-        size="sm"
-        className="text-xs"
-        onClick={() => Interviewmutation.mutate({ interview_id: item.id })}
-      >
-        Analyze
-      </Button>
-    </div>,
-    item.candidate_name,
-    item.job_title,
-    new Date(item.created_at).toLocaleDateString(),
-    <Badge key={item.status} className="bg-green-100 text-green-800">
-      {item.status}
-    </Badge>,
-    item.ai_score,
-  ]) || [];
+    DashboardTableData?.items?.map((item: any) => [
+      <div key={`actions-${item.id}`} className="flex gap-2 items-center">
+        <Eye
+          onClick={() => {
+            setSelectedCandidate(item);
+            setIsDialogOpen(true);
+          }}
+          className="w-5 h-5 text-gray-600 cursor-pointer"
+        />
+
+      </div>,
+      item.candidate_name,
+      item.job_title,
+      new Date(item.created_at).toLocaleDateString(),
+
+      item.status === "reject" ? (
+        <Badge key={`status-${item.status}`} className="capitalize bg-red-100 text-red-800">
+          {item.status}
+        </Badge>
+      ) : item.status === "pending" ? (
+        <Badge key={`status-${item.status}`} className="capitalize bg-yellow-100 text-[#f7941D]">
+          {item.status}
+        </Badge>
+      ) : (
+        <Badge key={`status-${item.status}`} className="capitalize bg-green-100 text-green-800">
+          {item.status}
+        </Badge>
+      ),
+
+      item.ai_score === null ? (
+        analyzingInterviewId === item.id ? (
+          <Loader className="w-4 h-4 animate-spin text-[#f7941D] mx-auto" />
+        ) : (
+          <Button
+            size="sm"
+            className="text-xs"
+            onClick={() => {
+              setAnalyzingInterviewId(item.id);
+              Interviewmutation.mutate(
+                { interview_id: item.id },
+                {
+                  onSuccess: (response) => {
+                    setAIResult(response?.final_report);
+                    setAIReportDialogOpen(true);
+                    setAnalyzingInterviewId('');
+                  },
+                  onError: (error) => {
+                    toast.error('AI analysis failed', {
+                      description: error.message
+                    });
+                    setAnalyzingInterviewId('');
+                  },
+                }
+              );
+            }}
+          >
+            Analyze
+          </Button>
+        )
+      ) : (
+        <Badge className="bg-[#f7941D] text-white">{item.ai_score}</Badge>
+      )
+
+    ]) || [];
 
 
 
@@ -67,14 +113,20 @@ export default function DashboardHome() {
             <DialogTitle>Interview Details</DialogTitle>
             <DialogDescription>
             </DialogDescription>
-            </DialogHeader>
-          <UserProfile 
-          data={selectedCandidate} />
+          </DialogHeader>
+          <UserProfile
+            data={selectedCandidate} />
           <DialogClose asChild></DialogClose>
         </DialogContent>
       </Dialog>
       <div>
-        <h1 className="text-[24px] font-[roboto] font-semibold ml-2 mb-4">Overview</h1>
+        <div className='flex flex-row justify-between'>
+          <h1 className="text-[24px] font-[roboto] font-semibold ml-2 mb-4">Overview</h1>
+          <Button
+            onClick={handleButtonClick}
+            className='font-semibold'>Posted a New Job</Button>
+        </div>
+
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 w-full">
           <CardComponent
             heading="Open Job Listings"
@@ -103,7 +155,6 @@ export default function DashboardHome() {
             {' '}
             Latest Interview
           </h1>
-        
           <TableComponent
             header={HomeTableTile}
             subheader={DATA}

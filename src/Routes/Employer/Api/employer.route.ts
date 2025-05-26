@@ -2,8 +2,8 @@ import axios from 'axios';
 import { EMPLOYERAPI } from '../Constant/employer-endpoint.route';
 import { toast } from 'sonner';
 import { clearAuthToken } from '@/Utils/Providers/auth';
-import { ProfileInfoType } from '@/Types/Employer/profileinfo';
-import { JobFilterType } from '@/Types/Employer/jobfilter';
+import { ProfileInfoType } from '@/Types/EmployerDashboard/profileinfo';
+import { JobFilterType } from '@/Types/EmployerDashboard/jobfilter';
 
 
 const api = axios.create({
@@ -15,7 +15,6 @@ const api = axios.create({
 
 api.interceptors.request.use((config) => {
 const token = localStorage.getItem('accessToken');
-  // const token = getAuthToken();
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     } 
@@ -130,7 +129,7 @@ export const DashboardCardStats = async () => {
 export const CandidateCardStats = async () => {
   const response = await api.get(EMPLOYERAPI.CANDIDATE_CARD_STATS);
   return response.data;
-};
+};    
 
 //Job card stats
 export const JobCardStats = async () => {

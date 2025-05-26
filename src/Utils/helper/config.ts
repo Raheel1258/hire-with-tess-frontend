@@ -2,11 +2,11 @@ interface Config {
   baseUrl: string;
 }
 const checkConfig = (server: string): Config | object => {
-  let config: Config | {} = {};
+  let config: Config | object = {};
   switch (server) {
     case 'production':
       config = {
-        baseUrl: 'https://hire-with-tess-frontend-mf6h.vercel.app',
+        baseUrl: 'https://hire-with-tess-frontend.vercel.app',
       };
       break;
     case 'local':

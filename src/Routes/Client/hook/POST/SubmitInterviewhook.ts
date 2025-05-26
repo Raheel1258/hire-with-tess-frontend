@@ -1,7 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
 import { SubmitInterview } from '@/Routes/Client/Api/api.routes';
 import { toast } from 'sonner';
-import { SubmitInterviewPayload } from '@/Types/Employer/useresponse';
+import { SubmitInterviewPayload } from '@/Types/EmployerDashboard/useresponse';
 import { useRouter } from 'next/navigation';
 import { AxiosError } from 'axios';
 

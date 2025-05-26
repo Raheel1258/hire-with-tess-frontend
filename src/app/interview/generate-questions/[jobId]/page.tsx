@@ -32,14 +32,17 @@ export default function Questionnaire() {
         description="Review, Edit, or regenerate questions before finalizing your interview"
       >
         <div className="flex flex-col w-full h-full items-center text-center space-y-4">
-          {response.length > 0 ? (
+          {/* {
+          response.length > 0 ? ( */}
             <Question questions={response} />
-          ) : (
-            <NoQuestion
-              title="No Questions Available"
-              description="Kindly Click on the Generate Button below to generate Interview questions"
-            />
-          )}
+          {/* // ) : 
+          // ( */}
+            {/* <NoQuestion */}
+            {/* //   title="No Questions Available"
+            //   description="Kindly Click on the Generate Button below to generate Interview questions"
+            // />
+          // )
+          // } */}
 
           <div className="mt-auto flex justify-center mb-2   ">
             {response.length > 0 ? (

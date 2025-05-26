@@ -10,9 +10,9 @@ import {
   SelectItem,
 } from '@/components/ui/select';
 import FormControl from '@mui/material/FormControl';
-import { useSkillStore } from '@/store/Employee/InputStore';
+import { useSkillStore } from '@/store/Employer/InputStore';
 import React, { useRef } from 'react';
-import { useToggleStore } from '@/store/Employee/Toggle.store';
+import { useToggleStore } from '@/store/Employer/Toggle.store';
 import { Eye, EyeOff } from 'lucide-react';
 
 interface CustomInputProps {

@@ -3,9 +3,8 @@ import { Card } from '@/components/ui/card';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Check, Pencil, X } from 'lucide-react';
-import { useSkillStore } from '@/store/Employee/InputStore';
+import { useSkillStore } from '@/store/Employer/InputStore';
 import useResReqHook from '@/hooks/UpdateResReq.hook';
-import useHomeStore from '@/store/Employee/home.store';
 import { toast } from 'sonner';
 import { Input } from '@/components/ui/input';
 
@@ -43,8 +42,8 @@ export default function OutputCard({
   const [editedReq, setEditedReq] = useState<string>(req.join('\n'));
 
   const ReqResMutation = useResReqHook();
-  const { jobDescription, jobTitle, jobType, companyName, salary, location, currency } =
-    useHomeStore();
+  // const { jobDescription, jobTitle, jobType, companyName, salary, location, currency } =
+  //   useHomeStore();
 
   const { isEditable, setIsEditable } = useSkillStore();
 
@@ -81,13 +80,13 @@ export default function OutputCard({
     }
     ReqResMutation.mutate({
       data: {
-        job_description: jobDescription,
-        job_title: jobTitle,
-        job_type: jobType,
-        company_name: companyName,
-        location: location,
-        salary: salary,
-        currency: currency,
+        // job_description: jobDescription,
+        // job_title: jobTitle,
+        // job_type: jobType,
+        // company_name: companyName,
+        // location: location,
+        // salary: salary,
+        // currency: currency,
         skills: skills,
         responsibilities: updatedRes,
         requirements: updatedReq,
@@ -100,11 +99,11 @@ export default function OutputCard({
     <div className={`flex flex-col gap-4  ${containerPadding}`}>
       {showHeading && (
         <h1 className="font-roboto font-semibold text-[20px] leading-[30px]">
-          Ai Powered Description
+          Ai Powered Response
         </h1>
       )}
 
-      <div className="flex items-start gap-6">
+      <div className="flex items-start gap-6 mt-4">
         {showAvatar && (
           <Image src={avatarSrc} alt="bot" width={40} height={40} className="shrink-0" />
         )}
@@ -219,7 +218,7 @@ export default function OutputCard({
                   <>
                     <Input
                       value={item}
-                      readOnly
+                      // readOnly
                       className="w-full sm:w-auto pr-10 border-[#E2E8F0] rounded-3xl text-black cursor-not-allowed font-openSans"
                     />
                     <button

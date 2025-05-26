@@ -2,12 +2,12 @@
 import { Card } from '@/components/ui/card';
 import { Form, FormField, FormItem } from '@/components/ui/form';
 import { Button } from '@/components/ui/button';
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { customformSchema, FormValidator } from '@/schema/customform.schema';
 import Image from 'next/image';
-import useHomeStore from '@/store/Employee/home.store';
+import useHomeStore from '@/store/Employer/home.store';
 import Link from 'next/link';
 import OutputCard from './component/outputCard';
 import NoQuestion from './component/emptycard';
@@ -15,54 +15,66 @@ import GenerateResponse from '@/hooks/GenerateResponse.hook';
 import InterviewLayout from '@/components/layout/InterviewLayout';
 import CustomInputForm from '@/app/interview/component/customformInput';
 import { Check, Pencil } from 'lucide-react';
-import { useSkillStore } from '@/store/Employee/InputStore';
+import { useSkillStore } from '@/store/Employer/InputStore';
+import useGenerateResponse from '@/hooks/generateResponse.hook';
+import GenerateQuestionResponse from '@/hooks/GenerateQuestion.hook';
 
 export default function InterviewForm() {
-  const { jobDescription, jobTitle, jobType, companyName, location, salary } =
-    useHomeStore();
+  // const { jobDescription, jobTitle, jobType, companyName, location, salary } =
+  //   useHomeStore();
+
+  const jobrequirements = useHomeStore((state) => state.requirements )
+  const jobresponsibilities = useHomeStore((state) => state.responsibilities )
+  const skills = useHomeStore((state) => state.skills )
+//  const {requirements,responsibilities,skills} = useHomeStore();
+
   const jobId = useHomeStore((state) => state.jobId);
 
-  const { isEditDescription, setIsEditableDescription } = useSkillStore();
-  const form = useForm<FormValidator>({
-    resolver: zodResolver(customformSchema),
-    defaultValues: {
-      jobDescription: jobDescription || '',
-      jobTitle: jobTitle || '',
-      jobType: jobType || '',
-      companyName: companyName || '',
-      location: location || '',
-      salary: salary || '',
-    },
-  });
-  const ref = useRef<HTMLFormElement>(null);
-  const generateMutation = GenerateResponse();
+  const questionMutation = GenerateQuestionResponse();
 
-  const onSubmit = async (data: FormValidator) => {
-    generateMutation.mutate({
-      job_description: data.jobDescription,
-      job_title: data.jobTitle,
-      job_type: data.jobType,
-      company_name: data.companyName,
-      location: data.location,
-      salary: data.salary,
-      currency: data.currency,
-    });
-  };
+  // const { isEditDescription, setIsEditableDescription } = useSkillStore();
 
-  const responseData = generateMutation.data || null;
+  // const form = useForm<FormValidator>({
+  //   resolver: zodResolver(customformSchema),
+  //   defaultValues: {
+  //     jobDescription: jobDescription || '',
+  //     jobTitle: jobTitle || '',
+  //     jobType: jobType || '',
+  //     companyName: companyName || '',
+  //     location: location || '',
+  //     salary: salary || '',
+  //   },
+  // });
+  // const ref = useRef<HTMLFormElement>(null);
+  // const generateMutation = GenerateResponse();
 
-  const handleEditDescription = () => {
-    setIsEditableDescription(true);
-  };
+  // const onSubmit = async (data: FormValidator) => {
+  //   generateMutation.mutate({
+  //     job_description: data.jobDescription,
+  //     job_title: data.jobTitle,
+  //     job_type: data.jobType,
+  //     company_name: data.companyName,
+  //     location: data.location,
+  //     salary: data.salary,
+  //     currency: data.currency,
+  //   });
+  // };
 
-  const UpdateJobDescription = () => {
-    setIsEditableDescription(false);
-  };
+
+  // const handleEditDescription = () => {
+  //   setIsEditableDescription(true);
+  // };
+
+  // const UpdateJobDescription = () => {
+  //   setIsEditableDescription(false);
+  // };
 
   return (
     <>
-      <InterviewLayout showGoogleLogin={false} useCard={false}>
-        <div className=" text-center pt-10 pb-10 w-full ">
+      <InterviewLayout
+      description='Your AI-powered Job breakdown — sharp, clear, and ready to impress.'
+      showGoogleLogin={false} useCard={false}>
+        {/* <div className=" text-center pt-10 pb-10 w-full ">
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(onSubmit)}
@@ -186,9 +198,39 @@ export default function InterviewForm() {
               </Button>
             </form>
           </Form>
-        </div>
+        </div> */}
+         {/* <div className=" sm:p-18 p-6 "> */}
+        {/* <Card className="  w-full rounded-4xl shadow-xl "> */}
+          {/* {responseData ? ( */}
+            <>
+              <OutputCard
+              
+                req={jobrequirements }
+                res={jobresponsibilities}
+                skill={skills }
+              />
+
+              {/* <div className="my-2 flex justify-center">
+                <Button
+                  disabled={generateMutation.isPending}
+                  onClick={() => onSubmit(form.getValues())}
+                  className="bg-transparent text-black hover:text-white  border border-gray-400 hover:border-none rounded-2xl flex items-center justify-center"
+                >
+                  {generateMutation.isPending
+                    ? 'Regenerating.....'
+                    : 'Regenerate response'}
+                </Button>
+              </div> */}
+            </>
+          {/* ) : 
+          (
+            <NoQuestion />
+          )
+          } */}
+        {/* </Card> */}
+      {/* </div> */}
       </InterviewLayout>
-      <div className=" sm:p-18 p-6 ">
+      {/* <div className=" sm:p-18 p-6 ">
         <Card className="  w-full rounded-4xl shadow-xl ">
           {responseData ? (
             <>
@@ -214,9 +256,9 @@ export default function InterviewForm() {
             <NoQuestion />
           )}
         </Card>
-      </div>
+      </div> */}
 
-      {responseData ? (
+      {/* {responseData ? ( */}
         <div className="flex justify-end mr-16  sm:justify-end items-center mt-6 mb-4 sm:mr-18 gap-4">
           <Link href="/">
             <Button
@@ -229,13 +271,13 @@ export default function InterviewForm() {
           </Link>
           <Link href={`/interview/generate-questions/${jobId}`}>
             <Button type="submit" className="w-full sm:w-auto cursor-pointer">
-              Next Step
+            Generate Question
             </Button>
           </Link>
         </div>
-      ) : (
+      {/* ) : (
         <div className="flex justify-end mr-16  sm:justify-end items-center mt-6 mb-4 sm:mr-18 gap-4"></div>
-      )}
+      )} */}
     </>
   );
 }

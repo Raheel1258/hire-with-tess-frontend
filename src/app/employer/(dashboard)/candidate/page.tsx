@@ -1,5 +1,5 @@
 'use client';
-import { BriefcaseBusiness, Eye, Users } from 'lucide-react';
+import { BriefcaseBusiness, Eye, Loader, Users } from 'lucide-react';
 import CardComponent from '../components/card';
 import TableComponent from '../components/table';
 import { Badge } from '@/components/ui/badge';
@@ -10,17 +10,22 @@ import { useState } from 'react';
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import UserProfile from '@/app/employer/(dashboard)/components/candiateprofile';
 import CandidateTableTitle from '../Constant/candiatetitle';
+import { Button } from '@/components/ui/button';
+import AnalyzeInterviewHook from '@/Routes/Employer/hooks/POST/analyzeInterview';
 
 export default function CandidatePage() {
 
   const { data: candidatestats } = UseDashboardCandidateCardStats();
   const { data: CandidateTableData } = UseGetAllInterview();
+  const Interviewmutation = AnalyzeInterviewHook();
 
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedCandidate, setSelectedCandidate] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
-
+  const [analyzingInterviewId, setAnalyzingInterviewId] = useState<string | null>(null);
+  const [aiResult, setAIResult] = useState(null);
+  
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
   };
@@ -31,19 +36,68 @@ export default function CandidatePage() {
 
 
   const DATA = (filteredJobs ?? []).map((item: any) => [
-    <Eye onClick={() => { setSelectedCandidate(item);
-      setIsDialogOpen(true);}}
-      key={item.id}
+
+    <Eye
+      onClick={() => {
+        setSelectedCandidate(item);
+        setIsDialogOpen(true);
+      }}
+      key={`eye-${item.id}`}
       className="w-5 h-5 text-tess-gray cursor-pointer"
     />,
     item?.candidate_name,
     item?.job_title,
-    item?.created_at,
-    <Badge key={'status'} variant="outline" className="bg-tess-green/10 text-tess-green">
-      {item?.status}
-    </Badge>,
-    item?.ai_score,
+    new Date(item.created_at).toLocaleDateString(),
+
+    item.status === "reject" ? (
+      <Badge key={`status-${item.status}`} className="capitalize bg-red-100 text-red-800">
+        {item.status}
+      </Badge>
+    ) : item.status === "pending" ? (
+      <Badge key={`status-${item.status}`} className="capitalize bg-yellow-100 text-[#f7941D]">
+        {item.status}
+      </Badge>
+    ) : (
+      <Badge key={`status-${item.status}`} className="capitalize bg-green-100 text-green-800">
+        {item.status}
+      </Badge>
+    ),
+  
+    item.ai_score === null ? (
+      analyzingInterviewId === item.id ? (
+        <Loader className="w-4 h-4 animate-spin text-[#f7941D] mx-auto" />
+      ) : (
+        <Button
+          size="sm"
+          className="text-xs"
+          onClick={() => {
+            setAnalyzingInterviewId(item.id);
+            Interviewmutation.mutate(
+              { interview_id: item.id },
+              {
+                onSuccess: (response) => {
+                  setAIResult(response?.final_report);
+                  setAIReportDialogOpen(true);
+                  setAnalyzingInterviewId(null);
+                },
+                onError: (error) => {
+                  toast.error('AI analysis failed', {
+                    description: error.message
+                  });
+                  setAnalyzingInterviewId(null);
+                },
+              }
+            );
+          }}
+        >
+          Analyze
+        </Button>
+      )
+    ) : (
+      <Badge className="bg-[#f7941D] text-white">{item.ai_score}</Badge>
+    )
   ]);
+  
   return (
     <>
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>

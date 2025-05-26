@@ -1,8 +1,6 @@
 'use client';
-
 import {  useRouter } from 'next/navigation';
 import { BellIcon } from 'lucide-react';
-import { Input } from '@/components/ui/input';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import UseProfileInfo from '@/Routes/Employer/hooks/GET/profile/profileinfohook';
 
@@ -12,23 +10,12 @@ export default function Header() {
 
   return (
     <div className="bg-white flex justify-between h-18 mb-8 p-6">
-      <div className="font-[Space Grotesk] text-[20px]">Hirewithtess</div>
-
-      {/* Right Section */}
+      <div className="font-[Space Grotesk] text-[20px]">{profileInfo?.organization_name}</div>
       <div className="flex gap-2 items-center">
-        <div className="relative">
-          <Input
-            type="search"
-            placeholder="Search"
-            className="pl-8 w-full md:w-2/3 lg:w-[300px]"
-          />
-        </div>
 
         <div className="bg-[#A2A1A81A] w-[50px] h-12 rounded-xl flex items-center justify-center">
           <BellIcon />
         </div>
-
-        {/* Profile */}
         <div
           onClick={() => router.push('/employer/profile/account-details')}
           className="flex w-full sm:w-[184px] h-[50px] border rounded-lg items-center cursor-pointer hover:bg-gray-100 transition"

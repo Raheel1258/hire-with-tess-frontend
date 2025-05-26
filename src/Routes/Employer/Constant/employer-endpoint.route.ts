@@ -11,9 +11,9 @@ export const EMPLOYERAPI = {
   INTERVIEW_DETAILS: `/api/v1/admin/interviews`,
   JOB_INTERVIEW_BYID: (job_id: string) => `/api/v1/admin/jobs/${job_id}/interviews`,
   INTERVIEW_DETAIL_BYID: (interview_id: string) =>
-    `/api/v1/admin/interviews/${interview_id}`,
+    `/api/v1/admin/interview/${interview_id}`,
   UPDATE_INTERVIEW_STATUS_BYID: (interview_id: string) =>
-    `/api/v1/admin/interviews/${interview_id}/status`,
+    `/api/v1/admin/interview/${interview_id}/status`,
 
   // Employer Dashboard
   DASHBOARD_CARD_STATS: `/api/v1/admin/dashboard-stats`,

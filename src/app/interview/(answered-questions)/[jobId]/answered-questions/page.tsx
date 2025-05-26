@@ -11,7 +11,7 @@ import EmojiRatingSlider from '@/app/interview/component/emojislider';
 import { useRef } from 'react';
 import { Textarea } from '@/components/ui/textarea';
 import useSubmitInterview from '@/Routes/Client/hook/POST/SubmitInterviewhook';
-import { SubmitInterviewPayload } from '@/Types/Employer/useresponse';
+import { SubmitInterviewPayload } from '@/Types/EmployerDashboard/useresponse';
 import { useResponseStore } from '@/store/candidate/responsestore';
 import { useState } from 'react';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
