@@ -1,21 +1,21 @@
-"use client";
-import React, { useRef } from "react";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import Image from "next/image";
-import Link from "next/link";
-import { Pencil, X, Check, CirclePlus } from "lucide-react";
-import InterviewLayout from "@/components/layout/InterviewLayout";
-import useHomeStore from "@/store/Employer/home.store";
-import { useSkillStore } from "@/store/Employer/InputStore";
-import { useSearchParams } from "next/navigation";
-import useResReqHook from "@/Routes/Client/hook/PUT/UpdateResReq.hook";
-import { Textarea } from "@/components/ui/textarea";
+'use client';
+import React, { Suspense, useRef } from 'react';
+import { Card } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import Image from 'next/image';
+import Link from 'next/link';
+import { Pencil, X, Check, CirclePlus } from 'lucide-react';
+import InterviewLayout from '@/components/layout/InterviewLayout';
+import useHomeStore from '@/store/Employer/home.store';
+import { useSkillStore } from '@/store/Employer/InputStore';
+import { useSearchParams } from 'next/navigation';
+import useResReqHook from '@/Routes/Client/hook/PUT/UpdateResReq.hook';
+import { Textarea } from '@/components/ui/textarea';
 
-export default function InterviewForm() {
+function InterviewForm() {
   const searchParams = useSearchParams();
-  const jobId = searchParams.get("job_id");
+  const jobId = searchParams.get('job_id');
 
   const ref = useRef<HTMLFormElement>(null);
   const ReqResMutation = useResReqHook();
@@ -84,9 +84,9 @@ export default function InterviewForm() {
   };
 
   const handleAddSkill = () => {
-    if (newSkill.trim() !== "") {
+    if (newSkill.trim() !== '') {
       setSkills([...skills, newSkill]);
-      setNewSkill("");
+      setNewSkill('');
     }
   };
 
@@ -149,9 +149,9 @@ export default function InterviewForm() {
                         </ul>
                       ) : (
                         <Textarea
-                          value={responsibilities.join("\n")}
+                          value={responsibilities.join('\n')}
                           onChange={(e) =>
-                            setResponsibilities(e.target.value.split("\n"))
+                            setResponsibilities(e.target.value.split('\n'))
                           }
                           className="w-full h-40 p-2 border rounded-xl resize-none font-openSans text-[14px]"
                         />
@@ -170,10 +170,8 @@ export default function InterviewForm() {
                       </ul>
                     ) : (
                       <Textarea
-                        value={requirements.join("\n")}
-                        onChange={(e) =>
-                          setRequirements(e.target.value.split("\n"))
-                        }
+                        value={requirements.join('\n')}
+                        onChange={(e) => setRequirements(e.target.value.split('\n'))}
                         className="w-full h-40 p-2 border rounded-xl resize-none font-openSans text-[14px]"
                       />
                     )}
@@ -253,11 +251,7 @@ export default function InterviewForm() {
 
         <div className="flex justify-end items-center mt-6 gap-4 mb-0">
           <Link href="/">
-            <Button
-              variant="secondary"
-              type="button"
-              className="cursor-pointer"
-            >
+            <Button variant="secondary" type="button" className="cursor-pointer">
               Cancel
             </Button>
           </Link>
@@ -267,5 +261,13 @@ export default function InterviewForm() {
         </div>
       </InterviewLayout>
     </>
+  );
+}
+
+export default function InterviewPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <InterviewForm />
+    </Suspense>
   );
 }
