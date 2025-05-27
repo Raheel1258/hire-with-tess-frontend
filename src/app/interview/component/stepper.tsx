@@ -8,7 +8,7 @@ type StepperProps = {
 
 export default function Stepper({
   currentStep,
-  totalSteps = 5,
+  totalSteps = 4,
   circleSize = 35,
   lineHeight = 6,
   lineWidth = 50,
@@ -24,10 +24,10 @@ export default function Stepper({
               <div
                 className={`z-10 flex items-center justify-center rounded-full shrink-0 text-sm sm:text-xs ${
                   step < currentStep
-                    ? "bg-[#1e4b8e] text-white"
+                    ? 'bg-[#1e4b8e] text-white'
                     : step === currentStep
-                      ? "bg-[#1e4b8e] text-white"
-                      : "bg-[#EFF0F6] text-[#9A8F82]"
+                      ? 'bg-[#1e4b8e] text-white'
+                      : 'bg-[#EFF0F6] text-[#9A8F82]'
                 }`}
                 style={{
                   width: circleSize,
@@ -49,18 +49,14 @@ export default function Stepper({
                   {/* Left half of line */}
                   <div
                     className={`h-full w-1/2 ${
-                      step <= currentStep
-                        ? "bg-[#1e4b8e] rounded-l-full"
-                        : "bg-[#EFF0F6]"
+                      step <= currentStep ? 'bg-[#1e4b8e] rounded-l-full' : 'bg-[#EFF0F6]'
                     }`}
                   ></div>
 
                   {/* Right half of line */}
                   <div
                     className={`h-full w-1/2 ${
-                      step < currentStep
-                        ? "bg-[#1e4b8e]"
-                        : "bg-[#EFF0F6] rounded-r-full"
+                      step < currentStep ? 'bg-[#1e4b8e]' : 'bg-[#EFF0F6] rounded-r-full'
                     }`}
                   ></div>
                 </div>

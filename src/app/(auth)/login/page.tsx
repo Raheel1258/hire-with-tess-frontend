@@ -115,7 +115,16 @@ export default function EmployeeSignIn() {
                 </div>
                 <p className="text-sm text-gray-500 text-center">
                   Don&apos;t have an account?{' '}
-                  <Link href="/signup" className="text-[#F7941D]">
+                  <Link
+                    href="/signup"
+                    className="text-[#F7941D]"
+                    onClick={() => {
+                      sessionStorage.setItem(
+                        'redirectPath',
+                        window.location.pathname + window.location.search,
+                      );
+                    }}
+                  >
                     Sign up
                   </Link>
                 </p>

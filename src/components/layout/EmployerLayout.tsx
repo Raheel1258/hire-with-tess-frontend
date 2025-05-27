@@ -1,14 +1,33 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Button } from '../ui/button';
-import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import Signup from '@/app/signup/page';
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
+import { SessionProvider, signOut, useSession } from 'next-auth/react';
+import SignupDialogue from '@/app/interview/component/signupDialogue';
+import { Session } from 'next-auth';
 
-export default function EmployerLayout({
+function EmployerLayout({
+  getSession,
   children,
 }: {
+  getSession: (session: Session | null) => void;
   children: React.ReactNode;
 }) {
+  const { data: session } = useSession();
+
+  useEffect(() => {
+    getSession(session);
+  }, [getSession, session]);
+
+  const handleSignOut = () => {
+    signOut();
+  };
+
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-br from-[#f7941D] via-[#ffbfbf] to-[#1e4b8e]">
       <header className="flex justify-between items-center p-6 text-white">
@@ -17,21 +36,34 @@ export default function EmployerLayout({
             <h1 className="text-xl font-semibold text-black">Hirewithtess</h1>
           </Link>
           <nav className="flex gap-4">
-            <Link href={'/login'}>
-              <Button className="bg-tess-blue text-white px-4 py-2 rounded-md hover:bg-[#1E4B8E]-700 cursor-pointer">
-                Login
-              </Button>
-            </Link>
-
+            {session ? (
+              <div>
+                <h2 className="text-lg font-medium text-gray-700">
+                  Welcome, {session.user?.name}!
+                </h2>
+                <button
+                  onClick={handleSignOut}
+                  className="px-4 py-2 mt-4 text-white bg-red-500 rounded-lg hover:bg-red-600"
+                >
+                  Sign Out
+                </button>
+              </div>
+            ) : (
+              <Link href={'/login'}>
+                <Button className="bg-tess-blue text-white px-4 py-2 rounded-md hover:bg-[#1E4B8E]-700 cursor-pointer">
+                  Login
+                </Button>
+              </Link>
+            )}
             <Dialog>
               <DialogTrigger asChild>
-              <Button className="bg-tess-blue text-white px-4 py-2 rounded-md hover:bg-[#1E4B8E]-700 cursor-pointer">
-                Sign up
-              </Button>
+                <Button className="bg-tess-blue text-white px-4 py-2 rounded-md hover:bg-[#1E4B8E]-700 cursor-pointer">
+                  Sign up
+                </Button>
               </DialogTrigger>
               <DialogContent className="items-center bg-white shadow-2xl rounded-lg w-5xl">
                 <DialogTitle></DialogTitle>
-                <Signup />
+                <SignupDialogue />
               </DialogContent>
             </Dialog>
           </nav>
@@ -48,5 +80,24 @@ export default function EmployerLayout({
         </div>
       </footer>
     </div>
+  );
+}
+
+export default function EmployerSessionProvider({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const [session, setSession] = useState<Session | null>(null);
+
+  const getSession = (childSession: Session | null) => {
+    const session = childSession;
+    setSession(session);
+  };
+
+  return (
+    <SessionProvider session={session}>
+      <EmployerLayout getSession={getSession}>{children}</EmployerLayout>
+    </SessionProvider>
   );
 }

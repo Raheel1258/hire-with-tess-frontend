@@ -8,9 +8,6 @@ import SocialShare from '@/app/interview/component/share';
 import { useToggleStore } from '@/store/Employer/Toggle.store';
 import QRCode from 'react-qr-code';
 import { cn } from '@/lib/utils';
-import useFetchInterviewLink from '@/Routes/Client/hook/POST/GenerateInterviewLink.hook';
-import { useParams } from 'next/navigation';
-import { useEffect, useRef } from 'react';
 
 export default function GenerateLink() {
   const { interviewLink, qrCode } = useToggleStore();
@@ -58,8 +55,8 @@ export default function GenerateLink() {
       description="Share the Interview link with candidates and start collecting responses"
       subtitleClassName="font-roboto font-bold text-[34px] mt-6 text-center"
       descriptionClassName="font-roboto font-normal text-[18px] mt-4 text-[#6F6C90] text-center"
-      currentStep={5}
       useCard={false}
+      showStepper={false}
     >
       <div className="mt-8 flex flex-col sm:w-[384px] mx-auto px-4 mb-8">
         <h1 className="font-[roboto] leading-[46px] font-bold text-[24px] text-center">

@@ -28,6 +28,7 @@ const ChooseInterviewOption = () => {
       interview_id: interviewId,
       phone_number: phoneNumber,
     });
+    console.log('phone number from options', phoneNumber);
   };
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-6 py-12 bg-gray-50">
