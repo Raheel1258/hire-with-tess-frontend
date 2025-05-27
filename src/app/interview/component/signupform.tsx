@@ -9,9 +9,9 @@ import { z } from 'zod';
 import useSignupMutation from '@/Routes/Client/hook/POST/SignUP.hook';
 import { Button } from '@/components/ui/button';
 import CustomInputForm from '@/app/interview/component/customformInput';
-
-
+import { useRouter } from 'next/navigation';
 export default function SignupForm() {
+  const router = useRouter();
   const form = useForm<z.infer<typeof signupFormSchema>>({
     resolver: zodResolver(signupFormSchema),
     defaultValues: {
@@ -25,7 +25,6 @@ export default function SignupForm() {
   });
   const ref = useRef<HTMLFormElement>(null);
   const signupMutation = useSignupMutation();
-
 
   const onSubmit = async (data: z.infer<typeof signupFormSchema>) => {
     const payload = {
@@ -41,6 +40,7 @@ export default function SignupForm() {
     signupMutation.mutate(payload, {
       onSuccess: () => {
         form.reset();
+        router.push(`/`);
       },
     });
   };
@@ -174,14 +174,13 @@ export default function SignupForm() {
         </div>
 
         <div className="flex justify-center w-full">
-        <Button
+          <Button
             type="submit"
             className="w-full sm:w-[528px] h-[64px] leading-[20px] font-roboto cursor-pointer rounded-2xl max-w-[90%]"
             disabled={signupMutation.isPending}
           >
             {signupMutation.isPending ? 'Signing Up...' : 'Sign Up to Continue'}
           </Button>
-         
         </div>
       </form>
     </Form>

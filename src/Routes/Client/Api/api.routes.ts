@@ -140,8 +140,11 @@ export const TwillioStartCall = async (
   interview_id: string,
   phone_number: string,
 ) => {
-  const response = await api.post(APIEndpoint.TWILLIO_START_CALL(job_id, interview_id), {
-    phone_number,
+  const url = APIEndpoint.TWILLIO_START_CALL(job_id, interview_id);
+  const response = await api.post(url, null, {
+    params: {
+      phone_number,
+    },
   });
   return response.data;
 };

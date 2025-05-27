@@ -12,40 +12,13 @@ import {
 } from '@/schema/CandidateDetail.schema';
 import { Button } from '@/components/ui/button';
 import { useParams } from 'next/navigation';
-import { Mic, X } from 'lucide-react';
+import { X } from 'lucide-react';
 import RegeisterCandidatehook from '@/Routes/Client/hook/POST/RegeisterCandidatehook';
 import { toast } from 'sonner';
 import { Input } from '@/components/ui/input';
-import { useRecordingStore } from '@/store/candidate/Recording.store';
-import Waveform from '../../component/Waveform';
-import EnhancedButton from '../../component/SpeechButton';
-import { useAudioStore } from '@/store/candidate/audio.store';
-import useVoiceRecorder from '@/Utils/helper/useVoiceRecorder';
 
 export default function CandidatesDetails() {
   const { jobId } = useParams<{ jobId: string }>();
-  // const {
-  //   audioURL,
-  //   setAudioURL,
-  //   isRecording,
-  //   setIsRecording,
-  //   isPlaying,
-  //   setIsPlaying,
-  //   isListening,
-  //   setIsListening,
-  //   seconds,
-  //   setSeconds,
-  // } = useAudioStore();
-
-  const interview_id = useRecordingStore((state) => state.interviewId);
-  // const {
-  //   isRecording: isRecordingVoice,
-  //   startVoiceRecording,
-  //   stopVoiceRecording,
-  //   resetRecording,
-  //   startSpeechRecognition,
-  //   stopSpeechRecognition,
-  // } = useVoiceRecorder();
 
   const form = useForm<CandidateDetailsValidator>({
     resolver: zodResolver(CandidateDetailSchema),
@@ -148,37 +121,6 @@ export default function CandidatesDetails() {
               </FormItem>
             )}
           />
-          {/* <EnhancedButton
-            action={false}
-            onClick={() => {
-              startVoiceRecording();
-              setIsRecording(true);
-              setIsListening(true);
-              setIsPlaying(true);
-              setAudioURL('');
-              setSeconds(0);
-              startSpeechRecognition();
-            }}
-            icon={<Mic />}
-            defaultTitle=""
-            onpressTitle="Listening..."
-          />
-          {isRecordingVoice && (
-            <div className="rounded-full p-3 border shadow-xl">
-              <div className="flex items-center gap-2 w-full">
-                <div className="rounded-full p-3 border shadow-xl">
-                  <Waveform
-                    recordedVoiceURL={audioURL}
-                    seconds={seconds}
-                    isRecording={isRecordingVoice}
-                    isPlaying={isPlaying}
-                    isListening={isListening}
-                    setIsRecording={setIsRecording}
-                  />
-                </div>
-              </div>
-            </div>
-          )} */}
 
           <FormField
             control={form.control}

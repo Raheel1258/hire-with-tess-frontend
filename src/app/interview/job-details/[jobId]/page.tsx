@@ -206,7 +206,7 @@ export default function InterviewForm() {
                   type="submit"
                   disabled={generateMutation.isPending || !jobId}
                   onClick={handleReviewClick}
-                  className="w-full sm:w-auto cursor-pointer"
+                  className=" cursor-pointer"
                 >
                   <Image src="/images/Vector.png" alt="alt" width={20} height={20} />
                   Review Details
