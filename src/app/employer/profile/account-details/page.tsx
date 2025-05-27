@@ -1,20 +1,20 @@
-"use client";
-import CustomInputForm from "@/app/interview/component/customformInput";
-import { Button } from "@/components/ui/button";
-import { FormControl, FormField, FormItem, Form } from "@/components/ui/form";
+'use client';
+import CustomInputForm from '@/app/interview/component/customformInput';
+import { Button } from '@/components/ui/button';
+import { FormControl, FormField, FormItem, Form } from '@/components/ui/form';
 import {
   AccountDetailformSchema,
   AccountFormValidator,
-} from "@/schema/accountDetail.schema";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useRef } from "react";
-import { useForm } from "react-hook-form";
-import { useEffect } from "react";
-import UseProfileInfo from "@/Routes/Employer/hooks/GET/profile/Profileinfo.hook";
-import RedirectToDashboard from "../components/breadcrumb";
-import UseUpdateProfileHook from "@/Routes/Employer/hooks/PUT/profile/Updateprofiehook";
-import { UserPen } from "lucide-react";
-import { useSkillStore } from "@/store/Employer/InputStore";
+} from '@/schema/accountDetail.schema';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useRef } from 'react';
+import { useForm } from 'react-hook-form';
+import { useEffect } from 'react';
+import UseProfileInfo from '@/Routes/Employer/hooks/GET/profile/Profileinfo.hook';
+import RedirectToDashboard from '../components/breadcrumb';
+import UseUpdateProfileHook from '@/Routes/Employer/hooks/PUT/profile/Updateprofilehook';
+import { UserPen } from 'lucide-react';
+import { useSkillStore } from '@/store/Employer/InputStore';
 
 export default function UserAccountDetail() {
   const { data: profileInfo } = UseProfileInfo();
@@ -28,17 +28,17 @@ export default function UserAccountDetail() {
   const form = useForm<AccountFormValidator>({
     resolver: zodResolver(AccountDetailformSchema),
     defaultValues: {
-      firstname: "",
-      lastname: "",
-      organization: "",
-      email: "",
+      firstname: '',
+      lastname: '',
+      organization: '',
+      email: '',
     },
   });
 
   const ref = useRef<HTMLFormElement>(null);
 
   const onSubmit = async (data: AccountFormValidator) => {
-    console.log("Function Called from Front end");
+    console.log('Function Called from Front end');
     UpdateProfileMutation.mutate(
       {
         first_name: data.firstname,
@@ -50,7 +50,7 @@ export default function UserAccountDetail() {
         onSuccess: () => {
           setIsEditable(false);
         },
-      }
+      },
     );
   };
 
@@ -58,10 +58,10 @@ export default function UserAccountDetail() {
 
   useEffect(() => {
     if (profileInfo) {
-      setValue("firstname", profileInfo.first_name || "");
-      setValue("lastname", profileInfo.last_name || "");
-      setValue("organization", profileInfo.organization_name || "");
-      setValue("email", profileInfo.email || "");
+      setValue('firstname', profileInfo.first_name || '');
+      setValue('lastname', profileInfo.last_name || '');
+      setValue('organization', profileInfo.organization_name || '');
+      setValue('email', profileInfo.email || '');
     }
   }, [profileInfo, setValue]);
 
@@ -72,12 +72,10 @@ export default function UserAccountDetail() {
         ProfileTitle="Profile"
         PageTitle="Account Details"
         DashboardUrl="/employer/home"
-        ProfileUrl={"/employer/profile"}
+        ProfileUrl={'/employer/profile'}
       />
       <div className="flex flex-row justify-between items-center">
-        <h1 className="text-2xl font-semibold text-slate-800">
-          Account Details
-        </h1>
+        <h1 className="text-2xl font-semibold text-slate-800">Account Details</h1>
         <div
           onClick={profilediting}
           className="w-10 h-10 flex items-center justify-center rounded-full border"
@@ -174,9 +172,7 @@ export default function UserAccountDetail() {
               className=" leading-[20px] font-roboto cursor-pointer "
               disabled={UpdateProfileMutation?.isPending}
             >
-              {UpdateProfileMutation?.isPending
-                ? "Updating..."
-                : "Update Profile"}
+              {UpdateProfileMutation?.isPending ? 'Updating...' : 'Update Profile'}
             </Button>
             <Button
               type="reset"
