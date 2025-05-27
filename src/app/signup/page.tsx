@@ -1,27 +1,23 @@
-"use client";
-import { Button } from "@/components/ui/button";
-import Image from "next/image";
-import React, { useRef } from "react";
-import useGoogleLoginHook from "@/Routes/Client/hook/POST/GoogleLogin.hook";
-import {
-  GoogleOAuthProvider,
-  googleLogout,
-  GoogleLogin,
-} from "@react-oauth/google";
-import useHomeStore from "@/store/Employer/home.store";
-import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
-import CustomInputForm from "../interview/component/customformInput";
-import { Checkbox } from "@/components/ui/checkbox";
-import useSignupMutation from "@/Routes/Client/hook/POST/SignUP.hook";
-import { signupFormSchema } from "@/schema/signup.schema";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import z from "zod";
-import { Loader2 } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { toast } from "sonner";
-import jwtDecode from "jwt-decode";
-import Link from "next/link";
+'use client';
+import { Button } from '@/components/ui/button';
+import Image from 'next/image';
+import React, { useRef } from 'react';
+import useGoogleLoginHook from '@/Routes/Client/hook/POST/GoogleLogin.hook';
+import { GoogleOAuthProvider, googleLogout, GoogleLogin } from '@react-oauth/google';
+import useHomeStore from '@/store/Employer/home.store';
+import { Form, FormControl, FormField, FormItem } from '@/components/ui/form';
+import CustomInputForm from '../interview/component/customformInput';
+import { Checkbox } from '@/components/ui/checkbox';
+import useSignupMutation from '@/Routes/Client/hook/POST/SignUP.hook';
+import { signupFormSchema } from '@/schema/signup.schema';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import z from 'zod';
+import { Loader2 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
+import jwtDecode from 'jwt-decode';
+import Link from 'next/link';
 
 export default function Signup() {
   const GoogleLoginMutation = useGoogleLoginHook();
@@ -36,12 +32,12 @@ export default function Signup() {
   const form = useForm<z.infer<typeof signupFormSchema>>({
     resolver: zodResolver(signupFormSchema),
     defaultValues: {
-      firstname: "",
-      lastname: "",
-      organization: "",
-      email: "",
-      password: "",
-      confirmPassword: "",
+      firstname: '',
+      lastname: '',
+      organization: '',
+      email: '',
+      password: '',
+      confirmPassword: '',
     },
   });
   const ref = useRef<HTMLFormElement>(null);
@@ -55,13 +51,13 @@ export default function Signup() {
       email: data.email,
       password: data.password,
       confirm_password: data.confirmPassword,
-      role: "admin",
+      role: 'admin',
     };
 
     signupMutation.mutate(payload, {
       onSuccess: () => {
         form.reset();
-        router.push("/");
+        router.push('/');
       },
     });
   };
@@ -83,11 +79,11 @@ export default function Signup() {
               width="400"
               theme="outline"
               onSuccess={(credentialResponse) => {
-                console.log("Clienr Id", credentialResponse);
+                console.log('Clienr Id', credentialResponse);
                 window.location.href = `/`;
               }}
               onError={() => {
-                toast.error("Google login failed");
+                toast.error('Google login failed');
               }}
               auto_select={true}
             />
@@ -241,8 +237,8 @@ export default function Signup() {
                     htmlFor="terms"
                     className="text-sm font-openSans text-[16px] font-normal text-[#1B2559] leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                   >
-                    I agree to the Terms of Service and acknowledge you have
-                    read our Privacy Policy
+                    I agree to the Terms of Service and acknowledge you have read our
+                    Privacy Policy
                   </label>
                 </div>
 
@@ -255,7 +251,7 @@ export default function Signup() {
                     {signupMutation.isPending ? (
                       <Loader2 className="animate-spin" />
                     ) : (
-                      "Sign Up to Continue"
+                      'Sign Up to Continue'
                     )}
                   </Button>
                 </div>
@@ -263,7 +259,7 @@ export default function Signup() {
             </Form>
           </div>
           <p className="text-sm text-gray-500 text-center">
-            Already have an account?{" "}
+            Already have an account?{' '}
             <Link href="/login" className="text-[#F7941D]">
               Login
             </Link>

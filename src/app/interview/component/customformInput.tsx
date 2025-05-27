@@ -84,6 +84,9 @@ const CustomInputForm: React.FC<CustomInputProps> = ({
                             <SelectItem value="Onsite" className="text-black">
                               Onsite
                             </SelectItem>
+                            <SelectItem value="Hybrid" className="text-black">
+                              Hybrid
+                            </SelectItem>
                             <SelectItem value="Remote" className="text-black">
                               Remote
                             </SelectItem>
