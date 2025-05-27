@@ -14,6 +14,7 @@ import Image from "next/image";
 import UseRegenerateQuestionHook from "@/Routes/Client/hook/POST/RegenerateQuestion.hook";
 import QuestionType from "@/Types/Employer/question.type";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Loader2 } from "lucide-react";
 
 export default function Questionnaire() {
   const { jobId } = useParams<{ jobId: string }>();
@@ -263,7 +264,7 @@ export default function Questionnaire() {
           >
             <Image src="/images/Vector.png" alt="alt" width={20} height={20} />
             {regenerateQuestionMutation.isPending ? (
-              <Loader2 className="animate-spin text-white" />
+              <Loader2 className="animate-spin itext-white" />
             ) : (
               "Generate with AI"
             )}
