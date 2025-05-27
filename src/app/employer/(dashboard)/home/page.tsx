@@ -174,7 +174,6 @@ export default function DashboardHome() {
             {" "}
             Latest Interview
           </h1>
-
           <TableComponent
             header={HomeTableTile}
             subheader={DATA}
