@@ -2,13 +2,13 @@ import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 
 interface Overviewprops {
-    aiResult: number;
+    aiResult: string | number;
     selectedCandidate: string,
     analyzingInterviewId: string,
     aiReportDialogOpen: boolean,
     isDialogOpen: boolean
 
-    setAIResult: (value: number) => void;
+    setAIResult: (value: string | number ) => void;
     setSelectedCandidate: (value: string) => void;
     setAnalyzingInterviewId: (value: string) => void;
     setAIReportDialogOpen: (value: boolean) => void;
