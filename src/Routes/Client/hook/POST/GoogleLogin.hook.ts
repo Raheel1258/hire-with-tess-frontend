@@ -15,7 +15,6 @@ export default function useGoogleLoginHook() {
     },
     onError: () => {
       toast.error('Login Failed', {
-        description: 'Something went wrong',
         position: 'bottom-right',
       });
     },

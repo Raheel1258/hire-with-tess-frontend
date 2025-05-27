@@ -1,10 +1,10 @@
-"use client";
-import { BriefcaseBusiness, Eye, Users } from "lucide-react";
-import CardComponent from "@/app/employer/(dashboard)/components/card";
-import TableComponent from "@/app/employer/(dashboard)/components/table";
-import { Badge } from "@/components/ui/badge";
-import UseDashboardCardStats from "@/Routes/Employer/hooks/GET/Overview/GetOverviewCardStats.hook";
-import UseGetAllInterview from "@/Routes/Employer/hooks/GET/Overview/GetAllInterview.hook";
+'use client';
+import { BriefcaseBusiness, Eye, Users } from 'lucide-react';
+import CardComponent from '@/app/employer/(dashboard)/components/card';
+import TableComponent from '@/app/employer/(dashboard)/components/table';
+import { Badge } from '@/components/ui/badge';
+import UseDashboardCardStats from '@/Routes/Employer/hooks/GET/Overview/GetOverviewCardStats.hook';
+import UseGetAllInterview from '@/Routes/Employer/hooks/GET/Overview/GetAllInterview.hook';
 import {
   Dialog,
   DialogContent,
@@ -12,14 +12,14 @@ import {
   DialogTitle,
   DialogDescription,
   DialogClose,
-} from "@/components/ui/dialog";
-import UserProfile from "../components/candiateprofile";
-import HomeTableTile from "../Constant/hometitle";
-import { Button } from "@/components/ui/button";
-import AnalyzeInterviewHook from "@/Routes/Employer/hooks/POST/AnalyzeInterview.hook";
-import { Loader } from "lucide-react";
-import { toast } from "sonner";
-import OverviewStore from "@/store/EmployeeDashboard/dashboard/overview/overview.store";
+} from '@/components/ui/dialog';
+import UserProfile from '../components/candiateprofile';
+import HomeTableTile from '../Constant/hometitle';
+import { Button } from '@/components/ui/button';
+import AnalyzeInterviewHook from '@/Routes/Employer/hooks/POST/AnalyzeInterview.hook';
+import { Loader } from 'lucide-react';
+import { toast } from 'sonner';
+import OverviewStore from '@/store/EmployeeDashboard/dashboard/overview/overview.store';
 
 export default function DashboardHome() {
   const { data: interviewCardData } = UseDashboardCardStats();
@@ -39,9 +39,9 @@ export default function DashboardHome() {
 
   const handleButtonClick = () => {
     window.open(
-      "https://hire-with-tess-frontend.vercel.app/",
-      "_blank",
-      "noopener,noreferrer"
+      'https://hire-with-tess-frontend-git-main-raheel1258s-projects.vercel.app/',
+      '_blank',
+      'noopener,noreferrer',
     );
   };
 
@@ -60,14 +60,14 @@ export default function DashboardHome() {
       item.job_title,
       new Date(item.created_at).toLocaleDateString(),
 
-      item.status === "reject" ? (
+      item.status === 'reject' ? (
         <Badge
           key={`status-${item.status}`}
           className="capitalize bg-red-100 text-red-800"
         >
           {item.status}
         </Badge>
-      ) : item.status === "pending" ? (
+      ) : item.status === 'pending' ? (
         <Badge
           key={`status-${item.status}`}
           className="capitalize bg-yellow-100 text-[#f7941D]"
@@ -98,15 +98,15 @@ export default function DashboardHome() {
                   onSuccess: (response) => {
                     setAIResult(response?.final_report);
                     setAIReportDialogOpen(true);
-                    setAnalyzingInterviewId("");
+                    setAnalyzingInterviewId('');
                   },
                   onError: (error) => {
-                    toast.error("AI analysis failed", {
+                    toast.error('AI analysis failed', {
                       description: error.message,
                     });
-                    setAnalyzingInterviewId("");
+                    setAnalyzingInterviewId('');
                   },
-                }
+                },
               );
             }}
           >
@@ -132,9 +132,7 @@ export default function DashboardHome() {
       </Dialog>
       <div>
         <div className="flex flex-row justify-between">
-          <h1 className="text-[24px] font-[roboto] font-semibold ml-2 mb-4">
-            Overview
-          </h1>
+          <h1 className="text-[24px] font-[roboto] font-semibold ml-2 mb-4">Overview</h1>
           <Button onClick={handleButtonClick} className="font-semibold">
             Posted a New Job
           </Button>
@@ -149,29 +147,23 @@ export default function DashboardHome() {
           <CardComponent
             heading="Total Applicant"
             subheading={interviewCardData?.total_applicants}
-            icon={
-              <BriefcaseBusiness size={20} strokeWidth={1.5} color="#f7941D" />
-            }
+            icon={<BriefcaseBusiness size={20} strokeWidth={1.5} color="#f7941D" />}
           ></CardComponent>
 
           <CardComponent
             heading="Interviews Completed"
             subheading={interviewCardData?.total_interviews}
-            icon={
-              <BriefcaseBusiness size={20} strokeWidth={1.5} color="#f7941D" />
-            }
+            icon={<BriefcaseBusiness size={20} strokeWidth={1.5} color="#f7941D" />}
           ></CardComponent>
           <CardComponent
             heading="Shortlised Applicants"
             subheading={interviewCardData?.shortlisted_candidates}
-            icon={
-              <BriefcaseBusiness size={20} strokeWidth={1.5} color="#f7941D" />
-            }
+            icon={<BriefcaseBusiness size={20} strokeWidth={1.5} color="#f7941D" />}
           ></CardComponent>
         </div>
         <div className="mt-10">
           <h1 className="font-[roboto] text-[24px] font-semibold leading-[30px] mb-4">
-            {" "}
+            {' '}
             Latest Interview
           </h1>
           <TableComponent
