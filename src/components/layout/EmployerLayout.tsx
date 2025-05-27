@@ -27,6 +27,7 @@ function EmployerLayout({
 
   const handleSignOut = () => {
     EmployeeAuthStore.setState({ accessToken: '' });
+    localStorage.removeItem('accessToken');
     signOut();
   };
 
@@ -41,16 +42,18 @@ function EmployerLayout({
           </Link>
           <nav className="flex gap-4">
             {accessToken ? (
-              <div>
-                {/* <h2 className="text-lg font-medium text-gray-700">
-                  Welcome, {session.user?.name}!
-                </h2> */}
+              <div className="flex gap-2">
                 <Button
                   onClick={handleSignOut}
                   className="px-4 py-2 text-white bg-red-500 rounded-lg hover:bg-red-600"
                 >
                   Sign Out
                 </Button>
+                <Link href={'/employer/home'}>
+                  <Button className="bg-tess-blue text-white px-4 py-2 rounded-md hover:bg-[#1E4B8E]-700 cursor-pointer">
+                    Dashboard
+                  </Button>
+                </Link>
               </div>
             ) : (
               <>
