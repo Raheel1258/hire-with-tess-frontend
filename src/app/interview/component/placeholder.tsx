@@ -1,7 +1,6 @@
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import React from 'react';
-import { Loader } from 'lucide-react';
 
 export default function Placeholder({
   onChange,
@@ -10,17 +9,14 @@ export default function Placeholder({
 }: {
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
-  isLoading: boolean,
-
+  isLoading: boolean;
 }) {
   return (
     <div className="flex justify-center w-full px-4">
-      <form
-        onSubmit={onSubmit} className="relative w-full max-w-xl sm:max-w-2xl">
-
+      <form onSubmit={onSubmit} className="relative w-full max-w-xl sm:max-w-2xl">
         <Input
           className="w-full h-10 sm:h-[60px] md:h-[72px] font-normal bg-white rounded-full
-                    placeholder:text-gray-500 pl-3 sm:pl-6 pr-12 sm:pr-20
+                    placeholder:text-gray-500 pl-3 sm:pl-6 pr-[100px] sm:pr-[120px] md:pr-[140px]
                     text-xs sm:text-sm md:text-base lg:text-lg"
           placeholder="Describe what you need..."
           onChange={onChange}
@@ -38,12 +34,10 @@ export default function Placeholder({
               <span className="animate-bounce [animation-delay:-0.3s]">•</span>
               <span className="animate-bounce [animation-delay:-0.15s]">•</span>
               <span className="animate-bounce">•</span>
-
             </div>
           ) : (
             'Generate'
           )}
-
         </Button>
       </form>
     </div>
