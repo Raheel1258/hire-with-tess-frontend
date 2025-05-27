@@ -34,6 +34,7 @@ function InterviewForm() {
     setRequirements,
     responsibilities,
     setResponsibilities,
+    jobDescription,
   } = useHomeStore();
 
   const handleCancel = () => {
@@ -58,6 +59,7 @@ function InterviewForm() {
   const updateValue = () => {
     ReqResMutation.mutate({
       data: {
+        job_description: jobDescription,
         skills,
         responsibilities,
         requirements,

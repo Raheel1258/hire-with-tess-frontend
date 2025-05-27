@@ -1,14 +1,13 @@
-"use client";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { KeyRound, ShieldCheck, Lock } from "lucide-react";
-import useVerifyOtp from "@/Routes/Employer/hooks/POST/VerifyOtp.hook";
-import { toast } from "sonner";
-import { useForgotPasswordStore } from "@/store/Employer/forgotpassword.store";
+'use client';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { KeyRound, ShieldCheck, Lock } from 'lucide-react';
+import useVerifyOtp from '@/Routes/Employer/hooks/POST/VerifyOtp.hook';
+import { toast } from 'sonner';
+import { useForgotPasswordStore } from '@/store/Employer/forgotpassword.store';
 
 const VerifyOtp = () => {
   const {
-    user_id,
     otp,
     new_password,
     confirm_password,
@@ -21,23 +20,23 @@ const VerifyOtp = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (new_password !== confirm_password) {
-      toast.error("Passwords do not match!");
+      toast.error('Passwords do not match!');
       return;
     }
     verifyOtpMutation.mutate({
-      user_id: user_id,
       otp: otp,
       new_password: new_password,
       confirm_password: confirm_password,
     });
+    setNewPassword('');
+    setConfirmPassword('');
+    setOtp('');
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
       <div className="w-full max-w-md bg-white shadow-xl rounded-2xl p-8 space-y-6">
-        <h2 className="text-2xl font-bold text-center text-gray-800">
-          Verify OTP
-        </h2>
+        <h2 className="text-2xl font-bold text-center text-gray-800">Verify OTP</h2>
         <p className="text-sm text-gray-500 text-center">
           Enter the OTP sent to your email and reset your password
         </p>

@@ -1,24 +1,17 @@
-"use client";
-import React, { useState } from "react";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Loader2, Mail } from "lucide-react";
-import useForgotPassword from "@/Routes/Employer/hooks/POST/ForgotPassword.hook";
-import { toast } from "sonner";
-import { useRouter } from "next/navigation";
+'use client';
+import React, { useState } from 'react';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Loader2, Mail } from 'lucide-react';
+import useForgotPassword from '@/Routes/Employer/hooks/POST/ForgotPassword.hook';
 
 const ForgotPassword = () => {
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState('');
   const forgotPasswordMutation = useForgotPassword();
-  const router = useRouter();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     forgotPasswordMutation.mutate({ email });
-    if (forgotPasswordMutation.isSuccess) {
-      toast.success("Password reset link sent to your email");
-      router.push("/verify-otp");
-    }
   };
 
   return (
@@ -50,14 +43,13 @@ const ForgotPassword = () => {
             {forgotPasswordMutation.isPending ? (
               <Loader2 className="animate-spin" />
             ) : (
-              "Send Reset Link"
+              'Send Reset Link'
             )}
             Send Reset Link
           </Button>
         </form>
         <p className="text-sm text-center text-gray-500 mt-4">
-          Enter your registered email address and we’ll send you a password
-          reset link.
+          Enter your registered email address and we’ll send you a password reset link.
         </p>
       </div>
     </div>
