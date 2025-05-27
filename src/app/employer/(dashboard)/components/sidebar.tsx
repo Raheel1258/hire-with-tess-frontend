@@ -17,6 +17,7 @@ export interface SidebarLink {
 
 export interface SidebarProps {
   links: SidebarLink[];
+  onLogout: () => void;
 }
 
 export default function Sidebar({ links }: SidebarProps) {

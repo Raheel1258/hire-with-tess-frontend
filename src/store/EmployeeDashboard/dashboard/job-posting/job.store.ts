@@ -1,14 +1,15 @@
+import postedJobProps from '@/Types/EmployerDashboard/Dashboard/Job/podtedjob.type';
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 
 interface JobProps {
 
     searchTerm:string,
-    postedjobdata:string,
+    postedjobdata:postedJobProps,
     isDialogOpen: boolean,
 
     setSearchTerm: (value: string) => void;
-    setpostedjobdata: (value: string) => void;
+    setpostedjobdata: (value: postedJobProps) => void;
     setIsDialogOpen: (value: boolean) => void;
 }
 const JobStore = create<JobProps>()(
