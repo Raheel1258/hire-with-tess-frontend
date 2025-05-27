@@ -10,6 +10,7 @@ import {
 import { SessionProvider, signOut, useSession } from 'next-auth/react';
 import SignupDialogue from '@/app/interview/component/signupDialogue';
 import { Session } from 'next-auth';
+import EmployeeAuthStore from '@/store/Auth/auth.store';
 
 function EmployerLayout({
   getSession,
@@ -25,8 +26,11 @@ function EmployerLayout({
   }, [getSession, session]);
 
   const handleSignOut = () => {
+    EmployeeAuthStore.setState({ accessToken: '' });
     signOut();
   };
+
+  const { accessToken } = EmployeeAuthStore();
 
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-br from-[#f7941D] via-[#ffbfbf] to-[#1e4b8e]">
@@ -36,36 +40,38 @@ function EmployerLayout({
             <h1 className="text-xl font-semibold text-black">Hirewithtess</h1>
           </Link>
           <nav className="flex gap-4">
-            {session ? (
+            {accessToken ? (
               <div>
-                <h2 className="text-lg font-medium text-gray-700">
+                {/* <h2 className="text-lg font-medium text-gray-700">
                   Welcome, {session.user?.name}!
-                </h2>
-                <button
+                </h2> */}
+                <Button
                   onClick={handleSignOut}
-                  className="px-4 py-2 mt-4 text-white bg-red-500 rounded-lg hover:bg-red-600"
+                  className="px-4 py-2 text-white bg-red-500 rounded-lg hover:bg-red-600"
                 >
                   Sign Out
-                </button>
+                </Button>
               </div>
             ) : (
-              <Link href={'/login'}>
-                <Button className="bg-tess-blue text-white px-4 py-2 rounded-md hover:bg-[#1E4B8E]-700 cursor-pointer">
-                  Login
-                </Button>
-              </Link>
+              <>
+                <Link href={'/login'}>
+                  <Button className="bg-tess-blue text-white px-4 py-2 rounded-md hover:bg-[#1E4B8E]-700 cursor-pointer">
+                    Login
+                  </Button>
+                </Link>
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button className="bg-tess-blue text-white px-4 py-2 rounded-md hover:bg-[#1E4B8E]-700 cursor-pointer">
+                      Sign up
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="items-center bg-white shadow-2xl rounded-lg w-5xl">
+                    <DialogTitle></DialogTitle>
+                    <SignupDialogue />
+                  </DialogContent>
+                </Dialog>
+              </>
             )}
-            <Dialog>
-              <DialogTrigger asChild>
-                <Button className="bg-tess-blue text-white px-4 py-2 rounded-md hover:bg-[#1E4B8E]-700 cursor-pointer">
-                  Sign up
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="items-center bg-white shadow-2xl rounded-lg w-5xl">
-                <DialogTitle></DialogTitle>
-                <SignupDialogue />
-              </DialogContent>
-            </Dialog>
           </nav>
         </div>
       </header>
