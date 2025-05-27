@@ -3,7 +3,11 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import React, { useRef } from "react";
 import useGoogleLoginHook from "@/Routes/Client/hook/POST/GoogleLogin.hook";
-import { GoogleOAuthProvider, useGoogleLogin } from "@react-oauth/google";
+import {
+  GoogleOAuthProvider,
+  googleLogout,
+  GoogleLogin,
+} from "@react-oauth/google";
 import useHomeStore from "@/store/Employer/home.store";
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 import CustomInputForm from "../interview/component/customformInput";
@@ -15,6 +19,9 @@ import { useForm } from "react-hook-form";
 import z from "zod";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import jwtDecode from "jwt-decode";
+import Link from "next/link";
 
 export default function Signup() {
   const GoogleLoginMutation = useGoogleLoginHook();
@@ -22,17 +29,9 @@ export default function Signup() {
   const jobId = useHomeStore((state) => state.jobId);
   const router = useRouter();
 
-  const login = useGoogleLogin({
-    onSuccess: (codeResponse) => {
-      const code = codeResponse.code;
-      window.location.href = `/auth/callback?code=${code}`;
-    },
-    onError: () => {
-      alert("Google login failed");
-    },
-    flow: "auth-code",
-    redirect_uri: "http://localhost:3000/auth/callback/google",
-  });
+  function logout() {
+    googleLogout();
+  }
 
   const form = useForm<z.infer<typeof signupFormSchema>>({
     resolver: zodResolver(signupFormSchema),
@@ -77,8 +76,23 @@ export default function Signup() {
           <p className="font-[roboto] font-[400] text-[14px] sm:text-[16px] leading-[24px] text-[#606778] mt-2 w-full sm:w-[642px]">
             Get started with a 60-day free trial - no credit required!
           </p>
-
-          <Button
+          <div className="mt-4">
+            <GoogleLogin
+              size="large"
+              shape="rectangular"
+              width="400"
+              theme="outline"
+              onSuccess={(credentialResponse) => {
+                console.log("Clienr Id", credentialResponse);
+                window.location.href = `/`;
+              }}
+              onError={() => {
+                toast.error("Google login failed");
+              }}
+              auto_select={true}
+            />
+          </div>
+          {/* <Button
             onClick={() => {
               login();
               localStorage.setItem("jobId", jobId);
@@ -93,7 +107,7 @@ export default function Signup() {
               height={20}
             />
             Continue with Google
-          </Button>
+          </Button> */}
         </div>
 
         <div className="w-full mt-4">
@@ -248,6 +262,12 @@ export default function Signup() {
               </form>
             </Form>
           </div>
+          <p className="text-sm text-gray-500 text-center">
+            Already have an account?{" "}
+            <Link href="/login" className="text-[#F7941D]">
+              Login
+            </Link>
+          </p>
         </div>
       </div>
     </GoogleOAuthProvider>
