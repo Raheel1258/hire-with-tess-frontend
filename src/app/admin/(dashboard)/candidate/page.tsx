@@ -20,7 +20,6 @@ export default function AdminCandidatePage() {
 
   const { data: candidatestats } = UseDashboardCandidateCardStats();
   const { data: CandidateTableData } = UseGetAllInterview();
-  console.log('Interview Candidate Table Data:', CandidateTableData);
   const DATA = [
     [
       <Eye key={CandidateTableData?.id} className="w-5 h-5 text-gray-600" />,
