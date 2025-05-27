@@ -1,13 +1,13 @@
-// 'use client';
-// import { useEffect } from 'react';
-// import { useSearchParams, useRouter } from 'next/navigation';
-// import useGoogleLoginHook from '@/hooks/GoogleLogin.hook';
-// import useHomeStore from '@/store/Employee/home.store';
+// "use client";
+// import { useEffect } from "react";
+// import { useSearchParams, useRouter } from "next/navigation";
+// import useGoogleLoginHook from "@/Routes/Client/hook/POST/GoogleLogin.hook";
+// import useHomeStore from "@/store/Employer/home.store";
 
 // export default function GoogleCallbackPage() {
 //   const searchParams = useSearchParams();
 //   const router = useRouter();
-//   const code = searchParams.get('code');
+//   const code = searchParams.get("code");
 //   const jobId = useHomeStore((state) => state.jobId);
 //   const GoogleLoginMutation = useGoogleLoginHook();
 
@@ -18,15 +18,15 @@
 //           if (jobId) {
 //             router.push(`/review/${jobId}`);
 //           } else {
-//             router.push('/signup');
+//             router.push("/signup");
 //           }
 //         },
 //         onError: () => {
-//           router.push('/login');
+//           router.push("/login");
 //         },
 //       });
 //     }
-//   }, [code]);
+//   }, [GoogleLoginMutation, code, jobId, router]);
 
 //   return <div className="text-center mt-20">Processing Google Login...</div>;
 // }

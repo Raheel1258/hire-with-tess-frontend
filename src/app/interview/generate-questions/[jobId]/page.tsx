@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import GenerateQuestionResponse from "@/Routes/Client/hook/POST/GenerateQuestion.hook";
 import { useEffect, useRef } from "react";
-import { Check, CirclePlus, Loader2, Pencil, X } from "lucide-react";
+import { Check, CirclePlus, Pencil, X } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import useUpdateJobQuestion from "@/Routes/Client/hook/PUT/UpdateJobQuestion.hook";
 import { useSkillStore } from "@/store/Employer/InputStore";
