@@ -3,7 +3,7 @@ import { ReactNode } from 'react';
 
 interface CardProps {
   heading: string;
-  subheading: string;
+  subheading: string | number | undefined;
   icon: ReactNode;
 }
 

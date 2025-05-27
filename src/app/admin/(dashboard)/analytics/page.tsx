@@ -1,13 +1,9 @@
 "use client";
 import { BriefcaseBusiness, Eye, Search, Users } from "lucide-react";
 import CardComponent from "@/app/employer/(dashboard)/components/card";
-import { Badge } from "@/components/ui/badge";
-import TableComponent from "@/app/employer/(dashboard)/components/table";
-import Searchbar from "@/app/employer/(dashboard)/components/searchbar";
-import UseDashboardJobCardStats from "@/Routes/Employer/hooks/GET/jobposting/GetJobCardstats.hook";
-import UseGetAllJob from "@/Routes/Employer/hooks/GET/jobposting/GetAllJobs.hook";
 import { ChartComponent } from "../component/chart";
 import { PieChartComponent } from "../component/piechart";
+import useAnalyses from "@/Routes/Employer/hooks/GET/analysis/GetAnalyses.hook";
 
 export default function Analytics() {
   const TITLE = [
@@ -20,23 +16,8 @@ export default function Analytics() {
     "Expiry Date",
   ];
 
-  const { data: jobdata } = UseDashboardJobCardStats();
-  const { data: JobTableData } = UseGetAllJob();
 
-  const DATA = [
-    [
-      <Eye key={JobTableData?.id} className="w-5 h-5 text-gray-600" />,
-      JobTableData?.job_title,
-      <Badge key={"status"} className="bg-green-100 text-green-800">
-        {JobTableData?.status}
-      </Badge>,
-      JobTableData?.shortlisted,
-      JobTableData?.shortlisted_rate,
-      JobTableData?.job_type,
-      JobTableData?.created_at,
-      JobTableData?.expiry_date,
-    ],
-  ];
+  const {data: analysisdata} = useAnalyses();
 
   return (
     <div>
@@ -46,12 +27,12 @@ export default function Analytics() {
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 w-full">
         <CardComponent
           heading=" Total Job Posting "
-          subheading={jobdata?.total_jobs}
+          subheading={analysisdata?.total_job_postings}
           icon={<Users className="text-[#f7941D]" />}
         ></CardComponent>
         <CardComponent
           heading="Active Employers"
-          subheading={jobdata?.active_jobs}
+          subheading={analysisdata?.active_employers}
           icon={
             <BriefcaseBusiness size={20} strokeWidth={1.5} color="#f7941D" />
           }
@@ -59,26 +40,26 @@ export default function Analytics() {
 
         <CardComponent
           heading="Subscription Revenue"
-          subheading={jobdata?.closed_jobs}
+          subheading={analysisdata?.subscription_revenue}
           icon={
             <BriefcaseBusiness size={20} strokeWidth={1.5} color="#f7941D" />
           }
         ></CardComponent>
         <CardComponent
           heading="Total Candidates Processed"
-          subheading={jobdata?.total_candidates}
+          subheading={analysisdata?.total_candidates}
           icon={
             <BriefcaseBusiness size={20} strokeWidth={1.5} color="#f7941D" />
           }
         ></CardComponent>
         <CardComponent
           heading=" Shortlisted Candidates "
-          subheading={jobdata?.total_jobs}
+          subheading={analysisdata?.shortlisted_candidates}
           icon={<Users className="text-[#f7941D]" />}
         ></CardComponent>
         <CardComponent
           heading="Candidate Success Rate(%)"
-          subheading={jobdata?.active_jobs}
+          subheading={analysisdata?.candidate_success_rate}
           icon={
             <BriefcaseBusiness size={20} strokeWidth={1.5} color="#f7941D" />
           }
@@ -86,14 +67,14 @@ export default function Analytics() {
 
         <CardComponent
           heading="Total Interviews Completed"
-          subheading={jobdata?.closed_jobs}
+          subheading={analysisdata?.total_interviews}
           icon={
             <BriefcaseBusiness size={20} strokeWidth={1.5} color="#f7941D" />
           }
         ></CardComponent>
         <CardComponent
           heading="Job with No Applicants"
-          subheading={jobdata?.total_candidates}
+          subheading={analysisdata?.jobs_without_applicants}
           icon={
             <BriefcaseBusiness size={20} strokeWidth={1.5} color="#f7941D" />
           }

@@ -1,26 +1,27 @@
-import axios from "axios";
-import { EMPLOYERAPI } from "../Constant/employer-endpoint.route";
-import { toast } from "sonner";
-import { clearAuthToken } from "@/Utils/Providers/auth";
-import { ProfileInfoType } from "@/Types/EmployerDashboard/profileinfo";
-import { JobFilterType } from "@/Types/EmployerDashboard/jobfilter";
-
+import axios from 'axios';
+import { EMPLOYERAPI } from '../Constant/employer-endpoint.route';
+import { toast } from 'sonner';
+import { clearAuthToken } from '@/Utils/Providers/auth';
+import { ProfileInfoType } from '@/Types/EmployerDashboard/profileinfo';
+import { JobFilterType } from '@/Types/EmployerDashboard/jobfilter';
+import { SubscriptionsResponse, SubscriptionStats } from '@/Types/Admin/subscription';
+import { AnalysisResponse } from '@/Types/Admin/analysis';
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BACKEND_URL,
   headers: {
-    "Content-Type": "application/json",
+    'Content-Type': 'application/json',
   },
 });
 
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("accessToken");
+    const token = localStorage.getItem('accessToken');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
   },
-  (error) => Promise.reject(error)
+  (error) => Promise.reject(error),
 );
 
 api.interceptors.response.use(
@@ -30,23 +31,23 @@ api.interceptors.response.use(
 
     const isLoginRequest =
       originalRequest?.url?.includes(EMPLOYERAPI.EMPLOYER_LOGIN) &&
-      originalRequest?.method === "post";
+      originalRequest?.method === 'post';
 
     if (error.response && error.response.status === 401 && !isLoginRequest) {
       clearAuthToken();
 
       if (error.response?.status === 403) {
-        toast.error("Unauthorized access");
+        toast.error('Unauthorized access');
       } else if (error.response?.status === 500) {
-        toast.error("Server error");
+        toast.error('Server error');
       } else {
-        toast.error("Session expired. Please login again.");
-        window.location.href = "/login";
+        toast.error('Session expired. Please login again.');
+        window.location.href = '/login';
       }
     }
 
     return Promise.reject(error);
-  }
+  },
 );
 
 //Get All Jobs
@@ -78,7 +79,7 @@ export const UpdateJobByID = async (
     location: string;
     salary: string;
     currency: string;
-  }
+  },
 ) => {
   const response = await api.put(EMPLOYERAPI.UPDATE_JOB_BYID(job_id), data);
   return response.data;
@@ -106,23 +107,15 @@ export const JobeInterById = async (job_id: string) => {
 
 //Get Interview Details BYID
 export const GetInterviewById = async (interview_id: string) => {
-  const response = await api.get(
-    EMPLOYERAPI.INTERVIEW_DETAIL_BYID(interview_id)
-  );
+  const response = await api.get(EMPLOYERAPI.INTERVIEW_DETAIL_BYID(interview_id));
   return response.data;
 };
 
 //Update Interview Status BYID
-export const UpdateInterviewStatusByID = async (
-  interview_id: string,
-  status: string
-) => {
-  const response = await api.put(
-    EMPLOYERAPI.UPDATE_INTERVIEW_STATUS_BYID(interview_id),
-    {
-      status,
-    }
-  );
+export const UpdateInterviewStatusByID = async (interview_id: string, status: string) => {
+  const response = await api.put(EMPLOYERAPI.UPDATE_INTERVIEW_STATUS_BYID(interview_id), {
+    status,
+  });
   return response.data;
 };
 
@@ -169,8 +162,7 @@ export const UpdateProfile = async (data: ProfileInfoType) => {
 };
 
 //Delete Profile
-export const DeleteProfile = async () =>
-  await api.delete(EMPLOYERAPI.DELETE_PROFILE);
+export const DeleteProfile = async () => await api.delete(EMPLOYERAPI.DELETE_PROFILE);
 
 //Admin Notification
 export const AdminNotification = async () => {
@@ -180,16 +172,14 @@ export const AdminNotification = async () => {
 
 //Admin Notificaation Setting
 export const ProfileNotificationPermission = async () => {
-  const response = await api.get(
-    EMPLOYERAPI.PROFILE_PERMISSION_NOTIFICATION_SETTING
-  );
+  const response = await api.get(EMPLOYERAPI.PROFILE_PERMISSION_NOTIFICATION_SETTING);
   return response.data;
 };
 
 //Update Notification Setting
 export const UpdateNotificationType = async (notification_type: string) => {
   const response = await api.put(
-    EMPLOYERAPI.UPDATE_PROFILE_NOTIFICATION(notification_type)
+    EMPLOYERAPI.UPDATE_PROFILE_NOTIFICATION(notification_type),
   );
   return response.data;
 };
@@ -200,10 +190,7 @@ export const AnalyzeInterview = async (interview_id: string) => {
 };
 
 //Employer Login
-export const EmployerLogin = async (data: {
-  email: string;
-  password: string;
-}) => {
+export const EmployerLogin = async (data: { email: string; password: string }) => {
   const response = await api.post(EMPLOYERAPI.EMPLOYER_LOGIN, data);
   return response.data;
 };
@@ -223,4 +210,19 @@ export const VerifyOTP = async (data: {
 }) => {
   const response = await api.post(EMPLOYERAPI.VERIFY_OTP, data);
   return response.data;
+};
+
+export const getSubscriptions = async (): Promise<SubscriptionsResponse> => {
+  const { data } = await api.get('/api/v1/superadmin/subscriptions');
+  return data;
+};
+
+export const getSubscriptionStats = async (): Promise<SubscriptionStats> => {
+  const { data } = await api.get('/api/v1/superadmin/subscription-stats');
+  return data;
+};
+
+export const getAnalyses = async (): Promise<AnalysisResponse> => {
+  const { data } = await api.get('/api/v1/superadmin/Super-Admin-dashboard-stats');
+  return data;
 };
