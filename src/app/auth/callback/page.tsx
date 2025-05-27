@@ -1,10 +1,10 @@
 'use client';
-import { useEffect } from 'react';
+import { Suspense, useEffect } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import useGoogleLoginHook from '@/Routes/Client/hook/POST/GoogleLogin.hook';
 import { Loader2 } from 'lucide-react';
 
-export default function GoogleCallbackPage() {
+function GoogleCallbackPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const code = searchParams.get('code');
@@ -30,5 +30,13 @@ export default function GoogleCallbackPage() {
       <Loader2 className="animate-spin h-20 w-20 text-gray-500" />
       <p className="text-lg text-gray-600">Processing Google Login...</p>
     </div>
+  );
+}
+
+export default function GoogleCallback() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <GoogleCallbackPage />
+    </Suspense>
   );
 }
