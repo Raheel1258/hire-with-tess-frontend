@@ -1,17 +1,15 @@
 'use client';
-import Waveform from "@/app/interview/component/Waveform";
-import { Card, CardContent } from "@/components/ui/card";
+import Waveform from '@/app/interview/component/Waveform';
+import { Card, CardContent } from '@/components/ui/card';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
-import InputBox from "./fieldbox";
-import { Button } from "@/components/ui/button";
-import Videopreviewdialogue from "./videopreviewdialogue";
-import { CirclePlay } from "lucide-react";
-import { useState } from "react";
-import UseUpdateInterviewStatus from "@/Routes/Employer/hooks/PUT/overview/UpdateInterviewStatus.hook";
-import  UserProfileProps  from "@/Types/EmployerDashboard/Dashboard/profile/userprofile.type";
+import InputBox from './fieldbox';
+import { Button } from '@/components/ui/button';
+import Videopreviewdialogue from './videopreviewdialogue';
+import { CirclePlay } from 'lucide-react';
+import { useState } from 'react';
+import UseUpdateInterviewStatus from '@/Routes/Employer/hooks/PUT/overview/UpdateInterviewStatus.hook';
 
-export default function UserProfile({ data }:any) {
-
+export default function UserProfile({ data, isSuperAdmin }: any) {
   const [openVideoURL, setOpenVideoURL] = useState<string | null>(null);
 
   if (!data) return null;
@@ -20,7 +18,6 @@ export default function UserProfile({ data }:any) {
   const updatejobstatus = UseUpdateInterviewStatus();
 
   return (
-
     <>
       <Videopreviewdialogue
         videoURL={openVideoURL}
@@ -38,7 +35,6 @@ export default function UserProfile({ data }:any) {
 
           <Card className="w-full lg:w-3xl h-auto">
             <CardContent className="w-xl flex flex-col md:flex-row text-[#505050] justify-between gap-4 p-4">
-
               <div className="flex flex-col text-[14px] font-[roboto] font-bold gap-2">
                 <div className="flex flex-col sm:flex-row sm:items-center gap-1">
                   <h1>Name:</h1>
@@ -50,7 +46,7 @@ export default function UserProfile({ data }:any) {
                 </div>
                 <div className="flex flex-col sm:flex-row sm:items-center gap-1">
                   <h1>AI Rating:</h1>
-                  <h1 className="font-normal sm:ml-2">{data.ai_score }</h1>
+                  <h1 className="font-normal sm:ml-2">{data.ai_score}</h1>
                 </div>
               </div>
 
@@ -69,32 +65,34 @@ export default function UserProfile({ data }:any) {
             </CardContent>
           </Card>
 
-
-          <div className="flex flex-col sm:flex-row lg:flex-col gap-4 items-center justify-center w-full px-4">
-            <Button
-              disabled={updatejobstatus.isPending}
-              onClick={() => updatejobstatus.mutate({
-                interview_id: data.id,
-                status: "hire"
-              })}
-              className="w-full sm:w-1/2 lg:w-40 bg-[#1E4B8E] hover:bg-[#1E4B8E] cursor-pointer h-[50px] text-white"
-            >
-              Shortlisted
-            </Button>
-            <Button
-              disabled={updatejobstatus.isPending}
-              onClick={() => updatejobstatus.mutate(
-                {
-                  interview_id: data.id,
-                  status: "reject"
-                })}
-              className="w-full sm:w-1/2 lg:w-40 bg-[#F55141] hover:bg-[#F55141] cursor-pointer h-[50px] text-white"
-            >
-              Reject
-            </Button>
-          </div>
-
-
+          {!isSuperAdmin && (
+            <div className="flex flex-col sm:flex-row lg:flex-col gap-4 items-center justify-center w-full px-4">
+              <Button
+                disabled={updatejobstatus.isPending}
+                onClick={() =>
+                  updatejobstatus.mutate({
+                    interview_id: data.id,
+                    status: 'hire',
+                  })
+                }
+                className="w-full sm:w-1/2 lg:w-40 bg-[#1E4B8E] hover:bg-[#1E4B8E] cursor-pointer h-[50px] text-white"
+              >
+                Shortlisted
+              </Button>
+              <Button
+                disabled={updatejobstatus.isPending}
+                onClick={() =>
+                  updatejobstatus.mutate({
+                    interview_id: data.id,
+                    status: 'reject',
+                  })
+                }
+                className="w-full sm:w-1/2 lg:w-40 bg-[#F55141] hover:bg-[#F55141] cursor-pointer h-[50px] text-white"
+              >
+                Reject
+              </Button>
+            </div>
+          )}
         </div>
 
         <div className="p-4">
@@ -108,8 +106,8 @@ export default function UserProfile({ data }:any) {
             const answer = answers[question];
 
             return (
-              <InputBox key={index} label={`Question ${index + 1}`} >
-                <p className="w-full font-normal text-[14px]">{question}</p>            
+              <InputBox key={index} label={`Question ${index + 1}`}>
+                <p className="w-full font-normal text-[14px]">{question}</p>
                 <div className="rounded-full p-3 border mt-6 w-full">
                   <div className="flex items-center gap-2 ">
                     {answer?.type === 'audio' && (
@@ -146,8 +144,8 @@ export default function UserProfile({ data }:any) {
               </InputBox>
             );
           })}
-
         </div>
-      </div></>
+      </div>
+    </>
   );
 }
