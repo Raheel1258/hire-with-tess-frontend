@@ -3,6 +3,7 @@ import EmployeeAuthStore from "@/store/Auth/auth.store";
 export const setAuthToken = (token: string, role:string) => {
   localStorage.setItem('accessToken', token);
   document.cookie = `accessToken=${token}; path=/; max-age=${60 * 60 * 24}; secure; samesite=strict`;
+  document.cookie = `userRole=${role}; path=/; max-age=${60 * 60 * 24}; secure; samesite=strict`;
   EmployeeAuthStore.getState().setAccessToken(token);
   EmployeeAuthStore.getState().setUserRole(role)
 };
@@ -11,6 +12,7 @@ export const setAuthToken = (token: string, role:string) => {
 export const clearAuthToken = () => {
   localStorage.removeItem('accessToken');
   document.cookie = 'accessToken=; path=/; max-age=0';
+  document.cookie = 'userRole=; path=/; max-age=0';
   EmployeeAuthStore.getState().clearAccessToken();
   EmployeeAuthStore.getState().clearUserRole();
 };
