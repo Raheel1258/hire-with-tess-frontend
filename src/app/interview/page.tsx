@@ -5,14 +5,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Image from "next/image";
 import Link from "next/link";
-import { Pencil, X, Check } from "lucide-react";
+import { Pencil, X, Check, CirclePlus } from "lucide-react";
 import InterviewLayout from "@/components/layout/InterviewLayout";
 import useHomeStore from "@/store/Employer/home.store";
 import { useSkillStore } from "@/store/Employer/InputStore";
 import { useSearchParams } from "next/navigation";
 import useResReqHook from "@/Routes/Client/hook/PUT/UpdateResReq.hook";
 import { Textarea } from "@/components/ui/textarea";
-import { useForm } from "react-hook-form";
 
 export default function InterviewForm() {
   const searchParams = useSearchParams();
@@ -20,7 +19,14 @@ export default function InterviewForm() {
 
   const ref = useRef<HTMLFormElement>(null);
   const ReqResMutation = useResReqHook();
-  const { isEditable, setIsEditable } = useSkillStore();
+  const {
+    isEditable,
+    setIsEditable,
+    newSkill,
+    setNewSkill,
+    showNewSkillInput,
+    setShowNewSkillInput,
+  } = useSkillStore();
   const {
     skills,
     setSkills,
@@ -77,6 +83,13 @@ export default function InterviewForm() {
     setSkills(skills.filter((_, i) => i !== index));
   };
 
+  const handleAddSkill = () => {
+    if (newSkill.trim() !== "") {
+      setSkills([...skills, newSkill]);
+      setNewSkill("");
+    }
+  };
+
   return (
     <>
       <InterviewLayout
@@ -87,9 +100,6 @@ export default function InterviewForm() {
         useCard={false}
       >
         <div className="flex flex-col ">
-          {/* <h1 className="font-roboto font-semibold text-[20px] leading-[30px] text-left">
-    AI Powered Response
-  </h1> */}
           <div className="flex items-start mt-4">
             <Image
               src="/images/AIAvatar.png"
@@ -183,25 +193,60 @@ export default function InterviewForm() {
               height={40}
               className="shrink-0"
             />
-            <div className="flex flex-wrap gap-2">
-              {skills.map((item, index) => (
-                <div key={index} className="relative w-full sm:w-auto">
-                  <Input
-                    value={item}
-                    readOnly={!isEditable}
-                    onChange={(e) => handleSkillChange(e.target.value, index)}
-                    className="pr-10 border-[#E2E8F0] rounded-3xl text-black font-openSans"
-                  />
-                  {isEditable && (
-                    <button
-                      onClick={() => handleDeleteSkill(index)}
-                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+            <div className="flex items-center justify-between flex-wrap gap-2 w-full">
+              {/* Skills List */}
+              <div className="flex flex-wrap gap-2 flex-grow">
+                {skills.map((item, index) => (
+                  <div key={index} className="relative w-full sm:w-auto">
+                    <Input
+                      value={item}
+                      readOnly={!isEditable}
+                      onChange={(e) => handleSkillChange(e.target.value, index)}
+                      className="pr-10 border-[#E2E8F0] rounded-3xl text-black font-openSans"
+                    />
+                    {isEditable && (
+                      <button
+                        onClick={() => handleDeleteSkill(index)}
+                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                      >
+                        <X size={18} />
+                      </button>
+                    )}
+                  </div>
+                ))}
+              </div>
+              {isEditable && (
+                <div className="flex items-center gap-2">
+                  {!showNewSkillInput ? (
+                    <Button
+                      variant="ghost"
+                      onClick={() => setShowNewSkillInput(true)}
+                      className="text-gray-500 hover:text-white hover:bg-amber-500 p-2 cursor-pointer"
                     >
-                      <X size={18} />
-                    </button>
+                      <CirclePlus size={20} />
+                    </Button>
+                  ) : (
+                    <>
+                      <Input
+                        value={newSkill}
+                        onChange={(e) => setNewSkill(e.target.value)}
+                        placeholder="Enter skill"
+                        className="w-full sm:w-48 h-10 p-2 border rounded-xl font-openSans text-[14px]"
+                      />
+                      <Button
+                        variant="ghost"
+                        onClick={() => {
+                          handleAddSkill();
+                          setShowNewSkillInput(false);
+                        }}
+                        className="text-green-600 hover:text-white hover:bg-green-500 p-2 cursor-pointer"
+                      >
+                        <Check size={20} />
+                      </Button>
+                    </>
                   )}
                 </div>
-              ))}
+              )}
             </div>
           </div>
         )}

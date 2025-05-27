@@ -13,14 +13,12 @@ import {
   DialogDescription,
   DialogClose,
 } from "@/components/ui/dialog";
-import { useState } from "react";
 import UserProfile from "../components/candiateprofile";
 import HomeTableTile from "../Constant/hometitle";
 import { Button } from "@/components/ui/button";
 import AnalyzeInterviewHook from "@/Routes/Employer/hooks/POST/AnalyzeInterview.hook";
 import { Loader } from "lucide-react";
 import { toast } from "sonner";
-import Link from "next/link";
 import OverviewStore from "@/store/EmployeeDashboard/dashboard/overview/overview.store";
 
 export default function DashboardHome() {

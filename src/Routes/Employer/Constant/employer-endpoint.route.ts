@@ -5,11 +5,13 @@ export const EMPLOYERAPI = {
 
   DELETE_JOB_BYID: (job_id: string) => `/api/v1/admin/jobs/${job_id}`,
   UPDATE_JOB_BYID: (job_id: string) => `/api/v1/admin/jobs/${job_id}`,
-  UPDATE_JOBSTATUS_BYID: (job_id: string) => `/api/v1/admin/jobs/${job_id}/status`,
+  UPDATE_JOBSTATUS_BYID: (job_id: string) =>
+    `/api/v1/admin/jobs/${job_id}/status`,
 
   //Interviews
   INTERVIEW_DETAILS: `/api/v1/admin/interviews`,
-  JOB_INTERVIEW_BYID: (job_id: string) => `/api/v1/admin/jobs/${job_id}/interviews`,
+  JOB_INTERVIEW_BYID: (job_id: string) =>
+    `/api/v1/admin/jobs/${job_id}/interviews`,
   INTERVIEW_DETAIL_BYID: (interview_id: string) =>
     `/api/v1/admin/interview/${interview_id}`,
   UPDATE_INTERVIEW_STATUS_BYID: (interview_id: string) =>
@@ -25,8 +27,8 @@ export const EMPLOYERAPI = {
   FILTER_INTERVIEW: `/api/v1/admin/interviews/filter/`,
 
   //Profile
-  ADMIN_PROFILE:`/api/v1/admin/profile`,
-  UPDATE_PROFILE:`/api/v1/admin/profile`,
+  ADMIN_PROFILE: `/api/v1/admin/profile`,
+  UPDATE_PROFILE: `/api/v1/admin/profile`,
   DELETE_PROFILE: `/api/v1/admin/delete-profile`,
 
   //Notification
@@ -35,10 +37,12 @@ export const EMPLOYERAPI = {
   UPDATE_PROFILE_NOTIFICATION: (notification_type: string) =>
     `/api/v1/admin/notification-settings/${notification_type}`,
 
-
   //Analyze Interview
-  ANALYZE_INTERVIEW:(interview_id:string) => `/api/v1/analyze/${interview_id}`,
+  ANALYZE_INTERVIEW: (interview_id: string) =>
+    `/api/v1/analyze/${interview_id}`,
 
   //Auth
   EMPLOYER_LOGIN: `/api/v1/auth/login`,
+  FORGOT_PASSWORD: `/api/v1/auth/forgot-password`,
+  VERIFY_OTP: `/api/v1/auth/verify-otp`,
 };

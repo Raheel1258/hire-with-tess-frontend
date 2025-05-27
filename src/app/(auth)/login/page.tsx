@@ -1,23 +1,24 @@
-'use client';
+"use client";
 
-import CustomInputForm from '@/app/interview/component/customformInput';
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Form, FormField, FormItem } from '@/components/ui/form';
-import LoginInMutation from '@/Routes/Employer/hooks/Auth/SignIn.hook';
-import { signInFormSchema, SignInFormValidator } from '@/schema/signIn.schema';
-import { zodResolver } from '@hookform/resolvers/zod';
-import Link from 'next/link';
-import { useRef } from 'react';
-import { useForm } from 'react-hook-form';
+import CustomInputForm from "@/app/interview/component/customformInput";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Form, FormField, FormItem } from "@/components/ui/form";
+import LoginInMutation from "@/Routes/Employer/hooks/Auth/SignIn.hook";
+import { signInFormSchema, SignInFormValidator } from "@/schema/signIn.schema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Loader2 } from "lucide-react";
+import Link from "next/link";
+import { useRef } from "react";
+import { useForm } from "react-hook-form";
 
 export default function EmployeeSignIn() {
   const form = useForm<SignInFormValidator>({
     resolver: zodResolver(signInFormSchema),
     defaultValues: {
-      email: '',
-      password: '',
+      email: "",
+      password: "",
     },
   });
 
@@ -96,7 +97,7 @@ export default function EmployeeSignIn() {
                     href="/forgot-password"
                     className="text-[#F7941D] font-sm text-[12px] cursor-pointer hover:underline"
                   >
-                    Forgot Password
+                    Forgot Password ?
                   </Link>
                 </div>
                 <div className="flex justify-center">
@@ -105,9 +106,19 @@ export default function EmployeeSignIn() {
                     type="submit"
                     disabled={SignInMutation.isPending}
                   >
-                    {SignInMutation.isPending ? 'Signing In...' : 'Sign In to Continue'}
+                    {SignInMutation.isPending ? (
+                      <Loader2 className="animate-spin text-white" />
+                    ) : (
+                      "Sign In to Continue"
+                    )}
                   </Button>
                 </div>
+                <p className="text-sm text-gray-500 text-center">
+                  Don&apos;t have an account?{" "}
+                  <Link href="/signup" className="text-[#F7941D]">
+                    Sign up
+                  </Link>
+                </p>
               </form>
             </Form>
           </div>

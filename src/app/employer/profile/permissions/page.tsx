@@ -1,8 +1,8 @@
-import { Card } from '@/components/ui/card';
-import { Switch } from '@/components/ui/switch';
-import { UpdateNotificationType } from '@/Routes/Employer/Api/employer.route';
-import UseProfilePermision from '@/Routes/Employer/hooks/GET/profile/permission';
-import RedirectToDashboard from '../components/breadcrumb';
+import { Card } from "@/components/ui/card";
+import { Switch } from "@/components/ui/switch";
+import { UpdateNotificationType } from "@/Routes/Employer/Api/employer.route";
+import UseProfilePermision from "@/Routes/Employer/hooks/GET/profile/Permission.hook";
+import RedirectToDashboard from "../components/breadcrumb";
 // import { useEffect } from 'react';
 
 export default function UserProfilePermission() {
@@ -33,12 +33,10 @@ export default function UserProfilePermission() {
                 Receive Interview Completion Alerts
               </h1>
               <p className="font-thin text-sm">
-                Get updates with candidates finish interviews{' '}
+                Get updates with candidates finish interviews{" "}
               </p>
             </div>
-            <Switch 
-            
-             />
+            <Switch />
           </div>
         </div>
 
@@ -50,8 +48,8 @@ export default function UserProfilePermission() {
                 Receive Notification for New Applicants
               </h1>
               <p className="font-thin text-sm">
-                Get notofied whenever a candidates completes an interview or submits
-                application{' '}
+                Get notofied whenever a candidates completes an interview or
+                submits application{" "}
               </p>
             </div>
             <Switch />
@@ -63,11 +61,11 @@ export default function UserProfilePermission() {
           <div className="flex flex-row items-center justify-between">
             <div>
               <h1 className="font-[open Sans] text-[#1E293B] font-semibold">
-                Show Company Brand on Job Listings{' '}
+                Show Company Brand on Job Listings{" "}
               </h1>
               <p className="font-thin text-sm">
                 Display your company logo and details on job postings for better
-                visibility{' '}
+                visibility{" "}
               </p>
             </div>
             <Switch />
