@@ -20,12 +20,16 @@ type SpeechRecordingInputProps = {
   placeholder?: string;
   jobId: string;
   index: number;
-  onSaveAndContinue: (transcript: string, currentquestion: string, audioURL: string | null,) => void;
+  onSaveAndContinue: (
+    transcript: string,
+    currentquestion: string,
+    audioURL: string | null,
+  ) => void;
 };
 
 const SpeechRecordingInput: React.FC<SpeechRecordingInputProps> = ({
   placeholder = 'Your response will appear here as you speak...',
-  onSaveAndContinue, 
+  onSaveAndContinue,
 }) => {
   const { hasRecorded, setIsPlaying } = useRecordingStore();
 
@@ -47,12 +51,11 @@ const SpeechRecordingInput: React.FC<SpeechRecordingInputProps> = ({
   const { mutate: uploadFile } = useUploadFileMutation();
 
   const { resetTranscript, browserSupportsSpeechRecognition } = useSpeechRecognition();
-  const { transcript, startSpeechRecognition, stopSpeechRecognition, listening } = useVoiceRecorder();
+  const { transcript, startSpeechRecognition, stopSpeechRecognition, listening } =
+    useVoiceRecorder();
   // const { startScreenShare } = useScreenSharing();
   const { stopVideoRecording } = useVideoRecording();
 
-
-  
   const startVoiceRecording = async () => {
     setIsVoiceRecording(true);
     try {
@@ -79,7 +82,7 @@ const SpeechRecordingInput: React.FC<SpeechRecordingInputProps> = ({
       };
       mediaRecorderRef.current.start();
     } catch (error) {
-      toast.error("Error starting voice recording");
+      toast.error('Error starting voice recording');
     }
   };
   const stopVoiceRecording = () => {
@@ -102,100 +105,100 @@ const SpeechRecordingInput: React.FC<SpeechRecordingInputProps> = ({
     }
   };
 
-  const startUserCamera = async (): Promise<MediaStream | null> => {
-    try {
-      const constraints: MediaStreamConstraints = {
-        video: {
-          width: { ideal: 1280 },
-          height: { ideal: 720 },
-          facingMode: 'user',
-        },
-        audio: {
-          echoCancellation: true,
-          noiseSuppression: true,
-          sampleRate: 44100,
-        },
-      };
+  // const startUserCamera = async (): Promise<MediaStream | null> => {
+  //   try {
+  //     const constraints: MediaStreamConstraints = {
+  //       video: {
+  //         width: { ideal: 1280 },
+  //         height: { ideal: 720 },
+  //         facingMode: 'user',
+  //       },
+  //       audio: {
+  //         echoCancellation: true,
+  //         noiseSuppression: true,
+  //         sampleRate: 44100,
+  //       },
+  //     };
 
-      const userStream = await navigator.mediaDevices.getUserMedia(constraints);
-      if (userCameraRef.current) {
-        userCameraRef.current.srcObject = userStream;
-      }
-      mediaStreamRef.current = userStream;
-      setIsRecordingStream(true);
-      return userStream;
-    } catch (error) {
-      toast.error('Could not access camera/microphone');
-      return null;
-    }
-  };
+  //     const userStream = await navigator.mediaDevices.getUserMedia(constraints);
+  //     if (userCameraRef.current) {
+  //       userCameraRef.current.srcObject = userStream;
+  //     }
+  //     mediaStreamRef.current = userStream;
+  //     setIsRecordingStream(true);
+  //     return userStream;
+  //   } catch (error) {
+  //     toast.error('Could not access camera/microphone');
+  //     return null;
+  //   }
+  // };
 
-  const stopUserCamera = (): void => {
-    if (mediaStreamRef.current) {
-      mediaStreamRef.current.getTracks().forEach((track) => {
-        track.stop();
-      });
-      mediaStreamRef.current = null;
-    }
+  // const stopUserCamera = (): void => {
+  //   if (mediaStreamRef.current) {
+  //     mediaStreamRef.current.getTracks().forEach((track) => {
+  //       track.stop();
+  //     });
+  //     mediaStreamRef.current = null;
+  //   }
 
-    if (previewVideoRef.current) {
-      previewVideoRef.current.srcObject = null;
-    }
+  //   if (previewVideoRef.current) {
+  //     previewVideoRef.current.srcObject = null;
+  //   }
 
-    if (userCameraRef.current) {
-      userCameraRef.current.srcObject = null;
-    }
+  //   if (userCameraRef.current) {
+  //     userCameraRef.current.srcObject = null;
+  //   }
 
-    setIsRecordingStream(false);
-  };
+  //   setIsRecordingStream(false);
+  // };
 
-  const startVideoRecording = async () => {
-    if (!mediaStreamRef.current) {
-      toast.error('Camera is not started');
-      return;
-    }
+  // const startVideoRecording = async () => {
+  //   if (!mediaStreamRef.current) {
+  //     toast.error('Camera is not started');
+  //     return;
+  //   }
 
-    recordedChunksRef.current = [];
+  //   recordedChunksRef.current = [];
 
-    try {
-      mediaRecorderRef.current = new MediaRecorder(mediaStreamRef.current, {
-        mimeType: 'video/webm; codecs=vp9',
-      });
+  //   try {
+  //     mediaRecorderRef.current = new MediaRecorder(mediaStreamRef.current, {
+  //       mimeType: 'video/webm; codecs=vp9',
+  //     });
 
-      mediaRecorderRef.current.ondataavailable = (event) => {
-        if (event.data.size > 0) {
-          recordedChunksRef.current.push(event.data);
-        }
-      };
+  //     mediaRecorderRef.current.ondataavailable = (event) => {
+  //       if (event.data.size > 0) {
+  //         recordedChunksRef.current.push(event.data);
+  //       }
+  //     };
 
-      mediaRecorderRef.current.onstop = () => {
-        const videoBlob = new Blob(recordedChunksRef.current, {
-          type: 'video/webm',
-        });
-        const videoURL = URL.createObjectURL(videoBlob);
-        setRecordedVideoURL(videoURL);
-        useRecordingStore.getState().setVideoURL(videoURL);
-      };
+  //     mediaRecorderRef.current.onstop = () => {
+  //       const videoBlob = new Blob(recordedChunksRef.current, {
+  //         type: 'video/webm',
+  //       });
+  //       const videoURL = URL.createObjectURL(videoBlob);
+  //       setRecordedVideoURL(videoURL);
+  //       useRecordingStore.getState().setVideoURL(videoURL);
+  //     };
 
-      mediaRecorderRef.current.start();
-    } catch (error) {
-      toast.error('Error starting video recording');
-    }
-  };
+  //     mediaRecorderRef.current.start();
+  //   } catch (error) {
+  //     toast.error('Error starting video recording');
+  //   }
+  // };
 
-  const toggleUserCamera = async () => {
-    if (isRecordingStream) {
-      await stopVideoRecording();
-      stopUserCamera();
-      setActiveTool(null);
-    } else {
-      setActiveTool('video');
-      const stream = await startUserCamera() as MediaStream | null;
-      if (stream) {
-        await startVideoRecording();
-      }
-    }
-  };
+  // const toggleUserCamera = async () => {
+  //   if (isRecordingStream) {
+  //     await stopVideoRecording();
+  //     stopUserCamera();
+  //     setActiveTool(null);
+  //   } else {
+  //     setActiveTool('video');
+  //     const stream = await startUserCamera() as MediaStream | null;
+  //     if (stream) {
+  //       await startVideoRecording();
+  //     }
+  //   }
+  // };
   const screenShareOptions = {
     video: {
       displaySurface: 'browser',
@@ -230,7 +233,7 @@ const SpeechRecordingInput: React.FC<SpeechRecordingInputProps> = ({
     };
 
     recorder.onstop = () => {
-      const videoBlob = new Blob(recordedChunksRef.current, { type: "video/webm" });
+      const videoBlob = new Blob(recordedChunksRef.current, { type: 'video/webm' });
       const screenURL = URL.createObjectURL(videoBlob);
       setRecordedBlobUrl(screenURL);
       useRecordingStore.getState().setScreenURL(screenURL);
@@ -255,9 +258,9 @@ const SpeechRecordingInput: React.FC<SpeechRecordingInputProps> = ({
     setIsRecordingStream(true);
   };
 
-
   const handleSaveAndContinue = async () => {
-    const { activeType, audioURL, videoURL, screenURL, currentquestion, interviewId } = useRecordingStore.getState();
+    const { activeType, audioURL, videoURL, screenURL, currentquestion, interviewId } =
+      useRecordingStore.getState();
 
     let fileUrl = '';
     if (activeType === 'audio') fileUrl = audioURL;
@@ -275,10 +278,13 @@ const SpeechRecordingInput: React.FC<SpeechRecordingInputProps> = ({
     formData.append('question_text', currentquestion);
     formData.append('answer_file', blob, `${activeType}-answer.webm`);
 
-    uploadFile({ interview_id: interviewId, data: formData },
+    uploadFile(
+      { interview_id: interviewId, data: formData },
       {
         onSuccess: (response) => {
-          const savedResponses = JSON.parse(localStorage.getItem('savedResponses') || '[]');
+          const savedResponses = JSON.parse(
+            localStorage.getItem('savedResponses') || '[]',
+          );
           const newEntry = {
             question_text: currentquestion,
             temp_url: response?.temp_url || fileUrl,
@@ -286,13 +292,10 @@ const SpeechRecordingInput: React.FC<SpeechRecordingInputProps> = ({
           };
           useResponseStore.getState().addResponse(newEntry);
           onSaveAndContinue(currentquestion, fileUrl, transcript || '');
-
         },
-      }
+      },
     );
-
   };
-
 
   const setActiveType = useRecordingStore.getState().setActiveType;
 
@@ -301,8 +304,8 @@ const SpeechRecordingInput: React.FC<SpeechRecordingInputProps> = ({
       stopSpeechRecognition();
     }
     stopVoiceRecording();
-    stopVideoRecording();
-    stopUserCamera();
+    // stopVideoRecording();
+    // stopUserCamera();
 
     setIsRecordedVoiceURL('');
     setRecordedVideoURL(null);
@@ -352,16 +355,16 @@ const SpeechRecordingInput: React.FC<SpeechRecordingInputProps> = ({
       icon: <Mic />,
       title: 'Listening...',
     },
-    {
-      key: 'video',
-      condition: isRecordingStream,
-      onClick: () => {
-        setActiveType('video');
-        toggleUserCamera();
-      },
-      icon: <Video />,
-      title: 'Recording...',
-    },
+    // {
+    //   key: 'video',
+    //   condition: isRecordingStream,
+    //   onClick: () => {
+    //     setActiveType('video');
+    //     toggleUserCamera();
+    //   },
+    //   icon: <Video />,
+    //   title: 'Recording...',
+    // },
     {
       key: 'screen',
       condition: isRecordingStream,
@@ -439,27 +442,27 @@ const SpeechRecordingInput: React.FC<SpeechRecordingInputProps> = ({
           <div className="flex justify-center gap-2 mt-12">
             {activeTool
               ? tools
-                .filter((tool) => tool.key === activeTool)
-                .map((tool) => (
+                  .filter((tool) => tool.key === activeTool)
+                  .map((tool) => (
+                    <EnhancedButton
+                      key={tool.key}
+                      action={tool.condition}
+                      onClick={tool.onClick}
+                      icon={tool.icon}
+                      defaultTitle=""
+                      onpressTitle={tool.title}
+                    />
+                  ))
+              : tools.map((tool) => (
                   <EnhancedButton
                     key={tool.key}
-                    action={tool.condition}
+                    action={false}
                     onClick={tool.onClick}
                     icon={tool.icon}
                     defaultTitle=""
                     onpressTitle={tool.title}
                   />
-                ))
-              : tools.map((tool) => (
-                <EnhancedButton
-                  key={tool.key}
-                  action={false}
-                  onClick={tool.onClick}
-                  icon={tool.icon}
-                  defaultTitle=""
-                  onpressTitle={tool.title}
-                />
-              ))}
+                ))}
           </div>
         )}
 

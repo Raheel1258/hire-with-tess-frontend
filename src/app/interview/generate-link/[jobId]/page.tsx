@@ -1,17 +1,21 @@
-"use client";
-import InterviewLayout from "@/components/layout/InterviewLayout";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Copy, Download, Share2 } from "lucide-react";
-import { toast } from "sonner";
-import SocialShare from "@/app/interview/component/share";
-import { useToggleStore } from "@/store/Employer/Toggle.store";
-import QRCode from "react-qr-code";
-import { cn } from "@/lib/utils";
+'use client';
+import InterviewLayout from '@/components/layout/InterviewLayout';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Copy, Download, Share2 } from 'lucide-react';
+import { toast } from 'sonner';
+import SocialShare from '@/app/interview/component/share';
+import { useToggleStore } from '@/store/Employer/Toggle.store';
+import QRCode from 'react-qr-code';
+import { cn } from '@/lib/utils';
+import useFetchInterviewLink from '@/Routes/Client/hook/POST/GenerateInterviewLink.hook';
+import { useParams } from 'next/navigation';
+import { useEffect, useRef } from 'react';
 
 export default function GenerateLink() {
-  const interviewLink = useToggleStore((state) => state.interviewLink);
-  const qrCode = useToggleStore((state) => state.qrCode);
+  const { interviewLink, qrCode } = useToggleStore();
+
+  console.log(interviewLink, qrCode);
 
   const {
     copied,
@@ -25,20 +29,20 @@ export default function GenerateLink() {
   const handleCopy = () => {
     if (!interviewLink) return;
     navigator.clipboard.writeText(interviewLink);
-    setCopied("Link copied to clipboard!");
-    toast("Link copied to clipboard!");
-    setTimeout(() => setCopied(""), 2000);
+    setCopied('Link copied to clipboard!');
+    toast('Link copied to clipboard!');
+    setTimeout(() => setCopied(''), 2000);
   };
 
   const handleDownloadQR = () => {
-    if (!interviewLink) return;
-    const link = document.createElement("a");
-    link.href = `data:image/png;base64,${interviewLink}`;
-    link.download = "QR_Code.png";
+    if (!qrCode) return;
+    const link = document.createElement('a');
+    link.href = `data:image/png;base64,${qrCode}`;
+    link.download = 'QR_Code.png';
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-    toast.success("QR Code downloaded successfully!");
+    toast.success('QR Code downloaded successfully!');
   };
 
   const toggleShareOptions = () => {
@@ -69,21 +73,21 @@ export default function GenerateLink() {
           <Input
             value={
               !interviewLink
-                ? "Generating Interview Link..."
-                : interviewLink || "No link available"
+                ? 'Generating Interview Link...'
+                : interviewLink || 'No link available'
             }
             readOnly
             onClick={() => {
               if (interviewLink) {
-                window.open(interviewLink, "_blank");
+                window.open(interviewLink, '_blank');
               }
             }}
             disabled={!interviewLink}
             className={cn(
-              "w-full h-[65px] border border-gray-300 rounded-[14px] px-4 pr-14 text-ellipsis overflow-hidden truncate",
+              'w-full h-[65px] border border-gray-300 rounded-[14px] px-4 pr-14 text-ellipsis overflow-hidden truncate',
               !interviewLink
-                ? "cursor-not-allowed text-gray-400 underline"
-                : "cursor-pointer text-[#4A3AFF] underline"
+                ? 'cursor-not-allowed text-gray-400 underline'
+                : 'cursor-pointer text-[#4A3AFF] underline',
             )}
           />
 
@@ -93,10 +97,7 @@ export default function GenerateLink() {
             className="absolute right-16 top-1/2 transform -translate-y-1/2 p-2 hover:bg-transparent"
             onClick={handleCopy}
           >
-            <Copy
-              size={20}
-              className={copied ? "text-blue-500" : "text-gray-600"}
-            />
+            <Copy size={20} className={copied ? 'text-blue-500' : 'text-gray-600'} />
           </Button>
 
           <div className="ml-2">
@@ -139,7 +140,7 @@ export default function GenerateLink() {
                   className="w-[200px] h-[200px] shadow-lg p-4"
                   width={216}
                   height={222}
-                  value={interviewLink || ""}
+                  value={interviewLink || ''}
                 />
               </div>
             )

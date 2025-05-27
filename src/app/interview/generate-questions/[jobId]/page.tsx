@@ -263,8 +263,8 @@ export default function Questionnaire() {
         </div>
 
         {editedQuestions?.length > 0 && (
-          <div className="flex justify-end sm:justify-end items-center mt-6 gap-4">
-            <Link href={`/interview?job_id=${jobId}`} className="w-full sm:w-auto">
+          <div className="flex justify-end items-center mt-6 gap-4">
+            <Link href={`/interview?job_id=${jobId}`}>
               <Button
                 type="button"
                 variant="secondary"

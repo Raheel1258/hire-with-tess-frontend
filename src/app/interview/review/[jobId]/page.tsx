@@ -1,32 +1,34 @@
-"use client";
-import InterviewLayout from "@/components/layout/InterviewLayout";
-import { Button } from "@/components/ui/button";
-import OutputCard from "@/app/interview/component/outputCard";
-import FetchJobDetails from "@/Routes/Client/hook/GET/FetchJobDetails.hook";
-import FetchQuestions from "@/Routes/Client/hook/GET/FetchQuestions.hook";
-import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
-import { customformSchema } from "@/schema/customform.schema";
-import { useRef, useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
+'use client';
+import InterviewLayout from '@/components/layout/InterviewLayout';
+import { Button } from '@/components/ui/button';
+import OutputCard from '@/app/interview/component/outputCard';
+import FetchJobDetails from '@/Routes/Client/hook/GET/FetchJobDetails.hook';
+import FetchQuestions from '@/Routes/Client/hook/GET/FetchQuestions.hook';
+import { Form, FormControl, FormField, FormItem } from '@/components/ui/form';
+import { customformSchema } from '@/schema/customform.schema';
+import { useRef, useEffect } from 'react';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
 import {
   Dialog,
   DialogContent,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import Signup from "@/app/signup/page";
-import CustomInputForm from "@/app/interview/component/customformInput";
-import { useRouter } from "next/navigation";
-import { useParams } from "next/navigation";
-import Link from "next/link";
-import { getAuthCookie, getAuthToken } from "@/Utils/Providers/auth";
+} from '@/components/ui/dialog';
+import Signup from '@/app/signup/page';
+import CustomInputForm from '@/app/interview/component/customformInput';
+import { useRouter } from 'next/navigation';
+import { useParams } from 'next/navigation';
+import Link from 'next/link';
+import { getAuthCookie, getAuthToken } from '@/Utils/Providers/auth';
+import useFetchInterviewLink from '@/Routes/Client/hook/POST/GenerateInterviewLink.hook';
 
 export default function InterviewReview() {
   const { jobId } = useParams<{ jobId: string }>();
   const ref = useRef<HTMLFormElement>(null);
   const router = useRouter();
   const accessToken = getAuthToken() || getAuthCookie();
+  const { mutate: fetchInterviewLink } = useFetchInterviewLink(jobId);
 
   const jobDetailsQuery = FetchJobDetails(jobId);
   const jobData = jobDetailsQuery?.data || {};
@@ -37,11 +39,11 @@ export default function InterviewReview() {
 
   useEffect(() => {
     if (jobData) {
-      setValue("jobTitle", jobData.job_title || "");
-      setValue("jobType", jobData.job_type || "");
-      setValue("companyName", jobData.company_name || "");
-      setValue("location", jobData.location || "");
-      setValue("salary", jobData.salary || "");
+      setValue('jobTitle', jobData.job_title || '');
+      setValue('jobType', jobData.job_type || '');
+      setValue('companyName', jobData.company_name || '');
+      setValue('location', jobData.location || '');
+      setValue('salary', jobData.salary || '');
     }
   }, [jobData, setValue]);
 
@@ -136,7 +138,7 @@ export default function InterviewReview() {
                 <FormItem>
                   <CustomInputForm
                     name="salary"
-                    currencyName={jobData.currency || "currency"}
+                    currencyName={jobData.currency || 'currency'}
                     label="Salary"
                     type="number"
                     readOnly
@@ -161,9 +163,7 @@ export default function InterviewReview() {
           </div>
         )}
         <div className="text-left space-y-2 w-full">
-          <h2 className="text-lg font-semibold mt-4 mb-6">
-            AI Powered Questions:
-          </h2>
+          <h2 className="text-lg font-semibold mt-4 mb-6">AI Powered Questions:</h2>
           <Form {...form}>
             <form>
               {data?.questions.map((question: string, index: number) => (
@@ -195,7 +195,9 @@ export default function InterviewReview() {
 
           {accessToken ? (
             <Link href={`/interview/generate-link/${jobId}`}>
-              <Button className="w-40">Generate Link</Button>
+              <Button onClick={() => fetchInterviewLink()} className="w-40">
+                Generate Link
+              </Button>
             </Link>
           ) : (
             <Dialog>
