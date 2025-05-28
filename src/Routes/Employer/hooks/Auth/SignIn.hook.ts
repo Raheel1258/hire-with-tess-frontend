@@ -5,7 +5,6 @@ import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import { setAuthToken } from '@/Utils/Providers/auth';
 
-
 interface LoginResponse {
   access_token: string;
   token_type: string;
@@ -24,13 +23,11 @@ export default function useLoginMutation() {
     mutationFn: EmployerLogin,
     onSuccess: (data) => {
       const { access_token, role } = data;
-
       if (!access_token) {
         toast.error('You are not authenticated.');
         return;
       }
-      setAuthToken(access_token,role);
-
+      setAuthToken(access_token, role);
       toast.success('Sign in successful', {
         description: 'Welcome to Dashboard!',
       });

@@ -29,13 +29,16 @@ export default function CandidateInstructions() {
           Take your time, be yourself, and show what you can do!
         </p>
 
-        <div className="py-8 w-full flex justify-center">
+        <div className="py-8 w-full flex justify-center items-center">
           <Card className="w-full sm:w-[90%] md:w-[669px] border-1 rounded-2xl p-4">
-            <h1 className="font-roboto font-bold text-[16px] leading-[20px] mb-2">
+            <h1 className="font-roboto font-bold text-[16px] leading-[20px] mb-2 text-center">
               Interview Instructions:
             </h1>
-            <div className="list-disc pl-5 font-openSans text-[14px] leading-[26px] text-black">
-              <li>You will answer few questions, each requiring an audio or video or screen sharing response.</li>
+            <ul className="list-disc pl-5 font-openSans text-[14px] leading-[26px] text-black text-left">
+              <li>
+                You will answer a few questions, each requiring an audio, video, or screen
+                sharing response.
+              </li>
               <li>You can redo your responses before submitting your final answer.</li>
               <li>
                 Each question has a time limit, so be mindful of your response time.
@@ -45,7 +48,7 @@ export default function CandidateInstructions() {
                 experience.
               </li>
               <li>Once you're ready, click "Continue" to begin!</li>
-            </div>
+            </ul>
           </Card>
         </div>
 

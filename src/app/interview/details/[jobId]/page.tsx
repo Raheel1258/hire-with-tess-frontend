@@ -16,6 +16,8 @@ import { X } from 'lucide-react';
 import RegeisterCandidatehook from '@/Routes/Client/hook/POST/RegeisterCandidatehook';
 import { toast } from 'sonner';
 import { Input } from '@/components/ui/input';
+import PhoneInput from 'react-phone-input-2';
+import 'react-phone-input-2/lib/style.css';
 
 export default function CandidatesDetails() {
   const { jobId } = useParams<{ jobId: string }>();
@@ -145,11 +147,43 @@ export default function CandidatesDetails() {
             name="phone"
             render={({ field }) => (
               <FormItem>
-                <CustomInputForm
-                  {...field}
-                  label="Phone Number"
-                  placeholder="+923000000000"
+                <FormLabel>Phone Number</FormLabel>
+                <PhoneInput
+                  country={'USA'}
+                  value={field.value}
+                  onChange={(phone) => field.onChange(phone)}
+                  inputProps={{
+                    name: 'phone',
+                    required: true,
+
+                    placeholder: 'Enter phone number',
+                  }}
+                  inputStyle={{
+                    width: '100%',
+                    height: '60px',
+                    fontWeight: 400,
+                    color: 'black',
+                    borderRadius: '14px',
+                    border: '1px solid #d1d5db',
+                    paddingLeft: '48px',
+                    outline: 'none',
+                    boxSizing: 'border-box',
+                    fontFamily: "'Roboto', 'Helvetica', 'Arial', sans-serif",
+                  }}
+                  containerStyle={{
+                    width: '100%',
+                    position: 'relative',
+                  }}
+                  buttonStyle={{
+                    borderRadius: '14px 0 0 14px',
+                    borderRight: 'none',
+                    border: '1px solid #d1d5db',
+                    height: '60px',
+                    display: 'flex',
+                    alignItems: 'center',
+                  }}
                 />
+                <FormMessage />
               </FormItem>
             )}
           />

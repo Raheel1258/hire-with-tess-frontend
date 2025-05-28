@@ -3,7 +3,6 @@ import WaveSurfer from 'wavesurfer.js';
 import { CirclePause, CirclePlay } from 'lucide-react';
 import DialogueStore from '@/store/EmployeeDashboard/dashboard/overview/dialoguewave';
 
-
 interface WaveformProps {
   recordedVoiceURL: string;
   seconds?: number;
@@ -41,7 +40,9 @@ const Waveform: React.FC<WaveformProps> = ({ recordedVoiceURL = 0 }) => {
 
     wavesurferRef.current = wavesurfer;
 
-    wavesurfer.on('ready', () => {setDuration(wavesurfer.getDuration());});
+    wavesurfer.on('ready', () => {
+      setDuration(wavesurfer.getDuration());
+    });
     wavesurfer.on('play', () => setIsPlaying(true));
     wavesurfer.on('pause', () => setIsPlaying(false));
     wavesurfer.on('finish', () => setIsPlaying(false));

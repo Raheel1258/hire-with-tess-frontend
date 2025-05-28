@@ -5,16 +5,32 @@ import EmployeeAuthStore from '@/store/Auth/auth.store';
 
 export default function useGoogleLoginHook() {
   const { setAccessToken } = EmployeeAuthStore();
+
   return useMutation({
     mutationFn: (code: string) => GoogleLoginIn(code),
+
     onSuccess: async (response) => {
-      setAccessToken(response.data.access_token);
-      toast.success('Login Successful', {
-        position: 'bottom-right',
-      });
+      try {
+        if (!response?.data?.access_token) {
+          throw new Error('Invalid token');
+        }
+
+        setAccessToken(response.data.access_token);
+        toast.success('Login Successful', {
+          position: 'bottom-right',
+        });
+      } catch (error: any) {
+        toast.error('Unexpected error during login', {
+          position: 'bottom-right',
+        });
+      }
     },
-    onError: () => {
-      toast.error('Login Failed', {
+
+    onError: (error: any) => {
+      const errorMessage =
+        error?.response?.data?.message || error?.message || 'Login Failed';
+
+      toast.error(errorMessage, {
         position: 'bottom-right',
       });
     },

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+'use client';
 import Link from 'next/link';
 import { Button } from '../ui/button';
 import {
@@ -7,31 +7,35 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { SessionProvider, signOut, useSession } from 'next-auth/react';
+
 import SignupDialogue from '@/app/interview/component/signupDialogue';
 import { Session } from 'next-auth';
 import EmployeeAuthStore from '@/store/Auth/auth.store';
+import { clearAuthToken, getAuthRole, getAuthToken } from '@/Utils/Providers/auth';
+import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
+import { useDashboardRedirect } from '@/Utils/helper/dashboardredirect';
+import { Loader2 } from 'lucide-react';
 
-function EmployerLayout({
-  getSession,
+export default function EmployerLayout({
   children,
 }: {
   getSession: (session: Session | null) => void;
   children: React.ReactNode;
 }) {
-  const { data: session } = useSession();
-
-  useEffect(() => {
-    getSession(session);
-  }, [getSession, session]);
-
+  const router = useRouter();
   const handleSignOut = () => {
-    EmployeeAuthStore.setState({ accessToken: '' });
-    localStorage.removeItem('accessToken');
-    signOut();
+    clearAuthToken();
   };
 
-  const { accessToken } = EmployeeAuthStore();
+  const DashboardRedirect = () => {
+    useDashboardRedirect(router);
+    if (getAuthToken() && getAuthRole() === 'superadmin') {
+      router.push('/superadmin/home');
+    } else if (getAuthToken()) {
+      router.push('/employer/home');
+    }
+  };
 
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-br from-[#f7941D] via-[#ffbfbf] to-[#1e4b8e]">
@@ -41,7 +45,7 @@ function EmployerLayout({
             <h1 className="text-xl font-semibold text-black">Hirewithtess</h1>
           </Link>
           <nav className="flex gap-4">
-            {accessToken ? (
+            {getAuthToken() ? (
               <div className="flex gap-2">
                 <Button
                   onClick={handleSignOut}
@@ -49,11 +53,13 @@ function EmployerLayout({
                 >
                   Sign Out
                 </Button>
-                <Link href={'/employer/home'}>
-                  <Button className="bg-tess-blue text-white px-4 py-2 rounded-md hover:bg-[#1E4B8E]-700 cursor-pointer">
-                    Dashboard
-                  </Button>
-                </Link>
+
+                <Button
+                  onClick={DashboardRedirect}
+                  className="bg-tess-blue text-white px-4 py-2 rounded-md hover:bg-[#1E4B8E]-700 cursor-pointer"
+                >
+                  Dashboard
+                </Button>
               </div>
             ) : (
               <>
@@ -89,24 +95,5 @@ function EmployerLayout({
         </div>
       </footer>
     </div>
-  );
-}
-
-export default function EmployerSessionProvider({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  const [session, setSession] = useState<Session | null>(null);
-
-  const getSession = (childSession: Session | null) => {
-    const session = childSession;
-    setSession(session);
-  };
-
-  return (
-    <SessionProvider session={session}>
-      <EmployerLayout getSession={getSession}>{children}</EmployerLayout>
-    </SessionProvider>
   );
 }
