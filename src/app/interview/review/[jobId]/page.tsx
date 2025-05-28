@@ -6,7 +6,7 @@ import FetchJobDetails from '@/Routes/Client/hook/GET/FetchJobDetails.hook';
 import FetchQuestions from '@/Routes/Client/hook/GET/FetchQuestions.hook';
 import { Form, FormControl, FormField, FormItem } from '@/components/ui/form';
 import { customformSchema } from '@/schema/customform.schema';
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import {
@@ -33,13 +33,13 @@ export default function InterviewReview() {
   const accessToken = getAuthToken() || getAuthCookie();
   const { mutate: fetchInterviewLink } = useFetchInterviewLink(jobId);
 
-  const { resetAIResponse } = useHomeStore();
+  const { resetAIResponse, jobDescription } = useHomeStore();
   const { resetInterviewLink } = useToggleStore();
   const { resetQuestionStore } = useQuestionStore();
 
   const ResetAll = () => {
     resetAIResponse();
-    resetInterviewLink();
+    // resetInterviewLink();
     resetQuestionStore();
   };
 
@@ -201,7 +201,16 @@ export default function InterviewReview() {
         </div>
         <div className="flex float-right gap-2 mt-8">
           <div>
-            <Button onClick={() => router.back()} variant="secondary">
+            <Button
+              onClick={() => {
+                if (jobDescription) {
+                  router.back();
+                } else {
+                  router.push(`/`);
+                }
+              }}
+              variant="secondary"
+            >
               Back
             </Button>
           </div>
