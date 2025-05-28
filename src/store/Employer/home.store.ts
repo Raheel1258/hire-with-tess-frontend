@@ -1,6 +1,6 @@
-import { create } from "zustand";
-import { devtools, persist } from "zustand/middleware";
-import { createJSONStorage } from "zustand/middleware";
+import { create } from 'zustand';
+import { devtools, persist } from 'zustand/middleware';
+import { createJSONStorage } from 'zustand/middleware';
 
 interface HomeState {
   jobId: string;
@@ -32,14 +32,14 @@ const useHomeStore = create<HomeState>()(
   devtools(
     persist(
       (set) => ({
-        jobId: "",
-        jobDescription: "",
-        jobTitle: "",
-        jobType: "",
-        companyName: "",
-        location: "",
-        salary: "",
-        currency: "",
+        jobId: '',
+        jobDescription: '',
+        jobTitle: '',
+        jobType: '',
+        companyName: '',
+        location: '',
+        salary: '',
+        currency: '',
         skills: [],
         responsibilities: [],
         requirements: [],
@@ -56,21 +56,36 @@ const useHomeStore = create<HomeState>()(
         setSkills: (value) => set({ skills: value }),
         setResponsibilities: (value) => set({ responsibilities: value }),
         setRequirements: (value) => set({ requirements: value }),
+
+        resetAIResponse: () =>
+          set({
+            jobId: '',
+            jobDescription: '',
+            jobTitle: '',
+            jobType: '',
+            companyName: '',
+            location: '',
+            salary: '',
+            currency: '',
+            skills: [],
+            responsibilities: [],
+            requirements: [],
+          }),
       }),
       {
-        name: "Ai-Response",
+        name: 'Ai-Response',
         storage: createJSONStorage(() => localStorage),
-        partialize: (state) => ({
-          jobId: state.jobId,
-          jobDescription: state.jobDescription,
-          requirements: state.requirements,
-          responsibilities: state.responsibilities,
-          skills: state.skills,
-          questions: state.Aiquestions,
-        }),
-      }
-    )
-  )
+        // partialize: (state) => ({
+        //   jobId: state.jobId,
+        //   jobDescription: state.jobDescription,
+        //   requirements: state.requirements,
+        //   responsibilities: state.responsibilities,
+        //   skills: state.skills,
+        //   questions: state.Aiquestions,
+        // }),
+      },
+    ),
+  ),
 );
 
 export default useHomeStore;
