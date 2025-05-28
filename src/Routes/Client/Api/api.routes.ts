@@ -83,6 +83,8 @@ export const GoogleLoginIn = async (code: string) => {
   const response = await api.post(APIEndpoint.GOOGLE_LOGIN, {
     code: code,
   });
+  console.log(response, 'response fro backend');
+  console.log(response.data, 'response.data from backend');
   return response.data;
 };
 

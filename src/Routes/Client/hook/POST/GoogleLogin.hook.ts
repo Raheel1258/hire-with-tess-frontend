@@ -10,12 +10,14 @@ export default function useGoogleLoginHook() {
     mutationFn: (code: string) => GoogleLoginIn(code),
 
     onSuccess: async (response) => {
+      console.log(response, 'response');
+      console.log('response.code', response?.data);
       try {
-        if (!response?.data?.access_token) {
+        if (!response?.access_token) {
           throw new Error('Invalid token');
         }
 
-        setAccessToken(response.data.access_token);
+        setAccessToken(response.access_token);
         toast.success('Login Successful', {
           position: 'bottom-right',
         });
