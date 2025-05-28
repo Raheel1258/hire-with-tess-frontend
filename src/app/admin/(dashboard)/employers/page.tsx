@@ -39,9 +39,9 @@ export default function EmployersList() {
     <div>
       <h1 className="font-[roboto] text-[24px] font-semibold leading-[30px] mb-4">
         {" "}
-        Job Posting
+        Employers
       </h1>
-      <Searchbar />
+      {/* <Searchbar /> */}
       <TableComponent
         header={TITLE}
         subheader={DATA}

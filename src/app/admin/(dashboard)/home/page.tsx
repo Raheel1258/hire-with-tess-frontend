@@ -12,7 +12,7 @@ import { Loader } from 'lucide-react';
 import { DialogDescription, DialogTitle } from '@radix-ui/react-dialog';
 
 export default function AdminDashboardHome() {
-  const TITLE = ['Action', 'Name', 'Job Applied For', 'Created At', 'Status', 'Score'];
+  const TITLE = ['Action', 'Name', 'Job Applied For', 'Applied On', 'Interview Status', 'Score'];
 
   const {
     data: interviewCardData,
@@ -119,13 +119,13 @@ export default function AdminDashboardHome() {
           ></CardComponent>
           <CardComponent
             heading="Total Applicant"
-            subheading={interviewCardData?.total_applicants}
+            subheading={interviewCardData?.total_candidates}
             icon={<BriefcaseBusiness size={20} strokeWidth={1.5} color="#f7941D" />}
           ></CardComponent>
 
           <CardComponent
             heading="Interviews Completed"
-            subheading={interviewCardData?.total_interviews}
+            subheading={interviewCardData?.completed_interviews}
             icon={<BriefcaseBusiness size={20} strokeWidth={1.5} color="#f7941D" />}
           ></CardComponent>
           <CardComponent

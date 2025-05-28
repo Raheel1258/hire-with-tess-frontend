@@ -19,6 +19,7 @@ import UserProfile from "@/app/employer/(dashboard)/components/candiateprofile";
 import CandidateTableTitle from "../Constant/candiatetitle";
 import { Button } from "@/components/ui/button";
 import AnalyzeInterviewHook from "@/Routes/Employer/hooks/POST/AnalyzeInterview.hook";
+import { toast } from "sonner";
 
 export default function CandidatePage() {
   const { data: candidatestats } = UseDashboardCandidateCardStats();
@@ -91,7 +92,7 @@ export default function CandidatePage() {
               {
                 onSuccess: (response) => {
                   setAIResult(response?.final_report);
-                  setAIReportDialogOpen(true);
+                  // setAIReportDialogOpen(true);
                   setAnalyzingInterviewId(null);
                 },
                 onError: (error) => {
@@ -136,7 +137,7 @@ export default function CandidatePage() {
           ></CardComponent>
           <CardComponent
             heading="New Candidates"
-            subheading={candidatestats?.hired}
+            subheading={candidatestats?.new_candidates}
             icon={
               <BriefcaseBusiness size={20} strokeWidth={1.5} color="#f7941D" />
             }

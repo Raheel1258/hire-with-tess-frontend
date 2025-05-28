@@ -7,7 +7,7 @@
     'Shortlisted Rate (%)',
     'Job Type',
     'Posted Date',
-    'Expiry Date',
+    'Link',
   ];
 
   export default JobPostingTableTitle
