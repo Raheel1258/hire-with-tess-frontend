@@ -13,7 +13,7 @@ import Link from 'next/link';
 import { useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import Image from 'next/image';
-import { Suspense } from 'react'
+import { Suspense } from 'react';
 
 function EmployeeSignIn() {
   const form = useForm<SignInFormValidator>({
@@ -168,9 +168,10 @@ function EmployeeSignIn() {
   );
 }
 
-export default EmployeeSignInPage(){
+export default function EmployeeSignInPage() {
   return (
-    <Suspense fallback={<div>Loading...</div>} >
+    <Suspense fallback={<div>Loading...</div>}>
       <EmployeeSignIn />
     </Suspense>
+  );
 }
