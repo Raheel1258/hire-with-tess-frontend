@@ -151,7 +151,11 @@ export default function CandidatesDetails() {
                 <PhoneInput
                   country={'us'}
                   value={field.value}
-                  onChange={(phone) => field.onChange(phone)}
+                  // onChange={(phone) => field.onChange(phone)}
+                  onChange={(phone) => {
+                    const formattedPhone = phone.startsWith('+') ? phone : `+${phone}`;
+                    field.onChange(formattedPhone);
+                  }}
                   inputProps={{
                     name: 'phone',
                     required: true,

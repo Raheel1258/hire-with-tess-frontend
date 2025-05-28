@@ -7,7 +7,9 @@ interface QuestionStore {
   manualQuestion: boolean;
   Aiquestions: QuestionType[];
   newQuestionText: string;
+  removeQuestion: number;
 
+  setRemoveQuestion: (value: number) => void;
   setNewQuestionText: (value: string) => void;
   setManualQuestion: (value: boolean) => void;
   setAiQuestions: (value: QuestionType[]) => void;
@@ -22,7 +24,9 @@ export const useQuestionStore = create<QuestionStore>()(
         editedQuestions: [],
         Aiquestions: [],
         newQuestionText: '',
+        removeQuestion: 0,
 
+        setRemoveQuestion: (value) => set({ removeQuestion: value }),
         setNewQuestionText: (value) => set({ newQuestionText: value }),
         setManualQuestion: (value) => set({ manualQuestion: value }),
         setEditedQuestions: (edited) => set({ editedQuestions: edited }),

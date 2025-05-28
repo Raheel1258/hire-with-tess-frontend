@@ -12,22 +12,9 @@ import SignupDialogue from '@/app/interview/component/signupDialogue';
 import { clearAuthToken, getAuthRole, getAuthToken } from '@/Utils/Providers/auth';
 import { useRouter } from 'next/navigation';
 import { useDashboardRedirect } from '@/Utils/helper/dashboardredirect';
-import { useEffect, useState } from 'react';
 
 export default function EmployerLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [userRole, setUserRole] = useState<string | null>(null);
-
-  useEffect(() => {
-    const token = getAuthToken();
-    const role = getAuthRole();
-    if (token) {
-      setIsAuthenticated(true);
-      setUserRole(role);
-    }
-  }, []);
-
   const handleSignOut = () => {
     clearAuthToken();
     router.push('/');
@@ -35,9 +22,9 @@ export default function EmployerLayout({ children }: { children: React.ReactNode
 
   const DashboardRedirect = () => {
     useDashboardRedirect(router);
-    if (userRole === 'superadmin') {
+    if (getAuthToken() && getAuthRole() === 'superadmin') {
       router.push('/superadmin/home');
-    } else if (userRole) {
+    } else if (getAuthToken()) {
       router.push('/employer/home');
     }
   };
@@ -50,7 +37,7 @@ export default function EmployerLayout({ children }: { children: React.ReactNode
             <h1 className="text-xl font-semibold text-black">Hirewithtess</h1>
           </Link>
           <nav className="flex gap-4">
-            {isAuthenticated ? (
+            {getAuthToken() ? (
               <div className="flex gap-2">
                 <Button
                   onClick={handleSignOut}
@@ -95,7 +82,7 @@ export default function EmployerLayout({ children }: { children: React.ReactNode
       <footer className="bg-gray-100 py-8">
         <div className="container mx-auto px-4">
           <p className="text-center text-gray-600">
-            © {new Date().getFullYear()} Hiring Platform. All rights reserved.
+            © {new Date().getFullYear()} Hiring Platform.All rights reserved.
           </p>
         </div>
       </footer>

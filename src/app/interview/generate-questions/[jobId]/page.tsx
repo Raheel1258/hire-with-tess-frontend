@@ -30,6 +30,7 @@ export default function Questionnaire() {
     setManualQuestion,
     setEditedQuestions,
     setNewQuestionText,
+    setAiQuestions,
   } = useQuestionStore();
 
   const updateJobQuestionMutation = useUpdateJobQuestion();
@@ -116,6 +117,22 @@ export default function Questionnaire() {
     }
   };
 
+  const handleRemoveQuestion = (indexToRemove: number) => {
+    const updatedEditedQuestions = editedQuestions.filter(
+      (_, index) => index !== indexToRemove,
+    );
+    const updatedAiQuestions = Aiquestions.filter((_, index) => index !== indexToRemove);
+
+    setEditedQuestions(updatedEditedQuestions);
+    setAiQuestions(updatedAiQuestions);
+    updateJobQuestionMutation.mutate({ questions: updatedEditedQuestions });
+
+    if (editableQuestionIndex === indexToRemove) {
+      setEditableQuestionIndex(null);
+      setIsEditable(false);
+    }
+  };
+
   return (
     <div>
       <InterviewLayout
@@ -176,31 +193,40 @@ export default function Questionnaire() {
                             </p>
                           </div>
                         )}
-
-                        {isEditing ? (
-                          hasChanged ? (
-                            <Check
-                              size={18}
-                              color="green"
-                              onClick={saveChanges}
-                              className="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer"
-                            />
+                        <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-2">
+                          {isEditing ? (
+                            hasChanged ? (
+                              <Check
+                                size={18}
+                                color="green"
+                                onClick={saveChanges}
+                                className="cursor-pointer"
+                              />
+                            ) : (
+                              <X
+                                size={18}
+                                color="orange"
+                                onClick={cancelEditing}
+                                className="cursor-pointer"
+                              />
+                            )
                           ) : (
-                            <X
-                              size={18}
-                              color="orange"
-                              onClick={cancelEditing}
-                              className="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer"
-                            />
-                          )
-                        ) : (
-                          <Pencil
-                            size={18}
-                            color="#718096"
-                            onClick={() => startEditing(index)}
-                            className="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer"
-                          />
-                        )}
+                            <>
+                              <Pencil
+                                size={18}
+                                color="#718096"
+                                onClick={() => startEditing(index)}
+                                className="cursor-pointer"
+                              />
+                              <X
+                                size={18}
+                                color="red"
+                                onClick={() => handleRemoveQuestion(index)}
+                                className="cursor-pointer"
+                              />
+                            </>
+                          )}
+                        </div>
                       </div>
                     </li>
                   );
