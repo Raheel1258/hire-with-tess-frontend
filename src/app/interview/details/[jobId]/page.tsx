@@ -28,11 +28,10 @@ export default function CandidatesDetails() {
       candidate_name: '',
       email: '',
       phone: '',
-      resume: null as unknown as File,
+      resume: undefined,
       job_id: jobId,
     },
   });
-  const UserImageRef = form.register('resume');
 
   const mutation = RegeisterCandidatehook();
 
@@ -42,7 +41,9 @@ export default function CandidatesDetails() {
     formData.append('candidate_name', data.candidate_name);
     formData.append('email', data.email);
     formData.append('phone', data.phone);
-    formData.append('resume', data.resume);
+    if (data.resume instanceof File) {
+      formData.append('resume', data.resume);
+    }
 
     mutation.mutate(formData, {
       onSuccess: () => {
@@ -65,7 +66,7 @@ export default function CandidatesDetails() {
 
   const removeFile = () => {
     setFileName(null);
-    form.setValue('resume', null as unknown as File);
+    form.setValue('resume', undefined);
     const input = document.getElementById('image-upload') as HTMLInputElement;
     if (input) input.value = '';
   };
@@ -114,8 +115,8 @@ export default function CandidatesDetails() {
                     id="image-upload"
                     type="file"
                     accept="application/pdf"
-                    {...UserImageRef}
                     className="hidden"
+                    {...field}
                     onChange={handleFileChange}
                   />
                 </Card>
@@ -147,9 +148,8 @@ export default function CandidatesDetails() {
             name="phone"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Phone Number</FormLabel>
                 <PhoneInput
-                  country={'USA'}
+                  country={'us'}
                   value={field.value}
                   onChange={(phone) => field.onChange(phone)}
                   inputProps={{

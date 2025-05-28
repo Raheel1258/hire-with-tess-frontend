@@ -47,7 +47,7 @@ export default function Signup() {
     signupMutation.mutate(payload, {
       onSuccess: () => {
         form.reset();
-        // router.push(`/interview/generate-link/${jobId}`);
+        router.push(`/interview/review/${jobId}`);
       },
     });
   };
@@ -246,7 +246,10 @@ export default function Signup() {
         </div>
         <p className="text-sm text-gray-500 text-center">
           Already have an account?{' '}
-          <Link href="/login" className="text-[#F7941D]">
+          <Link
+            href={`/login?returnTo=/interview/review/${jobId}`}
+            className="text-[#F7941D]"
+          >
             Login
           </Link>
         </p>

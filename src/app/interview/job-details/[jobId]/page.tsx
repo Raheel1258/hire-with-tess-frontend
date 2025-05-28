@@ -21,6 +21,7 @@ export default function InterviewForm() {
   const { isEditDescription, setIsEditableDescription } = useSkillStore();
   const router = useRouter();
 
+  const { jobTitle, jobType, companyName, location, salary } = useHomeStore();
   const { jobId } = useParams<{ jobId: string }>();
   const generateMutation = useUpdateJob();
 
@@ -28,11 +29,11 @@ export default function InterviewForm() {
     resolver: zodResolver(customformSchema),
     defaultValues: {
       jobDescription: jobDescription,
-      jobTitle: '',
-      jobType: '',
-      companyName: '',
-      location: '',
-      salary: '',
+      jobTitle: jobTitle,
+      jobType: jobType,
+      companyName: companyName,
+      location: location,
+      salary: salary,
     },
   });
   const ref = useRef<HTMLFormElement>(null);
@@ -40,12 +41,12 @@ export default function InterviewForm() {
   const onSubmit = async (data: FormValidator) => {
     generateMutation.mutate({
       job_description: data.jobDescription,
-      job_title: data.jobTitle,
-      job_type: data.jobType,
-      company_name: data.companyName,
-      location: data.location,
-      salary: data.salary,
-      currency: data.currency,
+      job_title: data.jobTitle || '',
+      job_type: data.jobType || '',
+      company_name: data.companyName || '',
+      location: data.location || '',
+      salary: data.salary || '',
+      currency: data.currency || '',
     });
   };
 
@@ -54,7 +55,6 @@ export default function InterviewForm() {
     if (!isValid) return;
 
     const formData = form.getValues();
-
     generateMutation.mutate({
       job_description: formData.jobDescription,
       job_title: formData.jobTitle,
@@ -199,7 +199,7 @@ export default function InterviewForm() {
                     className=" sm:w-auto cursor-pointer"
                     type="button"
                   >
-                    Cancel
+                    Back
                   </Button>
                 </Link>
                 <Button

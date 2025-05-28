@@ -18,7 +18,6 @@ import { Loader2 } from 'lucide-react';
 
 export default function Questionnaire() {
   const { jobId } = useParams<{ jobId: string }>();
-  const router = useRouter();
 
   const { editableQuestionIndex, setEditableQuestionIndex, setIsEditable } =
     useSkillStore();
