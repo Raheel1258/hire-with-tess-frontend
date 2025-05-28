@@ -22,6 +22,9 @@ import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { getAuthCookie, getAuthToken } from '@/Utils/Providers/auth';
 import useFetchInterviewLink from '@/Routes/Client/hook/POST/GenerateInterviewLink.hook';
+import useHomeStore from '@/store/Employer/home.store';
+import { useToggleStore } from '@/store/Employer/Toggle.store';
+import { useQuestionStore } from '@/store/Employer/questionStore';
 
 export default function InterviewReview() {
   const { jobId } = useParams<{ jobId: string }>();
@@ -29,6 +32,16 @@ export default function InterviewReview() {
   const router = useRouter();
   const accessToken = getAuthToken() || getAuthCookie();
   const { mutate: fetchInterviewLink } = useFetchInterviewLink(jobId);
+
+  const { resetAIResponse } = useHomeStore();
+  const { resetInterviewLink } = useToggleStore();
+  const { resetQuestionStore } = useQuestionStore();
+
+  const ResetAll = () => {
+    resetAIResponse();
+    resetInterviewLink();
+    resetQuestionStore();
+  };
 
   const jobDetailsQuery = FetchJobDetails(jobId);
   const jobData = jobDetailsQuery?.data || {};
@@ -195,7 +208,15 @@ export default function InterviewReview() {
 
           {accessToken ? (
             <Link href={`/interview/generate-link/${jobId}`}>
-              <Button onClick={() => fetchInterviewLink()} className="w-40">
+              <Button
+                onClick={() => {
+                  ResetAll();
+                  fetchInterviewLink();
+                  console.log('fetchInterviewLink', data.interviewLink);
+                  router.push(`/interview/generate-link/${jobId}`);
+                }}
+                className="w-40"
+              >
                 Generate Link
               </Button>
             </Link>

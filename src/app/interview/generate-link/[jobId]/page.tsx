@@ -12,8 +12,6 @@ import { cn } from '@/lib/utils';
 export default function GenerateLink() {
   const { interviewLink, qrCode } = useToggleStore();
 
-  console.log(interviewLink, qrCode);
-
   const {
     copied,
     setCopied,

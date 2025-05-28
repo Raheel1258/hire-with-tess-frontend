@@ -115,10 +115,7 @@ export default function EmployeeSignIn() {
 
                 <div className="flex flex-col sm:flex-row justify-between items-center gap-2">
                   <div className="flex items-center space-x-2">
-                    <Checkbox
-                      id="terms"
-                      //  required
-                    />
+                    <Checkbox id="terms" />
                     <label
                       htmlFor="terms"
                       className="text-sm font-openSans text-[12px] font-sm text-[#1B2559] leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"

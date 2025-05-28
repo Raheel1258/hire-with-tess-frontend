@@ -3,10 +3,11 @@ import { z } from 'zod';
 const phoneRegex = new RegExp(/^([+]?[\s0-9]+)?(\d{3}|[(]?[0-9]+[)])?([-]?[\s]?[0-9])+$/);
 export const CandidateDetailSchema = z.object({
   resume: z
-    .instanceof(File)
-    .refine((file) => file.type === 'application/pdf', 'Only PDF files are allowed')
-    .refine((file) => file.size < 5 * 1024 * 1024, 'Max file size is 5MB'),
-
+    .any()
+    .optional()
+    .refine((file) => file instanceof File || file === undefined, {
+      message: 'Invalid file',
+    }),
   job_id: z.string().min(1, { message: 'Job ID is required.' }),
 
   candidate_name: z.string().min(3, { message: 'Please provide your User name.' }),

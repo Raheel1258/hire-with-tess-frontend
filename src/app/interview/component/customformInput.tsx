@@ -133,7 +133,7 @@ const CustomInputForm: React.FC<CustomInputProps> = ({
                       }}
                       style={{ cursor: 'pointer' }}
                     >
-                      {showPassword ? <EyeOff /> : <Eye />}
+                      {showPassword ? <Eye /> : <EyeOff />}
                     </span>
                   </InputAdornment>
                 ) : icon ? (

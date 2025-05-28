@@ -9,30 +9,35 @@ import {
 } from '@/components/ui/dialog';
 
 import SignupDialogue from '@/app/interview/component/signupDialogue';
-import { Session } from 'next-auth';
-import EmployeeAuthStore from '@/store/Auth/auth.store';
 import { clearAuthToken, getAuthRole, getAuthToken } from '@/Utils/Providers/auth';
 import { useRouter } from 'next/navigation';
-import { toast } from 'sonner';
 import { useDashboardRedirect } from '@/Utils/helper/dashboardredirect';
-import { Loader2 } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
-export default function EmployerLayout({
-  children,
-}: {
-  getSession: (session: Session | null) => void;
-  children: React.ReactNode;
-}) {
+export default function EmployerLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [userRole, setUserRole] = useState<string | null>(null);
+
+  useEffect(() => {
+    const token = getAuthToken();
+    const role = getAuthRole();
+    if (token) {
+      setIsAuthenticated(true);
+      setUserRole(role);
+    }
+  }, []);
+
   const handleSignOut = () => {
     clearAuthToken();
+    router.push('/');
   };
 
   const DashboardRedirect = () => {
     useDashboardRedirect(router);
-    if (getAuthToken() && getAuthRole() === 'superadmin') {
+    if (userRole === 'superadmin') {
       router.push('/superadmin/home');
-    } else if (getAuthToken()) {
+    } else if (userRole) {
       router.push('/employer/home');
     }
   };
@@ -45,7 +50,7 @@ export default function EmployerLayout({
             <h1 className="text-xl font-semibold text-black">Hirewithtess</h1>
           </Link>
           <nav className="flex gap-4">
-            {getAuthToken() ? (
+            {isAuthenticated ? (
               <div className="flex gap-2">
                 <Button
                   onClick={handleSignOut}
@@ -90,7 +95,7 @@ export default function EmployerLayout({
       <footer className="bg-gray-100 py-8">
         <div className="container mx-auto px-4">
           <p className="text-center text-gray-600">
-            © {new Date().getFullYear()} Hiring Platform.All rights reserved.
+            © {new Date().getFullYear()} Hiring Platform. All rights reserved.
           </p>
         </div>
       </footer>

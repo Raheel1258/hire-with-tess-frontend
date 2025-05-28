@@ -1,5 +1,5 @@
-import { create } from "zustand";
-import { devtools, persist } from "zustand/middleware";
+import { create } from 'zustand';
+import { devtools, persist } from 'zustand/middleware';
 
 interface ToggleProps {
   showPassword: boolean;
@@ -25,11 +25,11 @@ export const useToggleStore = create<ToggleProps>()(
       (set) => ({
         showPassword: false,
         showConfirmPassword: false,
-        copied: "",
+        copied: '',
         showShareOptions: false,
         showQrSharedOptions: false,
-        interviewLink: "",
-        qrCode: "",
+        interviewLink: '',
+        qrCode: '',
 
         setQrCode: (value: string) => set({ qrCode: value }),
         setInterviewLink: (value: string) => set({ interviewLink: value }),
@@ -39,14 +39,24 @@ export const useToggleStore = create<ToggleProps>()(
         setShowShareOptions: () =>
           set((state) => ({ showShareOptions: !state.showShareOptions })),
 
-        toggleShowPassword: () =>
-          set((state) => ({ showPassword: !state.showPassword })),
+        toggleShowPassword: () => set((state) => ({ showPassword: !state.showPassword })),
         toggleShowConfirmPassword: () =>
           set((state) => ({ showConfirmPassword: !state.showConfirmPassword })),
+
+        resetInterviewLink: () =>
+          set({
+            showPassword: false,
+            showConfirmPassword: false,
+            copied: '',
+            showShareOptions: false,
+            showQrSharedOptions: false,
+            interviewLink: '',
+            qrCode: '',
+          }),
       }),
       {
-        name: "Basic-store",
-      }
-    )
-  )
+        name: 'Basic-store',
+      },
+    ),
+  ),
 );
