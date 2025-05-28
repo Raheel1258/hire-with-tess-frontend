@@ -2,7 +2,7 @@ import { EmployerLogin } from '@/Routes/Employer/Api/employer.route';
 import { useMutation } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { toast } from 'sonner';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { setAuthToken } from '@/Utils/Providers/auth';
 
 interface LoginResponse {
@@ -18,29 +18,35 @@ interface LoginPayload {
 
 export default function useLoginMutation() {
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   return useMutation<LoginResponse, AxiosError<{ detail?: string }>, LoginPayload>({
     mutationFn: EmployerLogin,
     onSuccess: (data) => {
       const { access_token, role } = data;
+      const returnTo = searchParams.get('returnTo');
+
       if (!access_token) {
         toast.error('You are not authenticated.');
         return;
       }
-      setAuthToken(access_token, role);
-      toast.success('Sign in successful', {
-        description: 'Welcome to Dashboard!',
-      });
 
+      setAuthToken(access_token, role);
+      toast.success('Login successful');
+      if (returnTo) {
+        router.push(returnTo);
+        return;
+      }
+      // role-based redirect
       switch (role) {
         case 'admin':
-          router.push('/employer/home');
+          router.push('/');
           break;
         case 'superadmin':
           router.push('/admin/home');
           break;
         default:
-          toast.error('Your are Not Allowed');
+          toast.error('You are not allowed.');
           break;
       }
     },

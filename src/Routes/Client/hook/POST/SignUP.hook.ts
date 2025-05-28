@@ -2,15 +2,14 @@ import { useMutation } from '@tanstack/react-query';
 import { SignUp } from '@/Routes/Client/Api/api.routes';
 import { toast } from 'sonner';
 import { AxiosError } from 'axios';
-import EmployeeAuthStore from '@/store/Auth/auth.store';
 import useSignUpRedirect from '@/Utils/helper/redirect';
 import { useRouter } from 'next/navigation';
 import { setAuthToken } from '@/Utils/Providers/auth';
+import useHomeStore from '@/store/Employer/home.store';
 
 export default function useSignupMutation(jobId?: string) {
   const router = useRouter();
   const redirectTo = useSignUpRedirect(jobId);
-  const { setAccessToken, setUserRole } = EmployeeAuthStore();
 
   return useMutation({
     mutationFn: SignUp,
@@ -18,15 +17,7 @@ export default function useSignupMutation(jobId?: string) {
     onSuccess: async (response) => {
       try {
         if (response?.access_token) {
-          setAccessToken(response.access_token);
-          setUserRole(response.role);
-          setAuthToken(response.access_token, response.role);
-          console.log('Signup success response:', response);
-          console.log('Access token:', response.access_token);
-          console.log('Role:', response.role);
-          console.log('Redirecting to:', redirectTo);
-
-          document.cookie = `accessToken=${response.access_token}; path=/`;
+          setAuthToken(response.access_token, 'admin');
           toast.success('Signup successful!');
           router.push(redirectTo);
         } else {
