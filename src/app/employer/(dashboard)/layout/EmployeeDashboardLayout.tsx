@@ -12,7 +12,7 @@ export default function DashboardBussinessLayout({
   const router = useRouter();
   const handleLogout = () => {
     clearAuthToken();
-    router.push('/employer');
+    router.push('/login');
   };
   return (
     <div className="bg-slate-100">

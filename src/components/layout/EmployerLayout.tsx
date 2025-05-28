@@ -15,6 +15,7 @@ import { clearAuthToken, getAuthRole, getAuthToken } from '@/Utils/Providers/aut
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { useDashboardRedirect } from '@/Utils/helper/dashboardredirect';
+import { Loader2 } from 'lucide-react';
 
 export default function EmployerLayout({
   children,
@@ -29,9 +30,12 @@ export default function EmployerLayout({
 
   const DashboardRedirect = () => {
     useDashboardRedirect(router);
+    if (getAuthToken() && getAuthRole() === 'superadmin') {
+      router.push('/superadmin/home');
+    } else if (getAuthToken()) {
+      router.push('/employer/home');
+    }
   };
-
-  const { accessToken } = EmployeeAuthStore();
 
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-br from-[#f7941D] via-[#ffbfbf] to-[#1e4b8e]">
@@ -41,7 +45,7 @@ export default function EmployerLayout({
             <h1 className="text-xl font-semibold text-black">Hirewithtess</h1>
           </Link>
           <nav className="flex gap-4">
-            {accessToken ? (
+            {getAuthToken() ? (
               <div className="flex gap-2">
                 <Button
                   onClick={handleSignOut}
@@ -49,20 +53,13 @@ export default function EmployerLayout({
                 >
                   Sign Out
                 </Button>
-                <Link href={'/employer/home'} onClick={DashboardRedirect}>
-                  <Button
-                    onClick={() => {
-                      if (getAuthToken()) {
-                        router.push('/employer/home');
-                      } else {
-                        toast.error('You must be logged in');
-                      }
-                    }}
-                    className="bg-tess-blue text-white px-4 py-2 rounded-md hover:bg-[#1E4B8E]-700 cursor-pointer"
-                  >
-                    Dashboard
-                  </Button>
-                </Link>
+
+                <Button
+                  onClick={DashboardRedirect}
+                  className="bg-tess-blue text-white px-4 py-2 rounded-md hover:bg-[#1E4B8E]-700 cursor-pointer"
+                >
+                  Dashboard
+                </Button>
               </div>
             ) : (
               <>

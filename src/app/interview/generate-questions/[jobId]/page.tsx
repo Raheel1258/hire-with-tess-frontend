@@ -48,10 +48,16 @@ export default function Questionnaire() {
   const hasFetched = useRef(false);
 
   useEffect(() => {
-    if (!jobId || hasFetched.current || generateQuestionMutation.isSuccess) return;
+    if (
+      !jobId ||
+      hasFetched.current ||
+      generateQuestionMutation.isSuccess ||
+      Aiquestions.length > 0
+    )
+      return;
     generateQuestionMutation.mutate({ job_id: jobId });
     hasFetched.current = true;
-  }, [jobId, generateQuestionMutation]);
+  }, [jobId, generateQuestionMutation, Aiquestions]);
 
   useEffect(() => {
     setEditedQuestions(Aiquestions);
