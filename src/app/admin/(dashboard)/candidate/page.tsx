@@ -11,17 +11,20 @@ import { DialogDescription, DialogTitle } from '@radix-ui/react-dialog';
 import UserProfile from '@/app/employer/(dashboard)/components/candiateprofile';
 
 export default function AdminCandidatePage() {
-  const TITLE = ['Action', 'Name', 'Job Applied For', 'Created At', 'Status', 'Score'];
+  const TITLE = [
+    'Action',
+    'Name',
+    'Job Applied For',
+    'Applied On',
+    'Interview Status',
+    'Score',
+  ];
 
   const { data: DashboardTableData } = UseGetAllInterview();
   const { data: candidatestats } = UseDashboardCandidateCardStats();
 
-  const {
-    selectedCandidate,
-    isDialogOpen,
-    setSelectedCandidate,
-    setIsDialogOpen,
-  } = OverviewStore();
+  const { selectedCandidate, isDialogOpen, setSelectedCandidate, setIsDialogOpen } =
+    OverviewStore();
 
   const DATA =
     DashboardTableData?.items?.map((item: any) => [
@@ -86,7 +89,7 @@ export default function AdminCandidatePage() {
           ></CardComponent>
           <CardComponent
             heading="New Candidates"
-            subheading={candidatestats?.pending}
+            subheading={candidatestats?.new_candidates}
             icon={<BriefcaseBusiness size={20} strokeWidth={1.5} color="#f7941D" />}
           ></CardComponent>
 

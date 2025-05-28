@@ -20,11 +20,16 @@ import AnalyzeInterviewHook from '@/Routes/Employer/hooks/POST/AnalyzeInterview.
 import { Loader } from 'lucide-react';
 import { toast } from 'sonner';
 import OverviewStore from '@/store/EmployeeDashboard/dashboard/overview/overview.store';
+import { useRouter } from 'next/navigation';
 
 export default function DashboardHome() {
   const { data: interviewCardData } = UseDashboardCardStats();
   const { data: DashboardTableData } = UseGetAllInterview();
   const Interviewmutation = AnalyzeInterviewHook();
+
+  const router = useRouter();
+
+  console.log({ interviewCardData });
 
   const {
     selectedCandidate,
@@ -38,11 +43,7 @@ export default function DashboardHome() {
   } = OverviewStore();
 
   const handleButtonClick = () => {
-    window.open(
-      'https://hire-with-tess-frontend-git-main-raheel1258s-projects.vercel.app/',
-      '_blank',
-      'noopener,noreferrer',
-    );
+    router.push('/');
   };
 
   const DATA =
@@ -146,13 +147,13 @@ export default function DashboardHome() {
           ></CardComponent>
           <CardComponent
             heading="Total Applicant"
-            subheading={interviewCardData?.total_applicants}
+            subheading={interviewCardData?.total_candidates}
             icon={<BriefcaseBusiness size={20} strokeWidth={1.5} color="#f7941D" />}
           ></CardComponent>
 
           <CardComponent
             heading="Interviews Completed"
-            subheading={interviewCardData?.total_interviews}
+            subheading={interviewCardData?.completed_interviews}
             icon={<BriefcaseBusiness size={20} strokeWidth={1.5} color="#f7941D" />}
           ></CardComponent>
           <CardComponent

@@ -1,5 +1,5 @@
 'use client';
-import { Eye } from 'lucide-react';
+import { Eye, Copy, BriefcaseBusiness, Users } from 'lucide-react';
 import {
   Dialog,
   DialogClose,
@@ -17,7 +17,11 @@ import UseUpdateJobStatus from '@/Routes/Employer/hooks/PUT/job/UpdateJobStatus.
 import JobStore from '@/store/EmployeeDashboard/dashboard/job-posting/job.store';
 import postedJobProps from '@/Types/EmployerDashboard/Dashboard/Job/podtedjob.type';
 import { DropDownCustomStatus } from '@/app/employer/(dashboard)/components/statusfeature';
+import CardComponent from '@/app/employer/(dashboard)/components/card';
 import JobpProfile from '@/app/employer/(dashboard)/components/postedjobdialogue';
+import { Button } from '@/components/ui/button';
+import { toast } from 'sonner';
+import UseDashboardCardStats from '@/Routes/Employer/hooks/GET/Overview/GetOverviewCardStats.hook';
 
 export default function AdminJobPosting() {
   const TITLE = [
@@ -28,12 +32,13 @@ export default function AdminJobPosting() {
     'Shortlisted Rate (%)',
     'Job Type',
     'Job Posted Date',
-    'Job Expiry Date',
+    'Link',
   ];
-  const { data: jobdata } = UseDashboardJobCardStats();
+  const { data: jobdata } = UseDashboardCardStats();
   const { data: JobPostedTableData } = UseGetAllJob();
   const deleteJobMutation = UseDeleteJobByID();
   const updatejobstatus = UseUpdateJobStatus();
+
   const {
     isDialogOpen,
     setIsDialogOpen,
@@ -47,6 +52,21 @@ export default function AdminJobPosting() {
     item?.job_title?.toLowerCase()?.includes(searchTerm.toLowerCase()),
   );
 
+  const handleCopyLink = (link: string | undefined) => {
+    if (!link) {
+      toast.error('No link available to copy');
+      return;
+    }
+    navigator.clipboard
+      .writeText(link)
+      .then(() => {
+        toast.success('Link copied to clipboard');
+      })
+      .catch(() => {
+        toast.error('Failed to copy link');
+      });
+  };
+
   const DATA =
     (filteredJobs ?? []).map((item: postedJobProps) => [
       <Eye
@@ -58,30 +78,50 @@ export default function AdminJobPosting() {
         className="w-5 h-5 text-gray-600 cursor-pointer"
       />,
       item?.job_title,
-      <DropDownCustomStatus
-        key={item.status}
-        Status={item?.status}
-        updateStatus={(newStatus) =>
-          updatejobstatus.mutate({
-            job_id: item.id,
-            status: newStatus,
-          })
-        }
-      />,
+      item.status,
       item?.shortlisted_stats?.shortlisted,
       item?.shortlisted_stats?.shortlist_ratio,
       item?.job_type,
       new Date(item.created_at).toLocaleDateString(),
-      item?.expiry_date,
+      item?.interview_link ? (
+        <Button
+          variant="ghost"
+          size="sm"
+          className="flex items-center gap-2"
+          onClick={() => handleCopyLink(item.interview_link)}
+        >
+          <Copy className="w-4 h-4" />
+          <span>Copy Link</span>
+        </Button>
+      ) : (
+        'No link available'
+      ),
     ]) || [];
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
   };
 
-  const deleteJob = (rowIndex: number) => {
+  const deleteJob = async (rowIndex: number) => {
+    if (!filteredJobs || filteredJobs.length === 0) {
+      toast.error('No jobs available to delete');
+      return;
+    }
+    if (rowIndex < 0 || rowIndex >= filteredJobs.length) {
+      toast.error('Invalid job index');
+      return;
+    }
+
+    const job = filteredJobs[rowIndex];
+
+    if (!job || !job.id) {
+      toast.error('Invalid job data');
+      return;
+    }
+
     const jobIds = filteredJobs?.map((item: { id: string }) => item.id) ?? [];
     const jobId = jobIds[rowIndex];
+    console.log(jobId);
     deleteJobMutation.mutate(jobId);
   };
 
@@ -98,8 +138,31 @@ export default function AdminJobPosting() {
         </DialogContent>
       </Dialog>
       <div>
-        <h1 className="font-[roboto] text-[24px] font-semibold leading-[30px] mb-4">
-          {' '}
+        <h1 className="text-[24px] font-[roboto] font-semibold ml-2 mb-4">Overview</h1>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 w-full">
+          <CardComponent
+            heading="Open Job Listings"
+            subheading={jobdata?.active_jobs}
+            icon={<Users className="text-[#f7941D]" />}
+          ></CardComponent>
+          <CardComponent
+            heading="Total Applicant"
+            subheading={jobdata?.total_candidates}
+            icon={<BriefcaseBusiness size={20} strokeWidth={1.5} color="#f7941D" />}
+          ></CardComponent>
+
+          <CardComponent
+            heading="Interviews Completed"
+            subheading={jobdata?.completed_interviews}
+            icon={<BriefcaseBusiness size={20} strokeWidth={1.5} color="#f7941D" />}
+          ></CardComponent>
+          <CardComponent
+            heading="Shortlised Applicants"
+            subheading={jobdata?.shortlisted_candidates}
+            icon={<BriefcaseBusiness size={20} strokeWidth={1.5} color="#f7941D" />}
+          ></CardComponent>
+        </div>
+        <h1 className="font-[roboto] mt-2 text-[24px] font-semibold leading-[30px] mb-4">
           Job Posting
         </h1>
         <Searchbar value={searchTerm} onChange={handleSearchChange} />
@@ -107,9 +170,9 @@ export default function AdminJobPosting() {
           header={TITLE}
           subheader={DATA}
           paginationstart={JobPostedTableData?.current_page}
-          paginationend={JobPostedTableData?.total}
-          // onDelete={deleteJob}
-          // showTrashIcon={true}
+          paginationend={JobPostedTableData?.pages}
+          onDelete={deleteJob}
+          showTrashIcon={true}
         />
       </div>
     </>

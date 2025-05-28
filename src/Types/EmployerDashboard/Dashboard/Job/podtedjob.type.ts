@@ -9,4 +9,5 @@ export default interface postedJobProps{
     job_type: string;
     created_at: string;
     expiry_date: string;
+    interview_link?: string;
 }

@@ -1,11 +1,18 @@
 'use client';
-import { BriefcaseBusiness, Eye, Users } from 'lucide-react';
+import { BriefcaseBusiness, Copy, Eye, Users } from 'lucide-react';
 import CardComponent from '../components/card';
 import TableComponent from '../components/table';
 import Searchbar from '../components/searchbar';
 import UseDashboardJobCardStats from '@/Routes/Employer/hooks/GET/jobposting/GetJobCardstats.hook';
 import UseGetAllJob from '@/Routes/Employer/hooks/GET/jobposting/GetAllJobs.hook';
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import JobPostingTableTitle from '@/app/employer/(dashboard)/Constant/jobposting';
 import UseDeleteJobByID from '@/Routes/Employer/hooks/DELETE/DeleteJobById.hook';
 import JobpProfile from '../components/postedjobdialogue';
@@ -14,6 +21,8 @@ import UseUpdateJobStatus from '@/Routes/Employer/hooks/PUT/job/UpdateJobStatus.
 import postedJobProps from '@/Types/EmployerDashboard/Dashboard/Job/podtedjob.type';
 import JobStore from '@/store/EmployeeDashboard/dashboard/job-posting/job.store';
 import UseGetFilteredJob from '@/Routes/Employer/hooks/GET/jobposting/GetFilterJob.hook';
+import { Button } from '@/components/ui/button';
+import { toast } from 'sonner';
 
 export default function JobPosting() {
   const { data: jobdata } = UseDashboardJobCardStats();
@@ -22,20 +31,42 @@ export default function JobPosting() {
   const updatejobstatus = UseUpdateJobStatus();
   // const { data: FilteredJobData } = UseGetFilteredJob({});
 
-  const {isDialogOpen, setIsDialogOpen, postedjobdata, setpostedjobdata, searchTerm, setSearchTerm} = JobStore();
+  const {
+    isDialogOpen,
+    setIsDialogOpen,
+    postedjobdata,
+    setpostedjobdata,
+    searchTerm,
+    setSearchTerm,
+  } = JobStore();
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
   };
 
-  const filteredJobs = JobPostedTableData?.items?.filter((item: {job_title: string}) =>
-    item.job_title.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredJobs = JobPostedTableData?.items?.filter((item: { job_title: string }) =>
+    item.job_title.toLowerCase().includes(searchTerm.toLowerCase()),
   );
   const deleteJob = (rowIndex: number) => {
     const jobIds = filteredJobs?.map((item: { id: string }) => item.id) ?? [];
     const jobId = jobIds[rowIndex];
     deleteJobMutation.mutate(jobId);
-  }
+  };
+
+  const handleCopyLink = (link: string | undefined) => {
+    if (!link) {
+      toast.error('No link available to copy');
+      return;
+    }
+    navigator.clipboard
+      .writeText(link)
+      .then(() => {
+        toast.success('Link copied to clipboard');
+      })
+      .catch(() => {
+        toast.error('Failed to copy link');
+      });
+  };
 
   const DATA = (filteredJobs ?? []).map((item: postedJobProps) => [
     <Eye
@@ -47,9 +78,9 @@ export default function JobPosting() {
       className="w-5 h-5 text-gray-600 cursor-pointer"
     />,
     item?.job_title,
-      <DropDownCustomStatus
+    <DropDownCustomStatus
       key={item.status}
-      Status={item?.status } 
+      Status={item?.status}
       updateStatus={(newStatus) =>
         updatejobstatus.mutate({
           job_id: item.id,
@@ -61,14 +92,25 @@ export default function JobPosting() {
     item?.shortlisted_stats?.shortlist_ratio,
     item?.job_type,
     new Date(item.created_at).toLocaleDateString(),
-    item?.expiry_date
+    item?.interview_link ? (
+      <Button
+        variant="ghost"
+        size="sm"
+        className="flex items-center gap-2"
+        onClick={() => handleCopyLink(item.interview_link)}
+      >
+        <Copy className="w-4 h-4" />
+        <span>Copy Link</span>
+      </Button>
+    ) : (
+      'No link available'
+    ),
+    ,
   ]);
 
   return (
     <>
-      <Dialog
-        open={isDialogOpen}
-        onOpenChange={setIsDialogOpen}>
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Posted Job Details</DialogTitle>
@@ -106,10 +148,7 @@ export default function JobPosting() {
 
         <div className="mt-10">
           <h1 className="font-roboto text-2xl font-bold leading-[30px] mb-4">Jobs</h1>
-          <Searchbar
-            value={searchTerm}
-            onChange={handleSearchChange}
-          />
+          <Searchbar value={searchTerm} onChange={handleSearchChange} />
           <TableComponent
             header={JobPostingTableTitle}
             subheader={DATA}
