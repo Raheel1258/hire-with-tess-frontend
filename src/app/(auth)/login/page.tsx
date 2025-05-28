@@ -13,8 +13,9 @@ import Link from 'next/link';
 import { useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import Image from 'next/image';
+import { Suspense } from 'react'
 
-export default function EmployeeSignIn() {
+function EmployeeSignIn() {
   const form = useForm<SignInFormValidator>({
     resolver: zodResolver(signInFormSchema),
     defaultValues: {
@@ -165,4 +166,11 @@ export default function EmployeeSignIn() {
       </div>
     </div>
   );
+}
+
+export default EmployeeSignInPage(){
+  return (
+    <Suspense fallback={<div>Loading...</div>} >
+      <EmployeeSignIn />
+    </Suspense>
 }
