@@ -25,7 +25,7 @@ export default function UserProfile({ data, isSuperAdmin }: any) {
       />
       <div>
         <div className="flex flex-col lg:flex-row w-full gap-4 p-4 mt-4">
-          <Avatar className="w-24 h-24 lg:w-40 lg:h-40 sm:w-24 sm:h-24 self-center lg:self-start">
+          <Avatar className="w-24 h-24 lg:w-40 lg:h-40 self-center lg:self-start">
             {data.image_url ? (
               <AvatarImage src={data.image_url} alt={data.candidate_name} />
             ) : (
@@ -33,9 +33,9 @@ export default function UserProfile({ data, isSuperAdmin }: any) {
             )}
           </Avatar>
 
-          <Card className="w-full lg:w-3xl h-auto">
-            <CardContent className="w-xl flex flex-col md:flex-row text-[#505050] justify-between gap-4 p-4">
-              <div className="flex flex-col text-[14px] font-[roboto] font-bold gap-2">
+          <Card className="flex-1 h-auto">
+            <CardContent className="flex flex-col md:flex-row text-[#505050] justify-between gap-4 p-4">
+              <div className="flex flex-col text-[14px] font-roboto font-bold gap-2">
                 <div className="flex flex-col sm:flex-row sm:items-center gap-1">
                   <h1>Name:</h1>
                   <h1 className="font-normal sm:ml-2">{data.candidate_name}</h1>
@@ -50,7 +50,7 @@ export default function UserProfile({ data, isSuperAdmin }: any) {
                 </div>
               </div>
 
-              <div className="flex flex-col text-[14px] font-[roboto] font-bold gap-2">
+              <div className="flex flex-col text-[14px] font-roboto font-bold gap-2">
                 <div className="flex flex-col sm:flex-row sm:items-center gap-1">
                   <h1>Applied For:</h1>
                   <h1 className="font-normal sm:ml-2 truncate">{data.job_title}</h1>
@@ -66,7 +66,7 @@ export default function UserProfile({ data, isSuperAdmin }: any) {
           </Card>
 
           {!isSuperAdmin && (
-            <div className="flex flex-col sm:flex-row lg:flex-col gap-4 items-center justify-center w-full px-4">
+            <div className="w-full lg:w-[180px] flex flex-col sm:flex-row lg:flex-col gap-4 items-center justify-center px-4">
               <Button
                 disabled={updatejobstatus.isPending}
                 onClick={() =>
@@ -75,7 +75,7 @@ export default function UserProfile({ data, isSuperAdmin }: any) {
                     status: 'hire',
                   })
                 }
-                className="w-full sm:w-1/2 lg:w-40 bg-[#1E4B8E] hover:bg-[#1E4B8E] cursor-pointer h-[50px] text-white"
+                className="w-full sm:w-1/2 lg:w-full bg-[#1E4B8E] hover:bg-[#1E4B8E] cursor-pointer h-[50px] text-white"
               >
                 Shortlisted
               </Button>
@@ -87,7 +87,7 @@ export default function UserProfile({ data, isSuperAdmin }: any) {
                     status: 'reject',
                   })
                 }
-                className="w-full sm:w-1/2 lg:w-40 bg-[#F55141] hover:bg-[#F55141] cursor-pointer h-[50px] text-white"
+                className="w-full sm:w-1/2 lg:w-full bg-[#F55141] hover:bg-[#F55141] cursor-pointer h-[50px] text-white"
               >
                 Reject
               </Button>

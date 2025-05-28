@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+'use client';
 import Link from 'next/link';
 import { Button } from '../ui/button';
 import {
@@ -7,28 +7,28 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { SessionProvider, signOut, useSession } from 'next-auth/react';
+
 import SignupDialogue from '@/app/interview/component/signupDialogue';
 import { Session } from 'next-auth';
 import EmployeeAuthStore from '@/store/Auth/auth.store';
+import { clearAuthToken, getAuthRole, getAuthToken } from '@/Utils/Providers/auth';
+import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
+import { useDashboardRedirect } from '@/Utils/helper/dashboardredirect';
 
-function EmployerLayout({
-  getSession,
+export default function EmployerLayout({
   children,
 }: {
   getSession: (session: Session | null) => void;
   children: React.ReactNode;
 }) {
-  const { data: session } = useSession();
-
-  useEffect(() => {
-    getSession(session);
-  }, [getSession, session]);
-
+  const router = useRouter();
   const handleSignOut = () => {
-    EmployeeAuthStore.setState({ accessToken: '' });
-    localStorage.removeItem('accessToken');
-    signOut();
+    clearAuthToken();
+  };
+
+  const DashboardRedirect = () => {
+    useDashboardRedirect(router);
   };
 
   const { accessToken } = EmployeeAuthStore();
@@ -49,8 +49,17 @@ function EmployerLayout({
                 >
                   Sign Out
                 </Button>
-                <Link href={'/employer/home'}>
-                  <Button className="bg-tess-blue text-white px-4 py-2 rounded-md hover:bg-[#1E4B8E]-700 cursor-pointer">
+                <Link href={'/employer/home'} onClick={DashboardRedirect}>
+                  <Button
+                    onClick={() => {
+                      if (getAuthToken()) {
+                        router.push('/employer/home');
+                      } else {
+                        toast.error('You must be logged in');
+                      }
+                    }}
+                    className="bg-tess-blue text-white px-4 py-2 rounded-md hover:bg-[#1E4B8E]-700 cursor-pointer"
+                  >
                     Dashboard
                   </Button>
                 </Link>
@@ -89,24 +98,5 @@ function EmployerLayout({
         </div>
       </footer>
     </div>
-  );
-}
-
-export default function EmployerSessionProvider({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  const [session, setSession] = useState<Session | null>(null);
-
-  const getSession = (childSession: Session | null) => {
-    const session = childSession;
-    setSession(session);
-  };
-
-  return (
-    <SessionProvider session={session}>
-      <EmployerLayout getSession={getSession}>{children}</EmployerLayout>
-    </SessionProvider>
   );
 }

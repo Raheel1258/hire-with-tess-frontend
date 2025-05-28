@@ -1,13 +1,13 @@
-import EmployeeAuthStore from "@/store/Auth/auth.store";
+import EmployeeAuthStore from '@/store/Auth/auth.store';
+import { signOut } from 'next-auth/react';
 
-export const setAuthToken = (token: string, role:string) => {
+export const setAuthToken = (token: string, role: string) => {
   localStorage.setItem('accessToken', token);
   document.cookie = `accessToken=${token}; path=/; max-age=${60 * 60 * 24}; secure; samesite=strict`;
   document.cookie = `userRole=${role}; path=/; max-age=${60 * 60 * 24}; secure; samesite=strict`;
   EmployeeAuthStore.getState().setAccessToken(token);
-  EmployeeAuthStore.getState().setUserRole(role)
+  EmployeeAuthStore.getState().setUserRole(role);
 };
-
 
 export const clearAuthToken = () => {
   localStorage.removeItem('accessToken');
@@ -15,11 +15,21 @@ export const clearAuthToken = () => {
   document.cookie = 'userRole=; path=/; max-age=0';
   EmployeeAuthStore.getState().clearAccessToken();
   EmployeeAuthStore.getState().clearUserRole();
+  signOut();
 };
 
 export const getAuthToken = () =>
   localStorage.getItem('accessToken') ||
-  EmployeeAuthStore.getState().accessToken;
+  EmployeeAuthStore.getState().accessToken ||
+  getAuthCookie();
+
+export const getAuthRole = () => {
+  const role =
+    localStorage.getItem('userRole') ||
+    EmployeeAuthStore.getState().userRole ||
+    getAuthCookie();
+  return role;
+};
 
 export const getAuthCookie = () => {
   const match = document.cookie.match(/(?:^|;\s*)accessToken=([^;]*)/);
@@ -28,5 +38,6 @@ export const getAuthCookie = () => {
 
 export const getAuthHeader = () => {
   const token = getAuthToken() || getAuthCookie();
-  return token ? { Authorization: `Bearer ${token}` } : {};
+  const role = getAuthRole();
+  return token ? { Authorization: `Bearer ${token}`, role } : { role };
 };

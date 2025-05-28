@@ -136,3 +136,17 @@
     @apply h-16 rounded-2xl border px-4 text-lg focus:outline-none focus:ring-2 focus:ring-blue-500;
   }
 }
+/* Override the dropdown option to be flex row aligned */
+.react-tel-input .country-list .country {
+  display: flex !important;
+  align-items: center;
+  gap: 8px; /* space between flag and code */
+  padding: 6px 12px;
+  font-size: 14px;
+}
+
+/* Adjust flag size */
+.react-tel-input .country-list .country .flag {
+  width: 20px !important;
+  height: 15px !important;
+}

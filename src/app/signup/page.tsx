@@ -47,7 +47,7 @@ export default function Signup() {
     signupMutation.mutate(payload, {
       onSuccess: () => {
         form.reset();
-        router.push(`/interview/generate-link/${jobId}`);
+        // router.push(`/interview/generate-link/${jobId}`);
       },
     });
   };
