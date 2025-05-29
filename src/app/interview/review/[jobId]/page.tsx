@@ -33,16 +33,6 @@ export default function InterviewReview() {
   const accessToken = getAuthToken() || getAuthCookie();
   const { mutate: fetchInterviewLink } = useFetchInterviewLink(jobId);
 
-  const { resetAIResponse, jobDescription } = useHomeStore();
-  const { resetInterviewLink } = useToggleStore();
-  const { resetQuestionStore } = useQuestionStore();
-
-  const ResetAll = () => {
-    resetAIResponse();
-    // resetInterviewLink();
-    resetQuestionStore();
-  };
-
   const jobDetailsQuery = FetchJobDetails(jobId);
   const jobData = jobDetailsQuery?.data || {};
   const { data } = FetchQuestions(jobId);
@@ -219,9 +209,7 @@ export default function InterviewReview() {
             <Link href={`/interview/generate-link/${jobId}`}>
               <Button
                 onClick={() => {
-                  ResetAll();
                   fetchInterviewLink();
-                  console.log('fetchInterviewLink', data.interviewLink);
                   router.push(`/interview/generate-link/${jobId}`);
                 }}
                 className="w-40"

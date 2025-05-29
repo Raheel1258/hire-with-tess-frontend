@@ -57,9 +57,13 @@ export default function UserAccountDetail() {
     formData.append('email', data.email);
     if (data.image instanceof File) {
       formData.append('image', data.image);
-    }
 
-    UpdateProfileMutation.mutate(formData);
+    UpdateProfileMutation.mutate(formData, {
+      onSuccess: () => {
+        setIsEditable(false);
+      },
+    });
+
   };
 
   const { setValue } = form;
@@ -85,7 +89,7 @@ export default function UserAccountDetail() {
         DashboardUrl="/employer/home"
         ProfileUrl={'/employer/profile'}
       />
-      <div className="flex flex-row justify-between items-center">
+      <div className="flex flex-row gap-4 items-center">
         <h1 className="text-2xl font-semibold text-slate-800">Account Details</h1>
       </div>
 

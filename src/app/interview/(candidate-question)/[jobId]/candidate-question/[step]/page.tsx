@@ -22,7 +22,6 @@ export default function InterviewQuestionPage() {
   const { data } = FetchQuestions(jobId);
   const totalSteps = data?.questions?.length ?? 0;
   const currentQuestion = data?.questions?.[currentStep - 1];
-   
   const handleSaveAndContinue = () => {
     const nextStep = currentStep + 1;
 

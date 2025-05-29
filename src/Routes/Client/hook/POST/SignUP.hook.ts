@@ -2,30 +2,32 @@ import { useMutation } from '@tanstack/react-query';
 import { SignUp } from '@/Routes/Client/Api/api.routes';
 import { toast } from 'sonner';
 import { AxiosError } from 'axios';
-import useSignUpRedirect from '@/Utils/helper/redirect';
 import { useRouter } from 'next/navigation';
 import { setAuthToken } from '@/Utils/Providers/auth';
 import useHomeStore from '@/store/Employer/home.store';
 
 export default function useSignupMutation(jobId?: string) {
   const router = useRouter();
-  const redirectTo = useSignUpRedirect(jobId);
+  const { setCompanyName } = useHomeStore();
+
+  const redirectTo =
+    typeof window !== 'undefined' && window.location.search.includes('returnTo=')
+      ? new URLSearchParams(window.location.search).get('returnTo')!
+      : jobId
+        ? `/interview/review/${jobId}`
+        : '/';
 
   return useMutation({
     mutationFn: SignUp,
 
     onSuccess: async (response) => {
-      try {
-        if (response?.access_token) {
-          setAuthToken(response.access_token, 'admin');
-          toast.success('Signup successful!');
-          router.push(redirectTo);
-        } else {
-          toast.error('Signup failed. No token received.');
-        }
-      } catch (err) {
-        toast.error('An error occurred after signup.');
-        console.error('Signup success handling error:', err);
+      if (response?.access_token) {
+        setAuthToken(response.access_token, 'admin');
+        setCompanyName(response.user.organization_name);
+        toast.success('Signup successful!');
+        router.push(redirectTo);
+      } else {
+        toast.error('Signup failed. No token received.');
       }
     },
 

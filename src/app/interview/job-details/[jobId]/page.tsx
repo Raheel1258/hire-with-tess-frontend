@@ -24,6 +24,7 @@ export default function InterviewForm() {
   const { jobTitle, jobType, companyName, location, salary } = useHomeStore();
   const { jobId } = useParams<{ jobId: string }>();
   const generateMutation = useUpdateJob();
+  const { companyName: companyNameStore } = useHomeStore();
 
   const form = useForm<FormValidator>({
     resolver: zodResolver(customformSchema),
@@ -31,7 +32,7 @@ export default function InterviewForm() {
       jobDescription: jobDescription,
       jobTitle: jobTitle,
       jobType: jobType,
-      companyName: companyName,
+      companyName: companyName || companyNameStore,
       location: location,
       salary: salary,
     },

@@ -2,7 +2,7 @@
 import InterviewLayout from '@/components/layout/InterviewLayout';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import GenerateQuestionResponse from '@/Routes/Client/hook/POST/GenerateQuestion.hook';
 import { useEffect, useRef } from 'react';
 import { Check, CirclePlus, Pencil, X } from 'lucide-react';
@@ -185,7 +185,7 @@ export default function Questionnaire() {
                           />
                         ) : (
                           <div className="relative">
-                            <p className="w-full h-[68px] rounded-[14px] border-1 text-black bg-white p-2 flex items-center">
+                            <p className="w-full h-lg rounded-[14px] border-1 text-black bg-white p-2 flex items-center">
                               <span className="text-base font-semibold">
                                 {index + 1}.
                               </span>

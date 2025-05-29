@@ -16,5 +16,6 @@ export default function UseGetAllInterview({
     refetchOnWindowFocus: true,
     refetchInterval: 90000,
     refetchIntervalInBackground: false,
+
   });
 }

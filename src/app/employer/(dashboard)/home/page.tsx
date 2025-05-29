@@ -26,13 +26,9 @@ import { useState } from 'react';
 export default function DashboardHome() {
   const [currentPage, setCurrentPage] = useState(1);
   const { data: interviewCardData } = UseDashboardCardStats();
-  const { data: DashboardTableData } = UseGetAllInterview({ page: currentPage });
+  const { data: DashboardTableData, refetch: refetchInterviews } = UseGetAllInterview({ page: currentPage });
   const Interviewmutation = AnalyzeInterviewHook();
-
   const router = useRouter();
-
-  console.log({ interviewCardData });
-
   const {
     selectedCandidate,
     analyzingInterviewId,
@@ -48,6 +44,26 @@ export default function DashboardHome() {
     router.push('/');
   };
 
+  const handleAnalyzeInterview = (interviewId: string) => {
+    setAnalyzingInterviewId(interviewId);
+    Interviewmutation.mutate(
+      { interview_id: interviewId },
+      {
+        onSuccess: (response) => {
+          setAIResult(response?.final_report);
+          setAIReportDialogOpen(true);
+          setAnalyzingInterviewId('');
+          refetchInterviews();
+        },
+        onError: (error) => {
+          toast.error('AI analysis already exists', {
+            description: error.message,
+          });
+          setAnalyzingInterviewId('');
+        },
+      },
+    );
+  };
   const DATA =
     DashboardTableData?.items?.map((item: any) => [
       <div key={`actions-${item.id}`} className="flex gap-2 items-center">
@@ -89,29 +105,13 @@ export default function DashboardHome() {
       item.ai_score === null ? (
         analyzingInterviewId === item.id ? (
           <Loader className="w-4 h-4 animate-spin text-[#f7941D] mx-auto" />
+        ) : item.status === 'pending' ? (
+          <p>Pending</p>
         ) : (
           <Button
             size="sm"
             className="text-xs"
-            onClick={() => {
-              setAnalyzingInterviewId(item.id);
-              Interviewmutation.mutate(
-                { interview_id: item.id },
-                {
-                  onSuccess: (response) => {
-                    setAIResult(response?.final_report);
-                    setAIReportDialogOpen(true);
-                    setAnalyzingInterviewId('');
-                  },
-                  onError: (error) => {
-                    toast.error('AI analysis failed', {
-                      description: error.message,
-                    });
-                    setAnalyzingInterviewId('');
-                  },
-                },
-              );
-            }}
+            onClick={() => handleAnalyzeInterview(item.id)}
           >
             Analyze
           </Button>

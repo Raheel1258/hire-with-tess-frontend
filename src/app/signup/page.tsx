@@ -12,9 +12,9 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import z from 'zod';
 import { Loader2 } from 'lucide-react';
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-
+import { useRouter } from 'next/navigation';
+import UseSignUpRedirect from '@/Utils/helper/redirect';
 export default function Signup() {
   const jobId = useHomeStore((state) => state.jobId);
   const router = useRouter();
@@ -45,10 +45,9 @@ export default function Signup() {
     };
 
     signupMutation.mutate(payload, {
-      onSuccess: () => {
-        form.reset();
-        router.push(`/interview/review/${jobId}`);
-      },
+      // onSuccess: () => {
+      //   form.reset();
+      // },
     });
   };
 

@@ -14,6 +14,14 @@ import { useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import Image from 'next/image';
 import { Suspense } from 'react';
+import SignupDialogue from '@/app/interview/component/signupDialogue';
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
+import { GoogleLoginButton } from '@/app/interview/component/googleloginbtn';
 
 function EmployeeSignIn() {
   const form = useForm<SignInFormValidator>({
@@ -47,8 +55,8 @@ function EmployeeSignIn() {
           <p className="text-[#606778] text-lg font-semibold font-[roboto] text-center">
             Easily create interviews and manage candidates
           </p>
-
-          <Button
+          <GoogleLoginButton redirectTo="/" />
+          {/* <Button
             onClick={() => {
               const GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!;
               const REDIRECT_URI =
@@ -64,18 +72,25 @@ function EmployeeSignIn() {
                 `&access_type=offline` +
                 `&prompt=consent`;
 
-              sessionStorage.setItem(
-                'redirectPath',
-                window.location.pathname + window.location.search,
-              );
+              // Only save redirectPath if it's NOT '/login'
+              if (window.location.pathname !== '/login') {
+                sessionStorage.setItem(
+                  'redirectPath',
+                  window.location.pathname + window.location.search,
+                );
+              } else {
+                // Optionally clear it or set it explicitly to '/'
+                sessionStorage.setItem('redirectPath', '/');
+              }
+
               window.location.href = googleAuthUrl;
             }}
             className="w-max-2xl sm:w-[528px] h-[64px] border-r-[14px] rounded-[14px] border-[1px] mt-4 mb-4 font-[roboto] font-normal bg-transparent text-black
-                  hover:bg-transparent border-gray-400 flex items-center justify-center gap-2"
+        hover:bg-transparent border-gray-400 flex items-center justify-center gap-2"
           >
             <Image src="/images/google.png" alt="Google Icon" width={20} height={20} />
             Continue with Google
-          </Button>
+          </Button> */}
 
           <div className="mt-10">
             <Form {...form}>
@@ -146,18 +161,17 @@ function EmployeeSignIn() {
                 </div>
                 <p className="text-sm text-gray-500 text-center">
                   Don&apos;t have an account?{' '}
-                  <Link
-                    href="/signup"
-                    className="text-[#F7941D]"
-                    onClick={() => {
-                      sessionStorage.setItem(
-                        'redirectPath',
-                        window.location.pathname + window.location.search,
-                      );
-                    }}
-                  >
-                    Sign up
-                  </Link>
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <span className="bg-transparent text-[#F7941D] rounded-md hover:bg-transparent cursor-pointer">
+                        Sign up
+                      </span>
+                    </DialogTrigger>
+                    <DialogContent className="items-center bg-white shadow-2xl rounded-lg w-5xl">
+                      <DialogTitle></DialogTitle>
+                      <SignupDialogue />
+                    </DialogContent>
+                  </Dialog>
                 </p>
               </form>
             </Form>

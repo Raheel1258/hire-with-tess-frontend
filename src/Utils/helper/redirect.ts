@@ -1,29 +1,23 @@
-import { usePathname, useRouter } from 'next/navigation';
-import { getAuthRole, getAuthToken } from '../Providers/auth';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useEffect } from 'react';
 
-export default function useSignUpRedirect(jobId?: string) {
+export default function UseSignUpRedirect(jobId?: string) {
   const pathname = usePathname();
-  let redirectTo = '/';
-
-  if (pathname === '/') {
-    redirectTo = '/';
-  } else if (pathname === '/signup') {
-    redirectTo = '/login';
-  } else if (pathname === `/interview/review/${jobId}`) {
-    redirectTo = `/interview/review/${jobId}`;
-  }
-
-  return redirectTo;
-}
-
-export function useLoginRedirect(jobId?: string) {
   const router = useRouter();
-  const pathname = usePathname();
-  if (pathname === '/login' && getAuthToken() && getAuthRole() === 'admin') {
-    router.push('/');
-  } else if (pathname === '/login' && getAuthToken() && getAuthRole() === 'superadmin') {
-    router.push('/admin/home');
-  } else if (pathname === '/login' && getAuthToken() && getAuthRole() === 'admin') {
-    router.push(`/interview/review/${jobId}`);
-  }
+  const searchParams = useSearchParams();
+  const returnTo = searchParams.get('returnTo');
+
+  useEffect(() => {
+    if (pathname === '/') {
+      router.push('/');
+    }
+    // else if (pathname === '/signup') {
+    //   router.push('/login');
+    // }
+    else if (pathname === `/interview/review/${jobId}`) {
+      router.push(`/interview/review/${jobId}`);
+    } else if (returnTo) {
+      router.push(returnTo);
+    }
+  }, [jobId, pathname, returnTo, router]);
 }
