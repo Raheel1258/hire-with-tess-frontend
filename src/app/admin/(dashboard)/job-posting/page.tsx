@@ -22,6 +22,7 @@ import JobpProfile from '@/app/employer/(dashboard)/components/postedjobdialogue
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import UseDashboardCardStats from '@/Routes/Employer/hooks/GET/Overview/GetOverviewCardStats.hook';
+import { useState } from 'react';
 
 export default function AdminJobPosting() {
   const TITLE = [
@@ -34,8 +35,9 @@ export default function AdminJobPosting() {
     'Job Posted Date',
     'Link',
   ];
+  const [currentPage, setCurrentPage] = useState(1);
   const { data: jobdata } = UseDashboardCardStats();
-  const { data: JobPostedTableData } = UseGetAllJob();
+  const { data: JobPostedTableData, isLoading: tableLoading } = UseGetAllJob({ page: currentPage });
   const deleteJobMutation = UseDeleteJobByID();
   const updatejobstatus = UseUpdateJobStatus();
 
@@ -171,8 +173,10 @@ export default function AdminJobPosting() {
           subheader={DATA}
           paginationstart={JobPostedTableData?.current_page}
           paginationend={JobPostedTableData?.pages}
+          onPageChange={(page: number) => setCurrentPage(page)}
           onDelete={deleteJob}
           showTrashIcon={true}
+          isLoading={tableLoading}
         />
       </div>
     </>

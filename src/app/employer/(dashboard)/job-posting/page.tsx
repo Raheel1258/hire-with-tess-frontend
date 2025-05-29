@@ -23,10 +23,12 @@ import JobStore from '@/store/EmployeeDashboard/dashboard/job-posting/job.store'
 import UseGetFilteredJob from '@/Routes/Employer/hooks/GET/jobposting/GetFilterJob.hook';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
+import { useState } from 'react';
 
 export default function JobPosting() {
+  const [currentPage, setCurrentPage] = useState(1);
   const { data: jobdata } = UseDashboardJobCardStats();
-  const { data: JobPostedTableData } = UseGetAllJob();
+  const { data: JobPostedTableData } = UseGetAllJob({ page: currentPage });
   const deleteJobMutation = UseDeleteJobByID();
   const updatejobstatus = UseUpdateJobStatus();
   // const { data: FilteredJobData } = UseGetFilteredJob({});
@@ -153,7 +155,8 @@ export default function JobPosting() {
             header={JobPostingTableTitle}
             subheader={DATA}
             paginationstart={JobPostedTableData?.current_page}
-            paginationend={JobPostedTableData?.total}
+            paginationend={JobPostedTableData?.pages}
+            onPageChange={(page: number) => setCurrentPage(page)}
             showTrashIcon
             onDelete={deleteJob}
           />

@@ -21,11 +21,12 @@ import { Loader } from 'lucide-react';
 import { toast } from 'sonner';
 import OverviewStore from '@/store/EmployeeDashboard/dashboard/overview/overview.store';
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 
 export default function DashboardHome() {
+  const [currentPage, setCurrentPage] = useState(1);
   const { data: interviewCardData } = UseDashboardCardStats();
-  const { data: DashboardTableData, refetch: refetchInterviews } = UseGetAllInterview();
-
+  const { data: DashboardTableData, refetch: refetchInterviews } = UseGetAllInterview({ page: currentPage });
   const Interviewmutation = AnalyzeInterviewHook();
   const router = useRouter();
   const {
@@ -172,7 +173,8 @@ export default function DashboardHome() {
             header={HomeTableTile}
             subheader={DATA}
             paginationstart={DashboardTableData?.current_page}
-            paginationend={DashboardTableData?.total}
+            paginationend={DashboardTableData?.pages}
+            onPageChange={(page: number) => setCurrentPage(page)}
           />
         </div>
       </div>

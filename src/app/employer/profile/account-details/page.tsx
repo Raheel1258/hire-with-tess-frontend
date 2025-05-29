@@ -2,23 +2,25 @@
 import CustomInputForm from '@/app/interview/component/customformInput';
 import { Button } from '@/components/ui/button';
 import { FormControl, FormField, FormItem, Form } from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { Pencil } from 'lucide-react';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   AccountDetailformSchema,
   AccountFormValidator,
 } from '@/schema/accountDetail.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useRef } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { useEffect } from 'react';
 import UseProfileInfo from '@/Routes/Employer/hooks/GET/profile/Profileinfo.hook';
 import RedirectToDashboard from '../components/breadcrumb';
 import UseUpdateProfileHook from '@/Routes/Employer/hooks/PUT/profile/Updateprofilehook';
-import { UserPen } from 'lucide-react';
 import { useSkillStore } from '@/store/Employer/InputStore';
 
 export default function UserAccountDetail() {
   const { data: profileInfo } = UseProfileInfo();
   const UpdateProfileMutation = UseUpdateProfileHook();
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
   const { isEditable, setIsEditable } = useSkillStore();
   const profilediting = () => {
@@ -32,22 +34,36 @@ export default function UserAccountDetail() {
       lastname: '',
       organization: '',
       email: '',
+      image: undefined,
     },
   });
 
   const ref = useRef<HTMLFormElement>(null);
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      form.setValue('image', file);
+      form.clearErrors('image');
+      setPreviewUrl(URL.createObjectURL(file));
+    }
+  };
+
   const onSubmit = async (data: AccountFormValidator) => {
     const formData = new FormData();
     formData.append('first_name', data.firstname);
     formData.append('last_name', data.lastname);
     formData.append('organization_name', data.organization);
     formData.append('email', data.email);
+    if (data.image instanceof File) {
+      formData.append('image', data.image);
 
     UpdateProfileMutation.mutate(formData, {
       onSuccess: () => {
         setIsEditable(false);
       },
     });
+
   };
 
   const { setValue } = form;
@@ -58,6 +74,9 @@ export default function UserAccountDetail() {
       setValue('lastname', profileInfo.last_name || '');
       setValue('organization', profileInfo.organization_name || '');
       setValue('email', profileInfo.email || '');
+      if (profileInfo.image_url) {
+        setPreviewUrl(profileInfo.image_url);
+      }
     }
   }, [profileInfo, setValue]);
 
@@ -72,12 +91,6 @@ export default function UserAccountDetail() {
       />
       <div className="flex flex-row gap-4 items-center">
         <h1 className="text-2xl font-semibold text-slate-800">Account Details</h1>
-        <div
-          onClick={profilediting}
-          className="w-10 h-10 flex items-center justify-center rounded-full border"
-        >
-          <UserPen className="w-5 h-5" />
-        </div>
       </div>
 
       <Form {...form}>
@@ -86,7 +99,35 @@ export default function UserAccountDetail() {
           ref={ref}
           className="space-y-8 flex flex-col overflow-auto max-h-[80vh] py-8"
         >
-          <div className="flex gap-4 items-start w-full mt-4 ">
+          <div className="flex flex-col items-center gap-6">
+            <div className="relative group">
+              <Avatar
+                className="w-32 h-32 border-4 border-[#F7941D] cursor-pointer"
+                onClick={() => document.getElementById('image-upload')?.click()}
+              >
+                {previewUrl ? (
+                  <AvatarImage src={previewUrl} alt="Profile" className="object-cover" />
+                ) : (
+                  <AvatarFallback className="text-2xl bg-[#F7941D] text-white">
+                    {profileInfo?.first_name?.[0] || 'U'}
+                  </AvatarFallback>
+                )}
+                <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
+                  <Pencil className="w-6 h-6 text-white" />
+                </div>
+              </Avatar>
+            </div>
+
+            <Input
+              id="image-upload"
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={handleFileChange}
+            />
+          </div>
+
+          <div className="flex gap-4 items-start w-full mt-4">
             <FormField
               control={form.control}
               name="firstname"
@@ -125,7 +166,7 @@ export default function UserAccountDetail() {
             />
           </div>
 
-          <div className="flex gap-4 items-start  w-full ">
+          <div className="flex gap-4 items-start w-full">
             <FormField
               control={form.control}
               name="organization"
@@ -162,21 +203,13 @@ export default function UserAccountDetail() {
               )}
             />
           </div>
-          <div className="flex ">
+          <div className="flex">
             <Button
               type="submit"
-              className=" leading-[20px] font-roboto cursor-pointer "
+              className="leading-[20px] font-roboto cursor-pointer"
               disabled={UpdateProfileMutation?.isPending}
             >
               {UpdateProfileMutation?.isPending ? 'Updating...' : 'Update Profile'}
-            </Button>
-            <Button
-              type="reset"
-              variant="ghost"
-              className="leading-[20px] font-roboto cursor-pointer "
-              onClick={() => form.reset()}
-            >
-              Reset
             </Button>
           </div>
         </form>

@@ -3,10 +3,11 @@ export const AdminEndpoint = {
   SUPERADMIN_LOGIN: `/api/v1/superadmin/login`,
 
   //Super Admin User
-  SUPERADMIN_GET_EMPLOYEES: `/api/v1/superadmin/Users`,
   SUPERADMIN_GET_EMPLOYEES_BY_ID: (user_id: string) =>
     `/api/v1/superadmin/users/${user_id}`,
   SUPERADMIN_DELETE_USER: (user_id: string) => `/api/v1/superadmin/users/${user_id}`,
+  SUPERADMIN_GET_EMPLOYERS: (page: number, limit: number) => 
+    `/api/v1/superadmin/Users?page=${page}&limit=${limit}`,
 
   //Super Admin Job
   SUPERADMIN_GET_ALLJOB: `/api/v1/superadmin/jobs`,

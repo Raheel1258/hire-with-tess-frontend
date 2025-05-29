@@ -3,6 +3,7 @@ import { useRouter } from 'next/navigation';
 import { BellIcon } from 'lucide-react';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import UseProfileInfo from '@/Routes/Employer/hooks/GET/profile/Profileinfo.hook';
+import UseProfileSuperAdmin from '@/Routes/Admin/hook/GET/Profileinfo.hook';
 import { toast } from 'sonner';
 
 interface Props {
@@ -13,9 +14,11 @@ export default function Header({ superAdmin }: Props) {
   const router = useRouter();
   const { data: profileInfo } = UseProfileInfo();
 
+  const { data: superAdminInfo } = UseProfileSuperAdmin();
+
   const handleNavigation = () => {
     if (superAdmin) {
-      toast.error('Profile is not available for superadmin');
+      router.push('/admin/profile/account-details');
     } else {
       router.push('/employer/profile/account-details');
     }
@@ -24,7 +27,7 @@ export default function Header({ superAdmin }: Props) {
   return (
     <div className="bg-white flex justify-between h-18 mb-8 p-6">
       <div className="font-[Space Grotesk] text-[20px]">
-        {profileInfo?.organization_name}
+        {superAdmin ? superAdminInfo?.organization_name : profileInfo?.organization_name}
       </div>
       <div className="flex gap-2 items-center">
         <div className="bg-[#A2A1A81A] w-[50px] h-12 rounded-xl flex items-center justify-center">
@@ -36,12 +39,22 @@ export default function Header({ superAdmin }: Props) {
         >
           <div className="p-2">
             <Avatar className="w-10 h-10">
-              <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-              <AvatarFallback> {profileInfo?.firstname || 'IN'} </AvatarFallback>
+              <AvatarImage
+                src={profileInfo?.image_url || 'https://github.com/shadcn.png'}
+                alt="@shadcn"
+              />
+              <AvatarFallback>
+                {' '}
+                {superAdmin
+                  ? superAdminInfo?.firstname
+                  : profileInfo?.firstname || 'IN'}{' '}
+              </AvatarFallback>
             </Avatar>
           </div>
           <div className="pl-2">
-            <h1 className="font-normal text-sm">{profileInfo?.first_name}</h1>
+            <h1 className="font-normal text-sm">
+              {superAdmin ? superAdminInfo?.first_name : profileInfo?.first_name}
+            </h1>
             <p className="text-sm text-[#A2A1A8]">
               {superAdmin ? 'Super Admin' : 'Employer'}
             </p>
