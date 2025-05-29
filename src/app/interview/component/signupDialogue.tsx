@@ -16,6 +16,7 @@ import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import Link from 'next/link';
 import Image from 'next/image';
+import { GoogleLoginButton } from './googleloginbtn';
 
 export default function SignupDialogue() {
   const GoogleLoginMutation = useGoogleLoginHook();
@@ -66,34 +67,7 @@ export default function SignupDialogue() {
           Get started with a 60-day free trial - no credit required!
         </p>
 
-        <Button
-          onClick={() => {
-            const GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!;
-            const REDIRECT_URI =
-              process.env.NEXT_PUBLIC_GOOGLE_REDIRECT_URI ||
-              'http://localhost:3000/auth/callback';
-
-            const googleAuthUrl =
-              `https://accounts.google.com/o/oauth2/v2/auth?` +
-              `client_id=${GOOGLE_CLIENT_ID}` +
-              `&redirect_uri=${encodeURIComponent(REDIRECT_URI)}` +
-              `&response_type=code` +
-              `&scope=openid%20email%20profile` +
-              `&access_type=offline` +
-              `&prompt=consent`;
-
-            sessionStorage.setItem(
-              'redirectPath',
-              window.location.pathname + window.location.search,
-            );
-            window.location.href = googleAuthUrl;
-          }}
-          className="w-max-2xl sm:w-[528px] h-[64px] border-r-[14px] rounded-[14px] border-[1px] mt-4 mb-4 font-[roboto] font-normal bg-transparent text-black
-                  hover:bg-transparent border-gray-400 flex items-center justify-center gap-2"
-        >
-          <Image src="/images/google.png" alt="Google Icon" width={20} height={20} />
-          Continue with Google
-        </Button>
+        <GoogleLoginButton redirectTo="/" />
       </div>
 
       <div className="w-full mt-4">
