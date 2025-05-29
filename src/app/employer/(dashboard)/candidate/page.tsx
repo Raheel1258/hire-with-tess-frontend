@@ -22,7 +22,8 @@ import AnalyzeInterviewHook from '@/Routes/Employer/hooks/POST/AnalyzeInterview.
 import { toast } from 'sonner';
 
 export default function CandidatePage() {
-  const { data: candidatestats } = UseDashboardCandidateCardStats();
+  const { data: candidatestats, refetch: refetchInterviews } =
+    UseDashboardCandidateCardStats();
   const { data: CandidateTableData } = UseGetAllInterview();
   const Interviewmutation = AnalyzeInterviewHook();
 
@@ -39,6 +40,26 @@ export default function CandidatePage() {
   const filteredJobs = CandidateTableData?.items?.filter((item: any) =>
     item.candidate_name.toLowerCase().includes(searchTerm.toLowerCase()),
   );
+
+  const handleAnalyzeInterview = (interviewId: string) => {
+    setAnalyzingInterviewId(interviewId);
+    Interviewmutation.mutate(
+      { interview_id: interviewId },
+      {
+        onSuccess: (response) => {
+          setAIResult(response?.final_report);
+          setAnalyzingInterviewId('');
+          refetchInterviews();
+        },
+        onError: (error) => {
+          toast.error('AI analysis already exists', {
+            description: error.message,
+          });
+          setAnalyzingInterviewId('');
+        },
+      },
+    );
+  };
 
   const DATA = (filteredJobs ?? []).map((item: any) => [
     <Eye
@@ -82,25 +103,7 @@ export default function CandidatePage() {
         <Button
           size="sm"
           className="text-xs"
-          onClick={() => {
-            setAnalyzingInterviewId(item.id);
-            Interviewmutation.mutate(
-              { interview_id: item.id },
-              {
-                onSuccess: (response) => {
-                  setAIResult(response?.final_report);
-                  // setAIReportDialogOpen(true);
-                  setAnalyzingInterviewId(null);
-                },
-                onError: (error) => {
-                  toast.error('AI analysis failed', {
-                    description: error.message,
-                  });
-                  setAnalyzingInterviewId(null);
-                },
-              },
-            );
-          }}
+          onClick={() => handleAnalyzeInterview(item.id)}
         >
           Analyze
         </Button>
