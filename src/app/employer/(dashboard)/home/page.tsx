@@ -87,6 +87,8 @@ export default function DashboardHome() {
       item.ai_score === null ? (
         analyzingInterviewId === item.id ? (
           <Loader className="w-4 h-4 animate-spin text-[#f7941D] mx-auto" />
+        ) : item.status === 'pending' ? (
+          <p>Pending</p>
         ) : (
           <Button
             size="sm"
