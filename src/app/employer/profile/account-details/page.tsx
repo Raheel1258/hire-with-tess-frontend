@@ -58,14 +58,13 @@ export default function UserAccountDetail() {
     if (data.image instanceof File) {
       formData.append('image', data.image);
 
-    UpdateProfileMutation.mutate(formData, {
-      onSuccess: () => {
-        setIsEditable(false);
-      },
-    });
-
+      UpdateProfileMutation.mutate(formData, {
+        onSuccess: () => {
+          setIsEditable(false);
+        },
+      });
+    }
   };
-
   const { setValue } = form;
 
   useEffect(() => {
@@ -99,7 +98,7 @@ export default function UserAccountDetail() {
           ref={ref}
           className="space-y-8 flex flex-col overflow-auto max-h-[80vh] py-8"
         >
-          <div className="flex flex-col items-center gap-6">
+          {/* <div className="flex flex-col items-center gap-6">
             <div className="relative group">
               <Avatar
                 className="w-32 h-32 border-4 border-[#F7941D] cursor-pointer"
@@ -125,7 +124,7 @@ export default function UserAccountDetail() {
               className="hidden"
               onChange={handleFileChange}
             />
-          </div>
+          </div> */}
 
           <div className="flex gap-4 items-start w-full mt-4">
             <FormField
