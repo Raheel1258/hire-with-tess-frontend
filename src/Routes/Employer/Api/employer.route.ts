@@ -166,8 +166,8 @@ export const ProfileInfo = async () => {
 };
 
 //update profile
-export const UpdateProfile = async (data: any) => {
-  const response = await api.put(EMPLOYERAPI.UPDATE_PROFILE, data, {
+export const UpdateProfile = async (formData: FormData) => {
+  const response = await api.put(EMPLOYERAPI.UPDATE_PROFILE, formData, {
     headers: {
       'Content-Type': 'multipart/form-data',
     },

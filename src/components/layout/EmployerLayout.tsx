@@ -12,11 +12,15 @@ import SignupDialogue from '@/app/interview/component/signupDialogue';
 import { clearAuthToken, getAuthRole, getAuthToken } from '@/Utils/Providers/auth';
 import { useRouter } from 'next/navigation';
 import { useDashboardRedirect } from '@/Utils/helper/dashboardredirect';
+import { useQuestionStore } from '@/store/Employer/questionStore';
+import useHomeStore from '@/store/Employer/home.store';
+import { useToggleStore } from '@/store/Employer/Toggle.store';
 
 export default function EmployerLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const handleSignOut = () => {
     clearAuthToken();
+    ResetAll();
     router.push('/');
   };
 
@@ -29,6 +33,15 @@ export default function EmployerLayout({ children }: { children: React.ReactNode
     }
   };
 
+  const { resetInterviewLink } = useToggleStore();
+  const { resetAIResponse } = useHomeStore();
+  const { resetQuestionStore } = useQuestionStore();
+
+  const ResetAll = () => {
+    resetAIResponse();
+    resetQuestionStore();
+    resetInterviewLink();
+  };
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-br from-[#f7941D] via-[#ffbfbf] to-[#1e4b8e]">
       <header className="flex justify-between items-center p-6 text-white">
