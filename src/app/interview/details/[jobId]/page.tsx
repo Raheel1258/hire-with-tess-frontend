@@ -28,7 +28,7 @@ export default function CandidatesDetails() {
       candidate_name: '',
       email: '',
       phone: '',
-      resume: undefined,
+      resume: null,
       job_id: jobId,
     },
   });
@@ -116,7 +116,6 @@ export default function CandidatesDetails() {
                     type="file"
                     accept="application/pdf"
                     className="hidden"
-                    {...field}
                     onChange={handleFileChange}
                   />
                 </Card>
