@@ -22,10 +22,12 @@ import AnalyzeInterviewHook from '@/Routes/Employer/hooks/POST/AnalyzeInterview.
 import { toast } from 'sonner';
 
 export default function CandidatePage() {
-
+  const [currentPage, setCurrentPage] = useState(1);
   const { data: candidatestats, refetch: refetchInterviews } =
     UseDashboardCandidateCardStats();
-   const { data: CandidateTableData, isLoading: tableLoading } = UseGetAllInterview({ page: currentPage });
+  const { data: CandidateTableData, isLoading: tableLoading } = UseGetAllInterview({
+    page: currentPage,
+  });
   const Interviewmutation = AnalyzeInterviewHook();
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
