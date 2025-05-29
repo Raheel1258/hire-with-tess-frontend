@@ -3,7 +3,7 @@ import CustomInputForm from '@/app/interview/component/customformInput';
 import { Button } from '@/components/ui/button';
 import { FormControl, FormField, FormItem, Form } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { Pencil } from 'lucide-react';
+import { Pencil, UserPen } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   AccountDetailformSchema,
@@ -14,8 +14,8 @@ import { useRef, useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import UseProfileInfo from '@/Routes/Employer/hooks/GET/profile/Profileinfo.hook';
 import RedirectToDashboard from '../components/breadcrumb';
-import UseUpdateProfileHook from '@/Routes/Employer/hooks/PUT/profile/Updateprofilehook';
 import { useSkillStore } from '@/store/Employer/InputStore';
+import UseUpdateProfileHook from '@/Routes/Employer/hooks/PUT/profile/Updateprofilehook';
 
 export default function UserAccountDetail() {
   const { data: profileInfo } = UseProfileInfo();
@@ -55,20 +55,23 @@ export default function UserAccountDetail() {
     formData.append('last_name', data.lastname);
     formData.append('organization_name', data.organization);
     formData.append('email', data.email);
+
     if (data.image instanceof File) {
       formData.append('image', data.image);
-
-      UpdateProfileMutation.mutate(formData, {
-        onSuccess: () => {
-          setIsEditable(false);
-        },
-      });
     }
+
+    UpdateProfileMutation.mutate(formData, {
+      onSuccess: () => {
+        setIsEditable(false);
+      },
+    });
   };
+
   const { setValue } = form;
 
   useEffect(() => {
     if (profileInfo) {
+      console.log(profileInfo);
       setValue('firstname', profileInfo.first_name || '');
       setValue('lastname', profileInfo.last_name || '');
       setValue('organization', profileInfo.organization_name || '');
@@ -90,6 +93,12 @@ export default function UserAccountDetail() {
       />
       <div className="flex flex-row gap-4 items-center">
         <h1 className="text-2xl font-semibold text-slate-800">Account Details</h1>
+        <div
+          onClick={profilediting}
+          className="w-10 h-10 flex items-center justify-center rounded-full border"
+        >
+          <UserPen className="w-5 h-5" />
+        </div>
       </div>
 
       <Form {...form}>

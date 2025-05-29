@@ -7,12 +7,7 @@ export const AccountDetailformSchema = z.object({
   lastname: z.string().min(1, { message: 'Last name is required.' }),
   organization: z.string().min(1, { message: 'Please enter your organization name.' }),
   email: z.string().email({ message: 'Please enter a valid email address.' }),
-  image: z
-    .any()
-    .optional()
-    .refine((file) => file instanceof File || file === undefined, {
-      message: 'Invalid file',
-    }),
+  image: z.instanceof(File).optional().or(z.literal(undefined)),
 });
 
 export type AccountFormValidator = z.infer<typeof AccountDetailformSchema>;
