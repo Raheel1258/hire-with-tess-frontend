@@ -56,7 +56,7 @@ export default function GenerateLink() {
   const { resetQuestionStore } = useQuestionStore();
 
   const ResetAll = () => {
-    setAIResponse(null);
+    resetAIResponse();
     resetQuestionStore();
     resetInterviewLink();
   };
