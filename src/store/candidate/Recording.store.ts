@@ -3,7 +3,7 @@ import { devtools, persist, createJSONStorage } from 'zustand/middleware';
 
 interface ResponseData {
   transcript: string;
-  type: 'audio' | 'video' | 'screen';
+  type: 'audio' | 'screen';
   url: string;
   question: string;
 }
@@ -15,13 +15,12 @@ interface RecordingState {
 
   // Recorded URLs
   audioURL: string;
-  videoURL: string;
   screenURL: string;
 
   // Recording info
   hasRecorded: boolean;
   audioData: number[];
-  activeType: 'audio' | 'video' | 'screen';
+  activeType: 'audio' | 'screen';
 
   // Stored answers by question
   storedResponses: { questionId: string; response: ResponseData }[];
@@ -34,7 +33,6 @@ interface RecordingState {
   setIsPlaying: (val: boolean) => void;
 
   setAudioURL: (url: string) => void;
-  setVideoURL: (url: string) => void;
   setScreenURL: (url: string) => void;
 
   setHasRecorded: (val: boolean) => void;
@@ -56,7 +54,6 @@ export const useRecordingStore = create<RecordingState>()(
         isPlaying: false,
 
         audioURL: '',
-        videoURL: '',
         screenURL: '',
 
         hasRecorded: false,
