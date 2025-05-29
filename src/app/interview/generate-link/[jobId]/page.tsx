@@ -8,6 +8,9 @@ import SocialShare from '@/app/interview/component/share';
 import { useToggleStore } from '@/store/Employer/Toggle.store';
 import QRCode from 'react-qr-code';
 import { cn } from '@/lib/utils';
+import Link from 'next/link';
+import { useQuestionStore } from '@/store/Employer/questionStore';
+import useHomeStore from '@/store/Employer/home.store';
 
 export default function GenerateLink() {
   const { interviewLink, qrCode } = useToggleStore();
@@ -47,6 +50,17 @@ export default function GenerateLink() {
   const QrToogleShareOptions = () => {
     setShowQrSharedOptions();
   };
+
+  const { resetInterviewLink } = useToggleStore();
+  const { resetAIResponse } = useHomeStore();
+  const { resetQuestionStore } = useQuestionStore();
+
+  const ResetAll = () => {
+    setAIResponse(null);
+    resetQuestionStore();
+    resetInterviewLink();
+  };
+
   return (
     <InterviewLayout
       subtitle="Your AI Interview is Ready!"
@@ -165,6 +179,18 @@ export default function GenerateLink() {
             </div>
           )}
         </div>
+      </div>
+      <div className="flex justify-end items-center mt-6 gap-4 mb-0 sm:mb-1 sm:ml-4">
+        <Link href={`/`}>
+          <Button
+            onClick={ResetAll}
+            variant={'secondary'}
+            className="sm:w-auto cursor-pointer bg-[#1E4B8E]"
+            type="button"
+          >
+            Generate New Interview
+          </Button>
+        </Link>
       </div>
     </InterviewLayout>
   );

@@ -1,5 +1,4 @@
 import EmployeeAuthStore from '@/store/Auth/auth.store';
-import { signOut } from 'next-auth/react';
 
 export const setAuthToken = (token: string, role: string) => {
   if (typeof window !== 'undefined') {
@@ -19,7 +18,6 @@ export const clearAuthToken = () => {
   }
   EmployeeAuthStore.getState().clearAccessToken();
   EmployeeAuthStore.getState().clearUserRole();
-  signOut();
 };
 
 export const getAuthToken = () => {

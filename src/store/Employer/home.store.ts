@@ -75,14 +75,6 @@ const useHomeStore = create<HomeState>()(
       {
         name: 'Ai-Response',
         storage: createJSONStorage(() => localStorage),
-        // partialize: (state) => ({
-        //   jobId: state.jobId,
-        //   jobDescription: state.jobDescription,
-        //   requirements: state.requirements,
-        //   responsibilities: state.responsibilities,
-        //   skills: state.skills,
-        //   questions: state.Aiquestions,
-        // }),
       },
     ),
   ),
