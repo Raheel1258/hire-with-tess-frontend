@@ -51,8 +51,13 @@ api.interceptors.response.use(
 );
 
 //Get All Jobs
-export const GetAllJob = async () => {
-  const response = await api.get(EMPLOYERAPI.JOB_DETAILS);
+export const GetAllJob = async (page: number = 1, limit: number = 10) => {
+  const response = await api.get(EMPLOYERAPI.JOB_DETAILS, {
+    params: {
+      page,
+      limit
+    }
+  });
   return response.data;
 };
 
@@ -94,8 +99,13 @@ export const UpdateJobStatusByID = async (job_id: string, status: string) => {
 };
 
 //Get All Interviews
-export const GetAllInterview = async () => {
-  const response = await api.get(EMPLOYERAPI.INTERVIEW_DETAILS);
+export const GetAllInterview = async (page: number = 1, limit: number = 10) => {
+  const response = await api.get(EMPLOYERAPI.INTERVIEW_DETAILS, {
+    params: {
+      page,
+      limit
+    }
+  });
   return response.data;
 };
 
@@ -156,8 +166,12 @@ export const ProfileInfo = async () => {
 };
 
 //update profile
-export const UpdateProfile = async (data: ProfileInfoType) => {
-  const response = await api.put(EMPLOYERAPI.UPDATE_PROFILE, data);
+export const UpdateProfile = async (data: any) => {
+  const response = await api.put(EMPLOYERAPI.UPDATE_PROFILE, data, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
   return response.data;
 };
 

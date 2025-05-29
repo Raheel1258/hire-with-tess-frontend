@@ -22,7 +22,7 @@ export default function Analytics() {
   return (
     <div>
       <h1 className="text-[24px] font-[open sans] font-semibold ml-2 mb-4">
-        Subscriptions
+        Analytics
       </h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 w-full">
         <CardComponent

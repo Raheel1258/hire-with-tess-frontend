@@ -8,14 +8,47 @@ import Videopreviewdialogue from './videopreviewdialogue';
 import { CirclePlay } from 'lucide-react';
 import { useState } from 'react';
 import UseUpdateInterviewStatus from '@/Routes/Employer/hooks/PUT/overview/UpdateInterviewStatus.hook';
+import { toast } from 'sonner';
+import { Loader } from 'lucide-react';
+import { useQueryClient } from '@tanstack/react-query';
 
 export default function UserProfile({ data, isSuperAdmin }: any) {
   const [openVideoURL, setOpenVideoURL] = useState<string | null>(null);
+  const [isShortlisting, setIsShortlisting] = useState(false);
+  const [isRejecting, setIsRejecting] = useState(false);
+  const queryClient = useQueryClient();
 
   if (!data) return null;
   const answers = data.answers;
   const questions = Object.keys(answers || {});
   const updatejobstatus = UseUpdateInterviewStatus();
+
+  const handleStatusUpdate = async (status: 'shortlisted' | 'reject') => {
+    try {
+      if (status === 'shortlisted') {
+        setIsShortlisting(true);
+      } else {
+        setIsRejecting(true);
+      }
+
+      await updatejobstatus.mutateAsync({
+        interview_id: data.id,
+        status: status,
+      });
+      toast.success(`Candidate ${status === 'shortlisted' ? 'shortlisted' : 'rejected'} successfully`);
+      
+      // Invalidate and refetch the interview data
+      await queryClient.invalidateQueries({ queryKey: ['interviews'] });
+    } catch (error) {
+      toast.error('Failed to update status');
+    } finally {
+      if (status === 'shortlisted') {
+        setIsShortlisting(false);
+      } else {
+        setIsRejecting(false);
+      }
+    }
+  };
 
   return (
     <>
@@ -68,28 +101,26 @@ export default function UserProfile({ data, isSuperAdmin }: any) {
           {!isSuperAdmin && (
             <div className="w-full lg:w-[180px] flex flex-col sm:flex-row lg:flex-col gap-4 items-center justify-center px-4">
               <Button
-                disabled={updatejobstatus.isPending}
-                onClick={() =>
-                  updatejobstatus.mutate({
-                    interview_id: data.id,
-                    status: 'hire',
-                  })
-                }
+                disabled={isShortlisting || isRejecting}
+                onClick={() => handleStatusUpdate('shortlisted')}
                 className="w-full sm:w-1/2 lg:w-full bg-[#1E4B8E] hover:bg-[#1E4B8E] cursor-pointer h-[50px] text-white"
               >
-                Shortlisted
+                {isShortlisting ? (
+                  <Loader className="w-4 h-4 animate-spin" />
+                ) : (
+                  'Shortlisted'
+                )}
               </Button>
               <Button
-                disabled={updatejobstatus.isPending}
-                onClick={() =>
-                  updatejobstatus.mutate({
-                    interview_id: data.id,
-                    status: 'reject',
-                  })
-                }
+                disabled={isShortlisting || isRejecting}
+                onClick={() => handleStatusUpdate('reject')}
                 className="w-full sm:w-1/2 lg:w-full bg-[#F55141] hover:bg-[#F55141] cursor-pointer h-[50px] text-white"
               >
-                Reject
+                {isRejecting ? (
+                  <Loader className="w-4 h-4 animate-spin" />
+                ) : (
+                  'Reject'
+                )}
               </Button>
             </div>
           )}

@@ -10,51 +10,46 @@ const api = axios.create({
     'Content-Type': 'application/json',
   },
 });
-api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('accessToken');
-      if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
-      } 
-      return config;
-    },
-    (error) => Promise.reject(error)
-  );
-
-  api.interceptors.response.use(
-    (response) => response,
-    (error) => {
-      // const originalRequest = error.config;
-  
-      // const isLoginRequest =
-      //   originalRequest?.url?.includes(EMPLOYERAPI.EMPLOYER_LOGIN) &&
-      //   originalRequest?.method === 'post';
-  
-      if (error.response && error.response.status === 401 ) {
-        clearAuthToken();
-  
-        if (error.response?.status === 403) {
-          toast.error('Unauthorized access');
-        } else if (error.response?.status === 500) {
-          toast.error('Server error');
-        } else {
-          toast.error('Session expired. Please login again.');
-          window.location.href = '/login';
-        }
-      }
-  
-      return Promise.reject(error);
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('accessToken');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
     }
-  );
-  
+    return config;
+  },
+  (error) => Promise.reject(error),
+);
+
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    // const originalRequest = error.config;
+
+    // const isLoginRequest =
+    //   originalRequest?.url?.includes(EMPLOYERAPI.EMPLOYER_LOGIN) &&
+    //   originalRequest?.method === 'post';
+
+    if (error.response && error.response.status === 401) {
+      clearAuthToken();
+
+      if (error.response?.status === 403) {
+        toast.error('Unauthorized access');
+      } else if (error.response?.status === 500) {
+        toast.error('Server error');
+      } else {
+        toast.error('Session expired. Please login again.');
+        window.location.href = '/login';
+      }
+    }
+
+    return Promise.reject(error);
+  },
+);
+
 //Super Admin Auth
 export const SuperAdminLogin = async (data: { email: string; password: string }) => {
   const response = await api.post(AdminEndpoint.SUPERADMIN_LOGIN, data);
-  return response.data;
-};
-
-//Super Admin User
-export const GetEmployees = async () => {
-  const response = await api.get(AdminEndpoint.SUPERADMIN_GET_EMPLOYEES);
   return response.data;
 };
 
@@ -131,5 +126,24 @@ export const UpdateProfile = async (data: {
   password: string;
 }) => {
   const response = await api.put(AdminEndpoint.SUPERADMIN_UPDATE_PROFILE, data);
+  return response.data;
+};
+
+export const GetEmployers = async (page: number = 1, limit: number = 10) => {
+  const response = await api.get(AdminEndpoint.SUPERADMIN_GET_EMPLOYERS(page, limit));
+  return response.data;
+};
+
+export const GetSuperAdminProfile = async () => {
+  const response = await api.get(AdminEndpoint.SUPERADMIN_GET_PROFILE);
+  return response.data;
+};
+
+export const UpdateSuperAdminProfile = async (data: any) => {
+  const response = await api.put(AdminEndpoint.SUPERADMIN_UPDATE_PROFILE, data, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },  
+  });
   return response.data;
 };

@@ -10,9 +10,11 @@ import UserProfile from '@/app/employer/(dashboard)/components/candiateprofile';
 import OverviewStore from '@/store/EmployeeDashboard/dashboard/overview/overview.store';
 import { Loader } from 'lucide-react';
 import { DialogDescription, DialogTitle } from '@radix-ui/react-dialog';
+import { useState } from 'react';
 
 export default function AdminDashboardHome() {
   const TITLE = ['Action', 'Name', 'Job Applied For', 'Applied On', 'Interview Status', 'Score'];
+  const [currentPage, setCurrentPage] = useState(1);
 
   const {
     data: interviewCardData,
@@ -23,7 +25,7 @@ export default function AdminDashboardHome() {
     data: DashboardTableData,
     isLoading: tableLoading,
     error: tableError,
-  } = UseGetAllInterview();
+  } = UseGetAllInterview({ page: currentPage });
 
   const { selectedCandidate, isDialogOpen, setSelectedCandidate, setIsDialogOpen } =
     OverviewStore();
@@ -143,7 +145,9 @@ export default function AdminDashboardHome() {
             header={TITLE}
             subheader={DATA}
             paginationstart={DashboardTableData?.current_page}
-            paginationend={DashboardTableData?.total}
+            paginationend={DashboardTableData?.pages}
+            onPageChange={(page: number) => setCurrentPage(page)}
+            isLoading={tableLoading}
           />
         </div>
       </div>

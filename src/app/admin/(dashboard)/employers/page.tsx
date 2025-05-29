@@ -1,52 +1,53 @@
-"use client";
-import { BriefcaseBusiness, Eye, Search, Users } from "lucide-react";
-import CardComponent from "@/app/employer/(dashboard)/components/card";
-import { Badge } from "@/components/ui/badge";
-import TableComponent from "@/app/employer/(dashboard)/components/table";
-import Searchbar from "@/app/employer/(dashboard)/components/searchbar";
-import UseDashboardJobCardStats from "@/Routes/Employer/hooks/GET/jobposting/GetJobCardstats.hook";
-import UseGetAllJob from "@/Routes/Employer/hooks/GET/jobposting/GetAllJobs.hook";
+'use client';
+import { Badge } from '@/components/ui/badge';
+import TableComponent from '@/app/employer/(dashboard)/components/table';
+import { useState } from 'react';
+import { useGetEmployers } from '@/Routes/Admin/hook/GET/employer/Getemployer';
 
 export default function EmployersList() {
+  const [currentPage, setCurrentPage] = useState(1);
+  const { data: employersData, isLoading } = useGetEmployers({ page: currentPage });
+
   const TITLE = [
-    "Action",
-    "Employer Name",
-    "Email",
-    "Total Job Posting",
-    "Status",
-    "Date Joined",
+    'Employer Name',
+    'Email',
+    'Organization',
+    'Total Job Posting',
+    'Subscription Status',
+    'Date Joined',
   ];
 
-  const { data: jobdata } = UseDashboardJobCardStats();
-  const { data: JobTableData } = UseGetAllJob();
-
-  const DATA = [
-    [
-      <Eye key={JobTableData?.id} className="w-5 h-5 text-gray-600" />,
-      JobTableData?.job_title,
-      <Badge key={"status"} className="bg-green-100 text-green-800">
-        {JobTableData?.status}
+  const DATA =
+    employersData?.items.map((employer: any) => [
+      employer.name,
+      employer.email,
+      employer.organization_name,
+      employer.stats.total_jobs,
+      <Badge
+        key={employer.id}
+        className={`${
+          employer.stats.subscription_status === 'active'
+            ? 'bg-green-100 text-green-800'
+            : 'bg-red-100 text-red-800'
+        }`}
+      >
+        {employer.stats.subscription_status}
       </Badge>,
-      JobTableData?.shortlisted,
-      JobTableData?.shortlisted_rate,
-      JobTableData?.job_type,
-      JobTableData?.created_at,
-      JobTableData?.expiry_date,
-    ],
-  ];
+      new Date(employer.date_joined).toLocaleDateString(),
+    ]) || [];
 
   return (
     <div>
       <h1 className="font-[roboto] text-[24px] font-semibold leading-[30px] mb-4">
-        {" "}
-        Employers
+        Employers test
       </h1>
-      {/* <Searchbar /> */}
       <TableComponent
         header={TITLE}
         subheader={DATA}
-        paginationstart={JobTableData?.current_page}
-        paginationend={JobTableData?.total}
+        paginationstart={employersData?.current_page ?? 1}
+        paginationend={employersData?.pages ?? 0}
+        onPageChange={(page: number) => setCurrentPage(page)}
+        isLoading={isLoading}
       />
     </div>
   );

@@ -13,15 +13,7 @@ export default function ProfileLayout() {
     <div className="bg-slate-100">
       <div className="flex p-4 gap-10">
         <div className="hidden md:block">
-          <ProfileSidebar
-            items={sidebarProfileItem}
-            name="Jane Doe"
-            role="Admin"
-            imageUrl="https://example.com/avatar.jpg"
-            fallback="JD"
-            activeKey={activeKey}
-            onSelect={setActiveKey}
-          />
+          <ProfileSidebar />
         </div>
       </div>
     </div>

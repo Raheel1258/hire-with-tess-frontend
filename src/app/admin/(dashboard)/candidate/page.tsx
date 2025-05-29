@@ -9,6 +9,7 @@ import OverviewStore from '@/store/EmployeeDashboard/dashboard/overview/overview
 import { Dialog, DialogContent, DialogHeader, DialogClose } from '@/components/ui/dialog';
 import { DialogDescription, DialogTitle } from '@radix-ui/react-dialog';
 import UserProfile from '@/app/employer/(dashboard)/components/candiateprofile';
+import { useState } from 'react';
 
 export default function AdminCandidatePage() {
   const TITLE = [
@@ -20,7 +21,8 @@ export default function AdminCandidatePage() {
     'Score',
   ];
 
-  const { data: DashboardTableData } = UseGetAllInterview();
+  const [currentPage, setCurrentPage] = useState(1);
+  const { data: DashboardTableData, isLoading: tableLoading } = UseGetAllInterview({ page: currentPage });
   const { data: candidatestats } = UseDashboardCandidateCardStats();
 
   const { selectedCandidate, isDialogOpen, setSelectedCandidate, setIsDialogOpen } =
@@ -113,7 +115,9 @@ export default function AdminCandidatePage() {
             header={TITLE}
             subheader={DATA}
             paginationstart={DashboardTableData?.current_page}
-            paginationend={DashboardTableData?.total}
+            paginationend={DashboardTableData?.pages}
+            onPageChange={(page: number) => setCurrentPage(page)}
+            isLoading={tableLoading}
           />
         </div>
       </div>
