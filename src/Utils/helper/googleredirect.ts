@@ -19,26 +19,18 @@ export function useGoogleLoginRedirect() {
 
     if (pathname === '/auth/callback' && token) {
       setTimeout(() => {
-        // 1. Specific job interview review page
         if (redirectPath?.includes('/interview/review') && jobId) {
           router.push(`/interview/review/${jobId}`);
-        }
-        // 2. Login or root should always go to /
-        else if (redirectPath === '/login' || redirectPath === '/') {
+        } else if (redirectPath === '/login' || redirectPath === '/') {
           router.push('/');
-        }
-        // 3. Generic valid redirect
-        else if (redirectPath) {
+        } else if (redirectPath) {
           router.push(redirectPath);
-        }
-        // 4. Fallback by role
-        else if (role === 'superadmin') {
+        } else if (role === 'superadmin') {
           router.push('/admin/home');
         } else {
-          router.push('/'); // for admin or others
+          router.push('/');
         }
 
-        // Clean up
         sessionStorage.removeItem('redirectPath');
       }, 200);
     }
