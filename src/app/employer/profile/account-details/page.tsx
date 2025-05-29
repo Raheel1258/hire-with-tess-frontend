@@ -36,22 +36,18 @@ export default function UserAccountDetail() {
   });
 
   const ref = useRef<HTMLFormElement>(null);
-
   const onSubmit = async (data: AccountFormValidator) => {
-    console.log('Function Called from Front end');
-    UpdateProfileMutation.mutate(
-      {
-        first_name: data.firstname,
-        last_name: data.lastname,
-        organization_name: data.organization,
-        email: data.email,
+    const formData = new FormData();
+    formData.append('first_name', data.firstname);
+    formData.append('last_name', data.lastname);
+    formData.append('organization_name', data.organization);
+    formData.append('email', data.email);
+
+    UpdateProfileMutation.mutate(formData, {
+      onSuccess: () => {
+        setIsEditable(false);
       },
-      {
-        onSuccess: () => {
-          setIsEditable(false);
-        },
-      },
-    );
+    });
   };
 
   const { setValue } = form;
