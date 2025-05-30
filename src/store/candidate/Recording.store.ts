@@ -40,7 +40,7 @@ interface RecordingState {
 
   setInterviewId: (id: string) => void;
 
-  setActiveType: (type: 'audio' | 'video' | 'screen') => void;
+  setActiveType: (type: 'audio' | 'screen') => void;
   saveResponse: (questionId: string, response: ResponseData) => void;
   setCurrentQuestion: (questionId: string) => void;
 }
@@ -69,7 +69,6 @@ export const useRecordingStore = create<RecordingState>()(
         setIsPlaying: (val) => set({ isPlaying: val }),
 
         setAudioURL: (url) => set({ audioURL: url }),
-        setVideoURL: (url) => set({ videoURL: url }),
         setScreenURL: (url) => set({ screenURL: url }),
 
         setHasRecorded: (val) => set({ hasRecorded: val }),
