@@ -6,4 +6,5 @@ export default interface JobDetails{
     location: string;
     salary: string;
     currency: string;
+    salary_type: string;
 }

@@ -22,9 +22,7 @@ import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { getAuthCookie, getAuthToken } from '@/Utils/Providers/auth';
 import useFetchInterviewLink from '@/Routes/Client/hook/POST/GenerateInterviewLink.hook';
-import useHomeStore from '@/store/Employer/home.store';
-import { useToggleStore } from '@/store/Employer/Toggle.store';
-import { useQuestionStore } from '@/store/Employer/questionStore';
+
 
 export default function InterviewReview() {
   const { jobId } = useParams<{ jobId: string }>();
@@ -37,7 +35,17 @@ export default function InterviewReview() {
   const jobData = jobDetailsQuery?.data || {};
   const { data } = FetchQuestions(jobId);
 
-  const form = useForm<z.infer<typeof customformSchema>>({});
+  const form = useForm<z.infer<typeof customformSchema>>({
+    defaultValues: {
+      salary: jobData?.salary || '',
+      currency: jobData?.currency || 'USD',
+      salaryType: jobData?.salary_type || 'per_hour',
+      jobTitle: jobData?.job_title || '',
+      jobType: jobData?.job_type || '',
+      companyName: jobData?.company_name || '',
+      location: jobData?.location || '',
+    }
+  });
   const { setValue } = form;
 
   useEffect(() => {
@@ -47,8 +55,12 @@ export default function InterviewReview() {
       setValue('companyName', jobData.company_name || '');
       setValue('location', jobData.location || '');
       setValue('salary', jobData.salary || '');
+      setValue('currency', jobData.currency || 'USD');
+      setValue('salaryType', jobData.salary_type || 'per_hour');
     }
   }, [jobData, setValue]);
+
+  console.log("jobData",jobData)
 
   useEffect(() => {
     if (data?.questions) {
@@ -137,15 +149,22 @@ export default function InterviewReview() {
             <FormField
               control={form.control}
               name="salary"
-              render={() => (
+              render={({ field }) => (
                 <FormItem>
-                  <CustomInputForm
-                    name="salary"
-                    currencyName={jobData.currency || 'currency'}
-                    label="Salary"
-                    type="number"
-                    readOnly
-                  />
+                  <FormControl>
+                    <CustomInputForm
+                      {...field}
+                      name="salary"
+                      label="Salary"
+                      type="number"
+                      readOnly
+                      currencyName="currency"
+                      salaryTypeName="salaryType"
+                      value={jobData.salary}
+                      currencyValue={jobData.currency}
+                      salaryTypeValue={jobData.salary_type}
+                    />
+                  </FormControl>
                 </FormItem>
               )}
             />

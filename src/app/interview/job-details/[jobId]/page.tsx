@@ -10,16 +10,13 @@ import useHomeStore from '@/store/Employer/home.store';
 import Link from 'next/link';
 import InterviewLayout from '@/components/layout/InterviewLayout';
 import CustomInputForm from '@/app/interview/component/customformInput';
-import { Check, Pencil } from 'lucide-react';
-import { useSkillStore } from '@/store/Employer/InputStore';
 import { useParams } from 'next/navigation';
 import { useUpdateJob } from '@/Routes/Client/hook/PUT/UpdateJobDetails.hook';
-import { useRouter } from 'next/navigation';
+
 
 export default function InterviewForm() {
   const { jobDescription } = useHomeStore();
-  const { isEditDescription, setIsEditableDescription } = useSkillStore();
-  const router = useRouter();
+ 
 
   const { jobTitle, jobType, companyName, location, salary } = useHomeStore();
   const { jobId } = useParams<{ jobId: string }>();
@@ -35,6 +32,8 @@ export default function InterviewForm() {
       companyName: companyName || companyNameStore,
       location: location,
       salary: salary,
+      currency: 'USD',
+      salaryType: 'per_hour',
     },
   });
   const ref = useRef<HTMLFormElement>(null);
@@ -48,6 +47,7 @@ export default function InterviewForm() {
       location: data.location || '',
       salary: data.salary || '',
       currency: data.currency || '',
+      salary_type: data.salaryType || '',
     });
   };
 
@@ -64,15 +64,8 @@ export default function InterviewForm() {
       location: formData.location,
       salary: formData.salary,
       currency: formData.currency,
+      salary_type: formData.salaryType,
     });
-  };
-
-  const handleEditDescription = () => {
-    setIsEditableDescription(true);
-  };
-
-  const UpdateJobDescription = () => {
-    setIsEditableDescription(false);
   };
 
   return (
@@ -101,25 +94,6 @@ export default function InterviewForm() {
                       label="Position Overview"
                       type="textarea"
                       placeholder={jobDescription || 'Position Overview here'}
-                      readOnly={!isEditDescription}
-                      icon={
-                        isEditDescription ? (
-                          <Check
-                            size={16}
-                            color="green"
-                            strokeWidth={0.75}
-                            style={{ cursor: 'pointer' }}
-                            onClick={UpdateJobDescription}
-                          />
-                        ) : (
-                          <Pencil
-                            size={18}
-                            color="#718096"
-                            style={{ cursor: 'pointer' }}
-                            onClick={handleEditDescription}
-                          />
-                        )
-                      }
                     />
                   </FormItem>
                 )}
@@ -185,10 +159,10 @@ export default function InterviewForm() {
                   <FormItem>
                     <CustomInputForm
                       name="salary"
-                      currencyName="currency"
                       label="Salary"
-                      placeholder="Enter salary here"
-                      type="number"
+                      placeholder="Enter salary amount"
+                      currencyName="currency"
+                      salaryTypeName="salaryType"
                     />
                   </FormItem>
                 )}

@@ -13,7 +13,7 @@ import { DialogDescription, DialogTitle } from '@radix-ui/react-dialog';
 import { useState } from 'react';
 
 export default function AdminDashboardHome() {
-  const TITLE = ['Action', 'Name', 'Job Applied For', 'Applied On', 'Interview Status', 'Score'];
+  const TITLE = ['ID', 'Name', 'Job Applied For', 'Applied On', 'Interview Status', 'Score'];
   const [currentPage, setCurrentPage] = useState(1);
 
   const {

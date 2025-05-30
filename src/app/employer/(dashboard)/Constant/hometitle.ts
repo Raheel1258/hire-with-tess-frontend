@@ -1,5 +1,5 @@
 const HomeTableTile=[
-        'Action',
+        'ID',
         'Name',
         'Job Applied For',
         'Interview Date',
