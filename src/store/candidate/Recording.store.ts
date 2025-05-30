@@ -3,7 +3,7 @@ import { devtools, persist, createJSONStorage } from 'zustand/middleware';
 
 interface ResponseData {
   transcript: string;
-  type: 'audio' | 'video' | 'screen';
+  type: 'audio' | 'screen';
   url: string;
   question: string;
 }
@@ -15,13 +15,12 @@ interface RecordingState {
 
   // Recorded URLs
   audioURL: string;
-  videoURL: string;
   screenURL: string;
 
   // Recording info
   hasRecorded: boolean;
   audioData: number[];
-  activeType: 'audio' | 'video' | 'screen';
+  activeType: 'audio' | 'screen';
 
   // Stored answers by question
   storedResponses: { questionId: string; response: ResponseData }[];
@@ -34,7 +33,6 @@ interface RecordingState {
   setIsPlaying: (val: boolean) => void;
 
   setAudioURL: (url: string) => void;
-  setVideoURL: (url: string) => void;
   setScreenURL: (url: string) => void;
 
   setHasRecorded: (val: boolean) => void;
@@ -42,7 +40,7 @@ interface RecordingState {
 
   setInterviewId: (id: string) => void;
 
-  setActiveType: (type: 'audio' | 'video' | 'screen') => void;
+  setActiveType: (type: 'audio' | 'screen') => void;
   saveResponse: (questionId: string, response: ResponseData) => void;
   setCurrentQuestion: (questionId: string) => void;
 }
@@ -56,7 +54,6 @@ export const useRecordingStore = create<RecordingState>()(
         isPlaying: false,
 
         audioURL: '',
-        videoURL: '',
         screenURL: '',
 
         hasRecorded: false,
@@ -72,7 +69,6 @@ export const useRecordingStore = create<RecordingState>()(
         setIsPlaying: (val) => set({ isPlaying: val }),
 
         setAudioURL: (url) => set({ audioURL: url }),
-        setVideoURL: (url) => set({ videoURL: url }),
         setScreenURL: (url) => set({ screenURL: url }),
 
         setHasRecorded: (val) => set({ hasRecorded: val }),

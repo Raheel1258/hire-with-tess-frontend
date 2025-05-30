@@ -24,16 +24,18 @@ const Waveform: React.FC<WaveformProps> = ({ recordedVoiceURL = 0 }) => {
     if (!recordedVoiceURL || !waveformRef.current) return;
 
     const wavesurfer = WaveSurfer.create({
+      mediaControls: true,
+      autoCenter: false,
       container: waveformRef.current,
       barWidth: 3,
       barRadius: 3,
       barGap: 2,
       cursorWidth: 1,
+      cursorColor: 'transparent',
       backend: 'WebAudio',
       height: 40,
       waveColor: '#1e4b8e',
       progressColor: '#C4C4C4',
-      cursorColor: 'transparent',
       url: recordedVoiceURL.toString(),
       normalize: true,
     });
@@ -64,7 +66,7 @@ const Waveform: React.FC<WaveformProps> = ({ recordedVoiceURL = 0 }) => {
       <div className="flex items-center gap-2 w-full">
         <div ref={waveformRef} className="flex-1 min-w-0" />
         <span className="text-[#1e4b8e] min-w-[50px] text-center">
-          {formatTime(duration)}
+          {duration ? formatTime(duration) : '00:00'}
         </span>
         <button
           onClick={togglePlayback}
