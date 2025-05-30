@@ -12,10 +12,10 @@ import {
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRef, useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import UseProfileInfo from '@/Routes/Employer/hooks/GET/profile/Profileinfo.hook';
 import RedirectToDashboard from '../components/breadcrumb';
 import { useSkillStore } from '@/store/Employer/InputStore';
 import UseUpdateProfileHook from '@/Routes/Employer/hooks/PUT/profile/Updateprofilehook';
+import UseProfileInfo from '@/Routes/Employer/hooks/GET/profile/Profileinfo.hook';
 
 export default function UserAccountDetail() {
   const { data: profileInfo } = UseProfileInfo();
@@ -23,9 +23,7 @@ export default function UserAccountDetail() {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
   const { isEditable, setIsEditable } = useSkillStore();
-  const profilediting = () => {
-    setIsEditable(true);
-  };
+ 
 
   const form = useForm<AccountFormValidator>({
     resolver: zodResolver(AccountDetailformSchema),
@@ -93,12 +91,6 @@ export default function UserAccountDetail() {
       />
       <div className="flex flex-row gap-4 items-center">
         <h1 className="text-2xl font-semibold text-slate-800">Account Details</h1>
-        <div
-          onClick={profilediting}
-          className="w-10 h-10 flex items-center justify-center rounded-full border"
-        >
-          <UserPen className="w-5 h-5" />
-        </div>
       </div>
 
       <Form {...form}>
@@ -107,33 +99,6 @@ export default function UserAccountDetail() {
           ref={ref}
           className="space-y-8 flex flex-col overflow-auto max-h-[80vh] py-8"
         >
-          {/* <div className="flex flex-col items-center gap-6">
-            <div className="relative group">
-              <Avatar
-                className="w-32 h-32 border-4 border-[#F7941D] cursor-pointer"
-                onClick={() => document.getElementById('image-upload')?.click()}
-              >
-                {previewUrl ? (
-                  <AvatarImage src={previewUrl} alt="Profile" className="object-cover" />
-                ) : (
-                  <AvatarFallback className="text-2xl bg-[#F7941D] text-white">
-                    {profileInfo?.first_name?.[0] || 'U'}
-                  </AvatarFallback>
-                )}
-                <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
-                  <Pencil className="w-6 h-6 text-white" />
-                </div>
-              </Avatar>
-            </div>
-
-            <Input
-              id="image-upload"
-              type="file"
-              accept="image/*"
-              className="hidden"
-              onChange={handleFileChange}
-            />
-          </div> */}
 
           <div className="flex gap-4 items-start w-full mt-4">
             <FormField
@@ -148,7 +113,7 @@ export default function UserAccountDetail() {
                       type="text"
                       label="First Name"
                       placeholder="John"
-                      readOnly={!isEditable}
+                
                     />
                   </FormControl>
                 </FormItem>
@@ -166,7 +131,7 @@ export default function UserAccountDetail() {
                       type="text"
                       label="Last Name"
                       placeholder="Doe"
-                      readOnly={!isEditable}
+                  
                     />
                   </FormControl>
                 </FormItem>
@@ -186,7 +151,7 @@ export default function UserAccountDetail() {
                       name="organization"
                       label="Organization Name"
                       placeholder="King Palm"
-                      readOnly={!isEditable}
+                  
                     />
                   </FormControl>
                 </FormItem>
@@ -204,7 +169,7 @@ export default function UserAccountDetail() {
                       type="email"
                       label="Email"
                       placeholder="john.doe@gmail.com"
-                      readOnly={!isEditable}
+                      
                     />
                   </FormControl>
                 </FormItem>
