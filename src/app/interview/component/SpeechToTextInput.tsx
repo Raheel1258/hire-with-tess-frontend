@@ -46,7 +46,7 @@ const SpeechRecordingInput: React.FC<SpeechRecordingInputProps> = ({
   const { mutate: uploadFile } = useUploadFileMutation();
 
   const { resetTranscript, browserSupportsSpeechRecognition } = useSpeechRecognition();
-  const { transcript, startSpeechRecognition, stopSpeechRecognition, listening } =
+  const { transcript, startSpeechRecognition, stopSpeechRecognition, listening,resetRecording } =
     useVoiceRecorder();
 
   const [inputTranscript, setInputTranscript] = useState('');
@@ -94,6 +94,8 @@ const SpeechRecordingInput: React.FC<SpeechRecordingInputProps> = ({
       await stopSpeechRecognition();
       setActiveTool(null);
     } else {
+      resetTranscript();
+      setInputTranscript('');
       await startSpeechRecognition();
       startVoiceRecording();
       setActiveTool('mic');
@@ -171,7 +173,9 @@ const SpeechRecordingInput: React.FC<SpeechRecordingInputProps> = ({
   };
 
   useEffect(() => {
-    setInputTranscript(transcript);
+    if (transcript) {
+      setInputTranscript(transcript);
+    }
   }, [transcript]);
 
   const setActiveType = useRecordingStore.getState().setActiveType;
@@ -207,6 +211,7 @@ const SpeechRecordingInput: React.FC<SpeechRecordingInputProps> = ({
       audioStream.current.stop();
       mediaStreamRef.current?.getTracks().forEach((track) => track.stop());
     }
+    setInputTranscript('');
     setAudioUrl('');
     setScreenShareUrl(null);
     setSeconds(0);
@@ -216,9 +221,8 @@ const SpeechRecordingInput: React.FC<SpeechRecordingInputProps> = ({
     setActiveTool(null);
     recordedChunksRef.current = [];
     resetTranscript();
-    setInputTranscript('');
-    useResponseStore.getState().clearResponses();
-    resetAllState();
+    stopSpeechRecognition();
+    setInputTranscript('');            
   };
 
   const getRecordAgainLabel = () => {
@@ -301,6 +305,7 @@ const SpeechRecordingInput: React.FC<SpeechRecordingInputProps> = ({
         spellCheck="false"
         placeholder={placeholder}
         onChange={(e) => {
+          console.log("e.target.value",e.target.value)
           setInputTranscript(e.target.value);
           if (e.target.value === '') {
             resetTranscript();

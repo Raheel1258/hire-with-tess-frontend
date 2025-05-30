@@ -8,7 +8,7 @@ import { AxiosError } from 'axios';
 export const useUpdateJob = () => {
   const { jobId } = useHomeStore();
   const router = useRouter();
-  const { setCompanyName, setCurrency, setJobType, setLocation, setJobTitle, setSalary } =
+  const { setCompanyName, setCurrency, setJobType, setLocation, setJobTitle, setSalary, setSalaryType } =
     useHomeStore();
   return useMutation({
     mutationFn: (data: JobDetails) => updateJobDetails(jobId, data),
@@ -19,6 +19,7 @@ export const useUpdateJob = () => {
       setLocation(data.location);
       setSalary(data.salary);
       setCurrency(data.currency);
+      setSalaryType(data.salary_type);
       router.push(`/interview/review/${jobId}`);
     },
     onError: async (error) => {

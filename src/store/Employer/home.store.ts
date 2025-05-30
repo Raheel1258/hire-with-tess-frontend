@@ -10,6 +10,7 @@ interface HomeState {
   companyName: string;
   location: string;
   salary: string;
+  salaryType: string;
   currency: string;
   skills: string[];
   responsibilities: string[];
@@ -22,6 +23,7 @@ interface HomeState {
   setCompanyName: (value: string) => void;
   setLocation: (value: string) => void;
   setSalary: (value: string) => void;
+  setSalaryType: (value: string) => void;
   setCurrency: (value: string) => void;
   setSkills: (value: string[]) => void;
   setResponsibilities: (value: string[]) => void;
@@ -39,6 +41,7 @@ const useHomeStore = create<HomeState>()(
         companyName: '',
         location: '',
         salary: '',
+        salaryType: '',
         currency: '',
         skills: [],
         responsibilities: [],
@@ -51,6 +54,7 @@ const useHomeStore = create<HomeState>()(
         setCompanyName: (value) => set({ companyName: value }),
         setLocation: (value) => set({ location: value }),
         setSalary: (value) => set({ salary: value }),
+        setSalaryType: (value) => set({ salaryType: value }),
         setCurrency: (value) => set({ currency: value }),
 
         setSkills: (value) => set({ skills: value }),
