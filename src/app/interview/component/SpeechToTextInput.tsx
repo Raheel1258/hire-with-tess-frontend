@@ -211,6 +211,7 @@ const SpeechRecordingInput: React.FC<SpeechRecordingInputProps> = ({
       audioStream.current.stop();
       mediaStreamRef.current?.getTracks().forEach((track) => track.stop());
     }
+    resetRecording();
     setInputTranscript('');
     setAudioUrl('');
     setScreenShareUrl(null);
