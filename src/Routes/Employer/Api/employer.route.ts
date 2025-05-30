@@ -2,7 +2,6 @@ import axios from 'axios';
 import { EMPLOYERAPI } from '../Constant/employer-endpoint.route';
 import { toast } from 'sonner';
 import { clearAuthToken } from '@/Utils/Providers/auth';
-import { ProfileInfoType } from '@/Types/EmployerDashboard/profileinfo';
 import { JobFilterType } from '@/Types/EmployerDashboard/jobfilter';
 import { SubscriptionsResponse, SubscriptionStats } from '@/Types/Admin/subscription';
 import { AnalysisResponse } from '@/Types/Admin/analysis';
