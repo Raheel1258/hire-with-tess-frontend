@@ -1,5 +1,5 @@
 'use client';
-import { BriefcaseBusiness, Eye, Loader, Users } from 'lucide-react';
+import { BriefcaseBusiness, Copy, Eye, Loader, Users } from 'lucide-react';
 import CardComponent from '../components/card';
 import TableComponent from '../components/table';
 import { Badge } from '@/components/ui/badge';
@@ -20,6 +20,7 @@ import CandidateTableTitle from '../Constant/candiatetitle';
 import { Button } from '@/components/ui/button';
 import AnalyzeInterviewHook from '@/Routes/Employer/hooks/POST/AnalyzeInterview.hook';
 import { toast } from 'sonner';
+import handleCopyLink from '@/Utils/helper/copylink';
 
 export default function CandidatePage() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -65,14 +66,7 @@ export default function CandidatePage() {
   };
 
   const DATA = (filteredJobs ?? []).map((item: any) => [
-    <Eye
-      onClick={() => {
-        setSelectedCandidate(item);
-        setIsDialogOpen(true);
-      }}
-      key={`eye-${item.id}`}
-      className="w-5 h-5 text-tess-gray cursor-pointer"
-    />,
+    item?.id,
     item?.candidate_name,
     item?.job_title,
     new Date(item.created_at).toLocaleDateString(),
@@ -96,6 +90,19 @@ export default function CandidatePage() {
         {item.status}
       </Badge>
     ),
+    item?.interview_link ? (
+      <Button
+        variant="ghost"
+        size="sm"
+        className="flex items-center gap-2"
+        onClick={() => handleCopyLink(item.interview_link)}
+      >
+        <Copy className="w-4 h-4" />
+        <span>Copy Link</span>
+      </Button>
+    ) : (
+      'No link available'
+    ),
 
     item.ai_score === null ? (
       analyzingInterviewId === item.id ? (
@@ -114,6 +121,15 @@ export default function CandidatePage() {
     ) : (
       <Badge className="bg-[#f7941D] text-white">{item.ai_score}</Badge>
     ),
+    <div key={`actions-${item.id}`} className="flex justify-center">
+    <Eye
+      onClick={() => {
+        setSelectedCandidate(item);
+        setIsDialogOpen(true);
+      }}
+      className="w-5 h-5 text-gray-600 cursor-pointer hover:text-[#f7941D] transition"
+    />
+  </div>,
   ]);
 
   return (

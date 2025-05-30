@@ -11,6 +11,7 @@ export default function CandidateInstructions() {
   const jobId = params?.jobId as string | undefined;
   const { data } = FetchQuestions(jobId);
 
+
   return (
     <InterviewLayout
       showStepper={false}
@@ -28,6 +29,18 @@ export default function CandidateInstructions() {
         <p className="font-roboto text-[14px] sm:text-[16px] font-normal text-[#6F6C90] mt-4 text-center">
           Take your time, be yourself, and show what you can do!
         </p>
+
+        {data?.status === "closed" && (
+          <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+            <p className="text-red-600 font-medium flex items-center justify-center gap-2">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+              </svg>
+              This job posting is no longer accepting applications
+            </p>
+          </div>
+        )}
+
 
         <div className="py-8 w-full flex justify-center items-center">
           <Card className="w-full sm:w-[90%] md:w-[669px] border-1 rounded-2xl p-4">
@@ -54,7 +67,12 @@ export default function CandidateInstructions() {
 
         <div className="py-8 w-full flex justify-center">
           <Link href={`/interview/details/${jobId}`}>
-            <Button className="w-full sm:w-[351px] h-[50px] rounded-md">Continue</Button>
+          <Button 
+              className="w-full sm:w-[351px] h-[50px] rounded-md"
+              disabled={data?.status === "closed"}
+            >
+              {data?.status === "closed" ? "Job Closed" : "Continue"}
+            </Button>
           </Link>
         </div>
 

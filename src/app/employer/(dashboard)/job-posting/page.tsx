@@ -24,6 +24,7 @@ import UseGetFilteredJob from '@/Routes/Employer/hooks/GET/jobposting/GetFilterJ
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import { useState } from 'react';
+import handleCopyLink from '@/Utils/helper/copylink';
 
 export default function JobPosting() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -31,6 +32,7 @@ export default function JobPosting() {
   const { data: JobPostedTableData } = UseGetAllJob({ page: currentPage });
   const deleteJobMutation = UseDeleteJobByID();
   const updatejobstatus = UseUpdateJobStatus();
+  console.log(JobPostedTableData);
   // const { data: FilteredJobData } = UseGetFilteredJob({});
 
   const {
@@ -55,30 +57,8 @@ export default function JobPosting() {
     deleteJobMutation.mutate(jobId);
   };
 
-  const handleCopyLink = (link: string | undefined) => {
-    if (!link) {
-      toast.error('No link available to copy');
-      return;
-    }
-    navigator.clipboard
-      .writeText(link)
-      .then(() => {
-        toast.success('Link copied to clipboard');
-      })
-      .catch(() => {
-        toast.error('Failed to copy link');
-      });
-  };
-
   const DATA = (filteredJobs ?? []).map((item: postedJobProps) => [
-    <Eye
-      onClick={() => {
-        setpostedjobdata(item);
-        setIsDialogOpen(true);
-      }}
-      key={item.id}
-      className="w-5 h-5 text-gray-600 cursor-pointer"
-    />,
+    item?.id,
     item?.job_title,
     <DropDownCustomStatus
       key={item.status}
@@ -107,9 +87,16 @@ export default function JobPosting() {
     ) : (
       'No link available'
     ),
-    ,
   ]);
-
+  
+  const handleViewJob = (rowIndex: number) => {
+    const selectedJob = filteredJobs?.[rowIndex];
+    if (selectedJob) {
+      setpostedjobdata(selectedJob);
+      setIsDialogOpen(true);
+    }
+  };
+  
   return (
     <>
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
@@ -159,6 +146,8 @@ export default function JobPosting() {
             onPageChange={(page: number) => setCurrentPage(page)}
             showTrashIcon
             onDelete={deleteJob}
+            showEyeIcon={true}
+            onView={handleViewJob} 
           />
         </div>
       </div>

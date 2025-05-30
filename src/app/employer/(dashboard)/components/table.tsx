@@ -7,7 +7,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { Trash } from 'lucide-react';
+import { Eye, Trash } from 'lucide-react';
 
 interface TableProps {
   header: string[];
@@ -15,10 +15,13 @@ interface TableProps {
   paginationend: number;
   subheader: (string | React.ReactNode)[][];
   showTrashIcon?: boolean;
+  showEyeIcon?: boolean;
   onDelete?: (rowIndex: number) => void;
+  onView?: (rowIndex: number) => void; 
   onPageChange?: (page: number) => void;
   isLoading?: boolean;
 }
+
 
 export default function TableComponent({
   header,
@@ -26,10 +29,13 @@ export default function TableComponent({
   paginationend,
   subheader,
   showTrashIcon = false,
+  showEyeIcon = false,
   onDelete,
+  onView, 
   onPageChange,
   isLoading = false,
 }: TableProps) {
+
   const handlePreviousPage = () => {
     if (paginationstart > 1 && onPageChange) {
       onPageChange(paginationstart - 1);
@@ -56,7 +62,7 @@ export default function TableComponent({
                   {head}
                 </TableHead>
               ))}
-              {showTrashIcon && (
+              {(showTrashIcon || showEyeIcon) && (
                 <TableHead className="text-left font-roboto text-[#535862] whitespace-nowrap">
                   Action
                 </TableHead>
@@ -67,13 +73,19 @@ export default function TableComponent({
           <TableBody className="border-t">
             {isLoading ? (
               <TableRow>
-                <TableCell colSpan={header.length + (showTrashIcon ? 1 : 0)} className="text-center py-8">
+                <TableCell
+                  colSpan={header.length + (showTrashIcon ? 1 : 0)}
+                  className="text-center py-8"
+                >
                   Loading...
                 </TableCell>
               </TableRow>
             ) : subheader.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={header.length + (showTrashIcon ? 1 : 0)} className="text-center py-8">
+                <TableCell
+                  colSpan={header.length + (showTrashIcon ? 1 : 0)}
+                  className="text-center py-8"
+                >
                   No data available
                 </TableCell>
               </TableRow>
@@ -88,12 +100,20 @@ export default function TableComponent({
                       {cell}
                     </TableCell>
                   ))}
-                  {showTrashIcon && (
-                    <TableCell>
-                      <Trash
-                        className="w-4 h-4 text-[#f7941D] cursor-pointer"
-                        onClick={() => onDelete?.(rowIndex)}
-                      />
+                  {(showTrashIcon || showEyeIcon) && (
+                    <TableCell className="flex items-center gap-3">
+                      {showEyeIcon && (
+                        <Eye
+                          className="w-4 h-4 text-[#f7941D] cursor-pointer"
+                          onClick={() => onView?.(rowIndex)}
+                        />
+                      )}
+                      {showTrashIcon && (
+                        <Trash
+                          className="w-4 h-4 text-[#f7941D] cursor-pointer"
+                          onClick={() => onDelete?.(rowIndex)}
+                        />
+                      )}
                     </TableCell>
                   )}
                 </TableRow>
@@ -104,15 +124,15 @@ export default function TableComponent({
 
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center px-4 py-4 border-t mt-6 gap-2 sm:gap-0">
           <div className="flex space-x-2">
-            <Button 
-              variant="outline" 
+            <Button
+              variant="outline"
               onClick={handlePreviousPage}
               disabled={paginationstart <= 1 || isLoading}
             >
               Previous
             </Button>
-            <Button 
-              variant="outline" 
+            <Button
+              variant="outline"
               onClick={handleNextPage}
               disabled={paginationstart >= paginationend || isLoading}
             >

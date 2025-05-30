@@ -15,9 +15,10 @@ export default function AdminDashboardBussinessLayout({
     localStorage.removeItem('accessToken');
     document.cookie = 'accessToken=; path=/; max-age=0;';
   };
+  
   return (
     <div className="bg-slate-100">
-      <Header superAdmin={true} />
+      <Header />
       <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr] pl-6">
         <Sidebar links={adminSidebarLinks} onLogout={handleLogout} />
         <div className="main-content-area px-4 md:px-6 py-4 overflow-x-hidden">

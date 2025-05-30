@@ -2,14 +2,13 @@
 
 import { useParams, useRouter } from 'next/navigation';
 import { toast } from 'sonner';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
 import FetchQuestions from '@/Routes/Client/hook/GET/FetchQuestions.hook';
 import Stepper from '@/app/interview/component/stepper';
 import SpeechRecordingInput from '@/app/interview/component/SpeechToTextInput';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useRecordingStore } from '@/store/candidate/Recording.store';
-import useUploadFileMutation from '@/Routes/Client/hook/POST/UploadFilehook';
 
 export default function InterviewQuestionPage() {
   const params = useParams();

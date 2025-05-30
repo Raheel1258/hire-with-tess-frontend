@@ -4,20 +4,17 @@ import { BellIcon } from 'lucide-react';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import UseProfileInfo from '@/Routes/Employer/hooks/GET/profile/Profileinfo.hook';
 import UseProfileSuperAdmin from '@/Routes/Admin/hook/GET/Profileinfo.hook';
-import { toast } from 'sonner';
+import { getAuthRole } from '@/Utils/Providers/auth';
 
-interface Props {
-  superAdmin?: boolean;
-}
 
-export default function Header({ superAdmin }: Props) {
+export default function Header() {
   const router = useRouter();
   const { data: profileInfo } = UseProfileInfo();
 
   const { data: superAdminInfo } = UseProfileSuperAdmin();
 
   const handleNavigation = () => {
-    if (superAdmin) {
+    if (getAuthRole() === 'superadmin') {
       router.push('/admin/profile/account-details');
     } else {
       router.push('/employer/profile/account-details');
@@ -27,7 +24,7 @@ export default function Header({ superAdmin }: Props) {
   return (
     <div className="bg-white flex justify-between h-18 mb-8 p-6">
       <div className="font-[Space Grotesk] text-[20px]">
-        {superAdmin ? superAdminInfo?.organization_name : profileInfo?.organization_name}
+        {getAuthRole() === 'superadmin' ? superAdminInfo?.organization_name : profileInfo?.organization_name}
       </div>
       <div className="flex gap-2 items-center">
         <div className="bg-[#A2A1A81A] w-[50px] h-12 rounded-xl flex items-center justify-center">
@@ -45,18 +42,18 @@ export default function Header({ superAdmin }: Props) {
               />
               <AvatarFallback>
                 {' '}
-                {superAdmin
+                {getAuthRole() === 'superadmin'
                   ? superAdminInfo?.firstname
                   : profileInfo?.firstname || 'IN'}{' '}
               </AvatarFallback>
             </Avatar>
           </div>
           <div className="pl-2">
-            <h1 className="font-normal text-sm">
-              {superAdmin ? superAdminInfo?.first_name : profileInfo?.first_name}
+            <h1 className="font-normal text-sm truncate max-w-[100px]">
+              {getAuthRole() === 'superadmin' ? superAdminInfo?.first_name : profileInfo?.first_name}
             </h1>
             <p className="text-sm text-[#A2A1A8]">
-              {superAdmin ? 'Super Admin' : 'Employer'}
+              {getAuthRole() === 'superadmin' ? 'Super Admin' : 'Employer'}
             </p>
           </div>
         </div>

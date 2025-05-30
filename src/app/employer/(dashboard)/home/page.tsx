@@ -1,5 +1,5 @@
 'use client';
-import { BriefcaseBusiness, Eye, Users } from 'lucide-react';
+import { BriefcaseBusiness, Copy, Eye, Users } from 'lucide-react';
 import CardComponent from '@/app/employer/(dashboard)/components/card';
 import TableComponent from '@/app/employer/(dashboard)/components/table';
 import { Badge } from '@/components/ui/badge';
@@ -22,6 +22,7 @@ import { toast } from 'sonner';
 import OverviewStore from '@/store/EmployeeDashboard/dashboard/overview/overview.store';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import handleCopyLink from '@/Utils/helper/copylink';
 
 export default function DashboardHome() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -64,62 +65,70 @@ export default function DashboardHome() {
       },
     );
   };
+
   const DATA =
-    DashboardTableData?.items?.map((item: any) => [
-      <div key={`actions-${item.id}`} className="flex gap-2 items-center">
-        <Eye
-          onClick={() => {
-            setSelectedCandidate(item);
-            setIsDialogOpen(true);
-          }}
-          className="w-5 h-5 text-gray-600 cursor-pointer"
-        />
-      </div>,
-      item.candidate_name,
-      item.job_title,
-      new Date(item.created_at).toLocaleDateString(),
+  DashboardTableData?.items?.map((item: any) => [
+    item?.id,
+    item.candidate_name,
+    item.job_title,
+    new Date(item.created_at).toLocaleDateString(),
 
-      item.status === 'reject' ? (
-        <Badge
-          key={`status-${item.status}`}
-          className="capitalize bg-red-100 text-red-800"
-        >
-          {item.status}
-        </Badge>
+    item.status === 'reject' ? (
+      <Badge key={`status-${item.status}`} className="capitalize bg-red-100 text-red-800">
+        {item.status}
+      </Badge>
+    ) : item.status === 'pending' ? (
+      <Badge key={`status-${item.status}`} className="capitalize bg-yellow-100 text-[#f7941D]">
+        {item.status}
+      </Badge>
+    ) : (
+      <Badge key={`status-${item.status}`} className="capitalize bg-green-100 text-green-800">
+        {item.status}
+      </Badge>
+    ),
+
+    item?.interview_link ? (
+      <Button
+        variant="ghost"
+        size="sm"
+        className="flex items-center gap-2"
+        onClick={() => handleCopyLink(item.interview_link)}
+      >
+        <Copy className="w-4 h-4" />
+        <span>Copy Link</span>
+      </Button>
+    ) : (
+      'No link available'
+    ),
+
+    item.ai_score === null ? (
+      analyzingInterviewId === item.id ? (
+        <Loader className="w-4 h-4 animate-spin text-[#f7941D] mx-auto" />
       ) : item.status === 'pending' ? (
-        <Badge
-          key={`status-${item.status}`}
-          className="capitalize bg-yellow-100 text-[#f7941D]"
-        >
-          {item.status}
-        </Badge>
+        <p>Pending</p>
       ) : (
-        <Badge
-          key={`status-${item.status}`}
-          className="capitalize bg-green-100 text-green-800"
+        <Button
+          size="sm"
+          className="text-xs"
+          onClick={() => handleAnalyzeInterview(item.id)}
         >
-          {item.status}
-        </Badge>
-      ),
+          Analyze
+        </Button>
+      )
+    ) : (
+      <Badge className="bg-[#f7941D] text-white">{item.ai_score}</Badge>
+    ),
+    <div key={`actions-${item.id}`} className="flex justify-center">
+      <Eye
+        onClick={() => {
+          setSelectedCandidate(item);
+          setIsDialogOpen(true);
+        }}
+        className="w-5 h-5 text-gray-600 cursor-pointer hover:text-[#f7941D] transition"
+      />
+    </div>,
+  ]) || [];
 
-      item.ai_score === null ? (
-        analyzingInterviewId === item.id ? (
-          <Loader className="w-4 h-4 animate-spin text-[#f7941D] mx-auto" />
-        ) : item.status === 'pending' ? (
-          <p>Pending</p>
-        ) : (
-          <Button
-            size="sm"
-            className="text-xs"
-            onClick={() => handleAnalyzeInterview(item.id)}
-          >
-            Analyze
-          </Button>
-        )
-      ) : (
-        <Badge className="bg-[#f7941D] text-white">{item.ai_score}</Badge>
-      ),
-    ]) || [];
 
   return (
     <>
