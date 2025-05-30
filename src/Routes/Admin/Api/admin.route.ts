@@ -143,7 +143,7 @@ export const UpdateSuperAdminProfile = async (data: any) => {
   const response = await api.put(AdminEndpoint.SUPERADMIN_UPDATE_PROFILE, data, {
     headers: {
       'Content-Type': 'multipart/form-data',
-    },  
+    },
   });
   return response.data;
 };
