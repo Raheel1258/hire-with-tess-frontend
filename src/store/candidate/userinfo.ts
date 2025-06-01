@@ -35,6 +35,16 @@ const useCandidateInfoStore = create<CandidateInfoState>()(
         setPhone: (phone: string) => set({ phone }),
         setImage: (image: File | null) => set({ image }),
         setJobId: (job_id: string) => set({ job_id }),
+
+        ResetUserInfoStore: () => set({
+          candidate_name: '',
+          email: '',
+          phone: '',
+          image: null,
+          job_id: '',
+          interview_id: '',
+        }),
+
       }),
       {
         name: 'candidate-info',

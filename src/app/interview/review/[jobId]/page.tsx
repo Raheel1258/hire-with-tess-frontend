@@ -15,13 +15,15 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import Signup from '@/app/signup/page';
+import SignupDialogue from '@/app/interview/component/signupDialogue';
 import CustomInputForm from '@/app/interview/component/customformInput';
 import { useRouter } from 'next/navigation';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { getAuthCookie, getAuthToken } from '@/Utils/Providers/auth';
 import useFetchInterviewLink from '@/Routes/Client/hook/POST/GenerateInterviewLink.hook';
+import useHomeStore from '@/store/Employer/home.store';
+import { Loader2 } from 'lucide-react';
 
 
 export default function InterviewReview() {
@@ -29,7 +31,7 @@ export default function InterviewReview() {
   const ref = useRef<HTMLFormElement>(null);
   const router = useRouter();
   const accessToken = getAuthToken() || getAuthCookie();
-  const { mutate: fetchInterviewLink } = useFetchInterviewLink(jobId);
+  const { mutate: fetchInterviewLink, isPending: isGeneratingLink } = useFetchInterviewLink(jobId);
 
   const jobDetailsQuery = FetchJobDetails(jobId);
   const jobData = jobDetailsQuery?.data || {};
@@ -47,7 +49,7 @@ export default function InterviewReview() {
     }
   });
   const { setValue } = form;
-
+  const setJobId = useHomeStore((state) => state.setJobId);  
   useEffect(() => {
     if (jobData) {
       setValue('jobTitle', jobData.job_title || '');
@@ -60,7 +62,6 @@ export default function InterviewReview() {
     }
   }, [jobData, setValue]);
 
-  console.log("jobData",jobData)
 
   useEffect(() => {
     if (data?.questions) {
@@ -69,6 +70,11 @@ export default function InterviewReview() {
       });
     }
   }, [data?.questions, setValue]);
+  useEffect(() => {
+    if (jobId) {
+      setJobId(jobId);
+    }
+  }, [jobId, setJobId]);
 
   return (
     <InterviewLayout
@@ -212,7 +218,7 @@ export default function InterviewReview() {
           <div>
             <Button
               onClick={() => {
-                if (jobDescription) {
+                if (jobData.job_description) {
                   router.back();
                 } else {
                   router.push(`/`);
@@ -233,7 +239,7 @@ export default function InterviewReview() {
                 }}
                 className="w-40"
               >
-                Generate Link
+                {isGeneratingLink ? <Loader2 className='animate-spin' /> : 'Generate Link'}
               </Button>
             </Link>
           ) : (
@@ -243,7 +249,7 @@ export default function InterviewReview() {
               </DialogTrigger>
               <DialogContent className="items-center bg-white shadow-2xl rounded-lg w-5xl">
                 <DialogTitle></DialogTitle>
-                <Signup />
+                <SignupDialogue />
               </DialogContent>
             </Dialog>
           )}

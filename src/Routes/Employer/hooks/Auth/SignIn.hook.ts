@@ -40,7 +40,7 @@ export default function useLoginMutation() {
       // role-based redirect
       switch (role) {
         case 'admin':
-          router.push('/');
+          router.push('/employer/home');
           break;
         case 'superadmin':
           router.push('/admin/home');

@@ -11,6 +11,7 @@ import UseUpdateInterviewStatus from '@/Routes/Employer/hooks/PUT/overview/Updat
 import { toast } from 'sonner';
 import { Loader } from 'lucide-react';
 import { useQueryClient } from '@tanstack/react-query';
+import StatusBadge from './status.badge';
 
 export default function UserProfile({ data, isSuperAdmin }: any) {
   const [openVideoURL, setOpenVideoURL] = useState<string | null>(null);
@@ -19,6 +20,7 @@ export default function UserProfile({ data, isSuperAdmin }: any) {
   const queryClient = useQueryClient();
 
   if (!data) return null;
+  console.log("data", data)
   const answers = data.answers;
   const questions = Object.keys(answers || {});
   const updatejobstatus = UseUpdateInterviewStatus();
@@ -36,8 +38,8 @@ export default function UserProfile({ data, isSuperAdmin }: any) {
         status: status,
       });
       toast.success(`Candidate ${status === 'shortlisted' ? 'shortlisted' : 'rejected'} successfully`);
-      
-      // Invalidate and refetch the interview data
+
+
       await queryClient.invalidateQueries({ queryKey: ['interviews'] });
     } catch (error) {
       toast.error('Failed to update status');
@@ -75,11 +77,11 @@ export default function UserProfile({ data, isSuperAdmin }: any) {
                 </div>
                 <div className="flex flex-col sm:flex-row sm:items-center gap-1">
                   <h1>Status:</h1>
-                  <h1 className="font-normal sm:ml-2">{data.status}</h1>
+                  <StatusBadge status={data.status} />
                 </div>
                 <div className="flex flex-col sm:flex-row sm:items-center gap-1">
                   <h1>AI Rating:</h1>
-                  <h1 className="font-normal sm:ml-2">{data.ai_score}</h1>
+                  <h1 className="font-normal sm:ml-2">{data.ai_score || 'N/A'}</h1>
                 </div>
               </div>
 
@@ -126,12 +128,6 @@ export default function UserProfile({ data, isSuperAdmin }: any) {
           )}
         </div>
 
-        <div className="p-4">
-          <h1 className="font-[roboto] text-[20px] font-semibold leading-2">
-            AI Powered Questions:
-          </h1>
-        </div>
-
         <div className="mt-4 p-4 space-y-4">
           {questions.map((question, index) => {
             const answer = answers[question];
@@ -140,11 +136,12 @@ export default function UserProfile({ data, isSuperAdmin }: any) {
               <InputBox key={index} label={`Question ${index + 1}`}>
                 <p className="w-full font-normal text-[14px]">{question}</p>
                 <div className="rounded-full p-3 border mt-6 w-full">
+
                   <div className="flex items-center gap-2 ">
-                    {answer?.type === 'audio' && (
+                    {answer?.submission_type === 'audio' && (
                       <Waveform recordedVoiceURL={answer.url} />
                     )}
-                    {answer?.type === 'video' && (
+                    {answer?.submission_type === 'video' && (
                       <div className="flex flex-row items-center justify-between w-full px-2 rounded">
                         <span className="text-sm font-medium text-[#1E4B8E]">
                           Camera Recorded Video
@@ -158,7 +155,7 @@ export default function UserProfile({ data, isSuperAdmin }: any) {
                       </div>
                     )}
 
-                    {answer?.type === 'screen' && (
+                    {answer?.submission_type === 'screen' && (
                       <div className="flex flex-row items-center justify-between p-2">
                         <span className="text-sm font-medium text-[#1E4B8E] ">
                           Screen Recorded Video

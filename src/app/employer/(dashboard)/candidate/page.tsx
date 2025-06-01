@@ -21,6 +21,7 @@ import { Button } from '@/components/ui/button';
 import AnalyzeInterviewHook from '@/Routes/Employer/hooks/POST/AnalyzeInterview.hook';
 import { toast } from 'sonner';
 import handleCopyLink from '@/Utils/helper/copylink';
+import StatusBadge from '../components/status.badge';
 
 export default function CandidatePage() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -71,25 +72,7 @@ export default function CandidatePage() {
     item?.job_title,
     new Date(item.created_at).toLocaleDateString(),
 
-    item.status === 'reject' ? (
-      <Badge key={`status-${item.status}`} className="capitalize bg-red-100 text-red-800">
-        {item.status}
-      </Badge>
-    ) : item.status === 'pending' ? (
-      <Badge
-        key={`status-${item.status}`}
-        className="capitalize bg-yellow-100 text-[#f7941D]"
-      >
-        {item.status}
-      </Badge>
-    ) : (
-      <Badge
-        key={`status-${item.status}`}
-        className="capitalize bg-green-100 text-green-800"
-      >
-        {item.status}
-      </Badge>
-    ),
+    <StatusBadge status={item.status} />,
     item?.interview_link ? (
       <Button
         variant="ghost"
@@ -104,32 +87,32 @@ export default function CandidatePage() {
       'No link available'
     ),
 
-    item.ai_score === null ? (
-      analyzingInterviewId === item.id ? (
-        <Loader className="w-4 h-4 animate-spin text-[#f7941D] mx-auto" />
-      ) : item.status === 'pending' ? (
-        <p>Pending</p>
-      ) : (
-        <Button
-          size="sm"
-          className="text-xs"
-          onClick={() => handleAnalyzeInterview(item.id)}
-        >
-          Analyze
-        </Button>
-      )
-    ) : (
+    item.ai_score !== null ? (
       <Badge className="bg-[#f7941D] text-white">{item.ai_score}</Badge>
+    ) : analyzingInterviewId === item.id ? (
+      <Button size="sm" className="text-xs flex items-center gap-2" disabled>
+        <Loader className="w-4 h-4 animate-spin" />
+      </Button>
+    ) : item.status === 'pending' ? (
+      <p>Pending</p>
+    ) : (
+      <Button
+        size="sm"
+        className="text-xs"
+        onClick={() => handleAnalyzeInterview(item.id)}
+      >
+        Analyze
+      </Button>
     ),
     <div key={`actions-${item.id}`} className="flex justify-center">
-    <Eye
-      onClick={() => {
-        setSelectedCandidate(item);
-        setIsDialogOpen(true);
-      }}
-      className="w-5 h-5 text-gray-600 cursor-pointer hover:text-[#f7941D] transition"
-    />
-  </div>,
+      <Eye
+        onClick={() => {
+          setSelectedCandidate(item);
+          setIsDialogOpen(true);
+        }}
+        className="w-5 h-5 text-gray-600 cursor-pointer hover:text-[#f7941D] transition"
+      />
+    </div>,
   ]);
 
   return (
@@ -178,7 +161,7 @@ export default function CandidatePage() {
             header={CandidateTableTitle}
             subheader={DATA}
             paginationstart={CandidateTableData?.current_page}
-            paginationend={CandidateTableData?.pages}
+            paginationend={CandidateTableData?.total}
             onPageChange={(page: number) => setCurrentPage(page)}
             isLoading={tableLoading}
           />

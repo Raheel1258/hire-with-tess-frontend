@@ -53,7 +53,7 @@ const CustomInputForm: React.FC<CustomInputProps> = ({
 
   const { showPassword, toggleShowPassword } = useToggleStore();
   const actualType = type === 'password' ? (showPassword ? 'text' : 'password') : type;
-console.log("salaryTypeName",salaryTypeName,name)
+
   return (
     <Controller
       name={name}

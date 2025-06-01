@@ -36,7 +36,8 @@ export default function SignupDialogue() {
     },
   });
   const ref = useRef<HTMLFormElement>(null);
-  const signupMutation = useSignupMutation();
+  
+  const signupMutation = useSignupMutation(jobId);
 
   const onSubmit = async (data: z.infer<typeof signupFormSchema>) => {
     const payload = {
@@ -50,10 +51,6 @@ export default function SignupDialogue() {
     };
 
     signupMutation.mutate(payload, {
-      onSuccess: () => {
-        form.reset();
-        router.push(`/`);
-      },
     });
   };
 

@@ -6,6 +6,7 @@ import DialogueStore from '@/store/EmployeeDashboard/dashboard/overview/dialogue
 interface WaveformProps {
   recordedVoiceURL: string;
   seconds?: number;
+  onReady?: () => void;
 }
 
 const formatTime = (totalSeconds: number): string => {
@@ -14,18 +15,27 @@ const formatTime = (totalSeconds: number): string => {
   return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
 };
 
-const Waveform: React.FC<WaveformProps> = ({ recordedVoiceURL = 0 }) => {
+// Keep track of all active wavesurfer instances
+const activeWavesurfers = new Map<string, WaveSurfer>();
+
+const Waveform: React.FC<WaveformProps> = ({ recordedVoiceURL = '', onReady }) => {
   const waveformRef = useRef<HTMLDivElement | null>(null);
   const wavesurferRef = useRef<WaveSurfer | null>(null);
+  
 
-  const { isPlaying, duration, setIsPlaying, setDuration } = DialogueStore();
+  const {
+    isPlaying,
+    duration,
+    currentlyPlayingId,
+    setIsPlaying,
+    setDuration,
+    setCurrentlyPlayingId
+  } = DialogueStore();
 
   useEffect(() => {
     if (!recordedVoiceURL || !waveformRef.current) return;
 
     const wavesurfer = WaveSurfer.create({
-      mediaControls: true,
-      autoCenter: false,
       container: waveformRef.current,
       barWidth: 3,
       barRadius: 3,
@@ -34,32 +44,61 @@ const Waveform: React.FC<WaveformProps> = ({ recordedVoiceURL = 0 }) => {
       cursorColor: 'transparent',
       backend: 'WebAudio',
       height: 40,
-      waveColor: '#1e4b8e',
-      progressColor: '#C4C4C4',
-      url: recordedVoiceURL.toString(),
+      waveColor: '#C4C4C4',
+      progressColor: '#1e4b8e',
+      url: recordedVoiceURL,
       normalize: true,
     });
 
     wavesurferRef.current = wavesurfer;
+    activeWavesurfers.set(recordedVoiceURL, wavesurfer);
 
     wavesurfer.on('ready', () => {
       setDuration(wavesurfer.getDuration());
+      onReady?.();
     });
-    wavesurfer.on('play', () => setIsPlaying(true));
-    wavesurfer.on('pause', () => setIsPlaying(false));
-    wavesurfer.on('finish', () => setIsPlaying(false));
+    wavesurfer.on('play', () => {
+      // Stop all other wavesurfers
+      activeWavesurfers.forEach((ws, url) => {
+        if (url !== recordedVoiceURL && ws.isPlaying()) {
+          ws.pause();
+        }
+      });
+      setIsPlaying(true);
+      setCurrentlyPlayingId(recordedVoiceURL);
+    });
+    wavesurfer.on('pause', () => {
+      setIsPlaying(false);
+      setCurrentlyPlayingId(null);
+    });
+    wavesurfer.on('finish', () => {
+      setIsPlaying(false);
+      setCurrentlyPlayingId(null);
+    });
 
     return () => {
       wavesurfer.destroy();
       wavesurferRef.current = null;
+      activeWavesurfers.delete(recordedVoiceURL);
     };
-  }, [recordedVoiceURL, setDuration, setIsPlaying]);
+  }, [recordedVoiceURL, setIsPlaying, setDuration, setCurrentlyPlayingId, onReady]);
 
   const togglePlayback = () => {
     const ws = wavesurferRef.current;
     if (!ws) return;
+
+    // If another audio is playing, stop it first
+    if (currentlyPlayingId && currentlyPlayingId !== recordedVoiceURL) {
+      const currentWavesurfer = activeWavesurfers.get(currentlyPlayingId);
+      if (currentWavesurfer) {
+        currentWavesurfer.pause();
+      }
+    }
+
     ws.playPause();
   };
+
+  const isThisAudioPlaying = currentlyPlayingId === recordedVoiceURL && isPlaying;
 
   return (
     <div className="w-full overflow-hidden">
@@ -71,9 +110,9 @@ const Waveform: React.FC<WaveformProps> = ({ recordedVoiceURL = 0 }) => {
         <button
           onClick={togglePlayback}
           className="p-1"
-          aria-label={isPlaying ? 'Pause' : 'Play'}
+          aria-label={isThisAudioPlaying ? 'Pause' : 'Play'}
         >
-          {isPlaying ? (
+          {isThisAudioPlaying ? (
             <CirclePause className="w-10 h-8" color="#1e4b8e" />
           ) : (
             <CirclePlay className="w-10 h-8" color="#1e4b8e" />

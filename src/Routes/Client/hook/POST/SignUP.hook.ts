@@ -27,7 +27,7 @@ export default function useSignupMutation(jobId?: string) {
         toast.success('Signup successful!');
         router.push(redirectTo);
       } else {
-        toast.error('Signup failed. No token received.');
+        toast.error('Signup failed');
       }
     },
 
