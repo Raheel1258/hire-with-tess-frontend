@@ -1,13 +1,15 @@
 'use client';
+import { Button } from '@/components/ui/button';
 import { useParams } from 'next/navigation';
 import React from 'react';
+import { useRouter } from 'next/navigation' 
 
 export default function PhoneCall() {
   const { jobId } = useParams<{ jobId: string }>();
-  const interviewId = `INTV-${jobId}`;
+  const interviewId = jobId;
   const companyName = 'HireWithTess';
   const phoneNumber = '+1-989-510-7499';
-
+  const router = useRouter();
   return (
     <div className="min-h-screen flex flex-col justify-center items-center bg-gray-50 px-4">
       <div className="bg-white shadow-lg rounded-lg p-8 max-w-md w-full text-center">
@@ -34,7 +36,16 @@ export default function PhoneCall() {
           When prompted, say your Interview ID clearly to begin. The AI will then ask you
           a series of questions. Make sure you’re in a quiet place and speak clearly.
         </p>
+        <div className="mt-4">
+        <Button
+            onClick={() => router.back()} 
+            className="mt-4 px-5 py-3 text-white font-semibold rounded-lg transition w-full"
+          >
+            Back
+          </Button>
       </div>
+      </div>
+
     </div>
   );
 }

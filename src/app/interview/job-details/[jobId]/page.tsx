@@ -28,7 +28,7 @@ export default function InterviewForm() {
     resolver: zodResolver(customformSchema),
     defaultValues: {
       jobDescription: jobDescription,
-      jobTitle: jobTitle,
+      jobTitle: jobTitle || '',
       jobType: jobType,
       companyName: companyName || companyNameStore,
       location: location,
@@ -108,7 +108,7 @@ export default function InterviewForm() {
                       {...field}
                       name="jobTitle"
                       label="Job Title"
-                      placeholder="Job Title here"
+                      placeholder={jobTitle || 'Job Title here'}
                     />
                   </FormItem>
                 )}

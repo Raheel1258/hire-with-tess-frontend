@@ -6,6 +6,12 @@ export default function FetchQuestions(jobId: string) {
     queryKey: ['questions', jobId],
     queryFn: () => GetQuestionById(jobId!),
     enabled: !!jobId,
+    staleTime: 0,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+    refetchInterval: false,
+    refetchIntervalInBackground: false,
     
   });
 }

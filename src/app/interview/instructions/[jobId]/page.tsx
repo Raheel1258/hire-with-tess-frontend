@@ -5,12 +5,22 @@ import { Button } from '@/components/ui/button';
 import FetchQuestions from '@/Routes/Client/hook/GET/FetchQuestions.hook';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
+import { useResponseStore } from '@/store/candidate/responsestore';
+import { useRecordingStore } from '@/store/candidate/Recording.store';
+import useCandidateInfoStore from '@/store/candidate/userinfo';
+import { useAudioStore } from '@/store/candidate/audio.store';
 
 export default function CandidateInstructions() {
   const params = useParams();
   const jobId = params?.jobId as string | undefined;
   const { data } = FetchQuestions(jobId);
 
+  const EmptyStore = () => {
+    useResponseStore.getState().clearUserResponses();
+    useRecordingStore.getState().ResetRecording();
+    useAudioStore.getState().ResetAudioStore();
+    useCandidateInfoStore.getState().ResetUserInfoStore();
+  }
 
   return (
     <InterviewLayout
@@ -18,14 +28,18 @@ export default function CandidateInstructions() {
       useCard={false}
       description="Let's get started. Record your response at your own pace and put your best foot forward!"
       subtitle="Your next opportunity starts here!"
-      showTitle={true}
+      showTitle={false}
       subtitleClassName="font-roboto font-bold text-[34px] leading-[46px] mt-8"
       descriptionClassName="mt-4 text-[#6F6C90] leading-[30px] font-roboto font-normal"
+      jobTitle={data?.job_title}
+      jobCompany={data?.company_name}
+      showJobTitleSeparator={true}
     >
+      
       <div className="flex flex-col items-center justify-center px-4 ">
-        <h1 className="font-roboto font-bold text-[22px] sm:text-[26px] text-center">
+        {/* <h1 className="font-roboto font-bold text-[22px] sm:text-[26px] text-center">
           {data?.job_title} - {data?.company_name}
-        </h1>
+        </h1> */}
         <p className="font-roboto text-[14px] sm:text-[16px] font-normal text-[#6F6C90] mt-4 text-center">
           Take your time, be yourself, and show what you can do!
         </p>
@@ -68,6 +82,7 @@ export default function CandidateInstructions() {
         <div className="py-8 w-full flex justify-center">
           <Link href={`/interview/details/${jobId}`}>
           <Button 
+              onClick={() => EmptyStore()}
               className="w-full sm:w-[351px] h-[50px] rounded-md"
               disabled={data?.status === "closed"}
             >

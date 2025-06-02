@@ -72,7 +72,7 @@ export default function CandidatePage() {
     item?.job_title,
     new Date(item.created_at).toLocaleDateString(),
 
-    <StatusBadge status={item.status} />,
+    <StatusBadge status={item.status} key={`status-${item.id}`} />,
     item?.interview_link ? (
       <Button
         variant="ghost"

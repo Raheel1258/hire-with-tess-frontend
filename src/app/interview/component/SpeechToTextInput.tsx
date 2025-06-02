@@ -32,8 +32,8 @@ const SpeechRecordingInput: React.FC<SpeechRecordingInputProps> = ({
   // States
   const [isMobile, setIsMobile] = useState(false);
   const [isRecordingStream, setIsRecordingStream] = useState(false);
-  const [screenShareUrl, setScreenShareUrl] = useState<string | null>(null);
-  const [audioUrl, setAudioUrl] = useState('');
+  const [ScreenShareUrl, setScreenShareUrl] = useState<string | null>(null);
+  const [AudioUrl, setAudioUrl] = useState('');
   const [isVoiceRecording, setIsVoiceRecording] = useState(false);
   const [seconds, setSeconds] = useState(0);
   const [activeTool, setActiveTool] = useState<'mic' | 'screen' | null>(null);
@@ -43,10 +43,9 @@ const SpeechRecordingInput: React.FC<SpeechRecordingInputProps> = ({
   const audioStream = useRef<MediaRecorder | null>(null);
   const mediaStreamRef = useRef<MediaStream | null>(null);
   const recordedChunksRef = useRef<Blob[]>([]);
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   // Hooks
-  const { hasRecorded, setIsPlaying, setActiveType, setAudioURL, setScreenURL } = useRecordingStore();
+  const { hasRecorded, setIsPlaying, setActiveType,  } = useRecordingStore();
   const { mutate: uploadFile } = useUploadFileMutation();
   const { resetTranscript } = useSpeechRecognition();
   const { transcript, startSpeechRecognition, stopSpeechRecognition, listening, resetRecording } = useVoiceRecorder();
@@ -119,7 +118,10 @@ useEffect(() => {
   };
 
   const setupMediaRecorder = (stream: MediaStream) => {
-    const recorder = new MediaRecorder(stream);
+    const recorder = new MediaRecorder(stream, {
+      mimeType: 'video/webm;codecs=vp9',
+      videoBitsPerSecond: 2500000 
+    });
     audioStream.current = recorder;
 
     recorder.ondataavailable = (event) => {
@@ -167,20 +169,24 @@ useEffect(() => {
     }
 
     const blob = await fetch(fileUrl).then((res) => res.blob());
+    const fileType = activeType === 'audio' ? 'audio/mp3' : 'video/webm';
+    const fileExtension = activeType === 'audio' ? 'mp3' : 'webm';
 
     const formData = new FormData();
     formData.append('question_text', currentquestion);
-    formData.append('answer_file', blob, `${activeType}-answer.webm`);
+    formData.append('answer_file', blob, `${activeType}-answer.${fileExtension}`);
 
     uploadFile(
       { interview_id: interviewId, data: formData },
+      
       {
         onSuccess: (response) => {
           const newEntry = {
             question_text: currentquestion,
             temp_url: response?.temp_url || fileUrl,
-            content_type: blob.type,
+            content_type: fileType,
           };
+
           setInputTranscript('');
           useResponseStore.getState().addResponse(newEntry);
           onSaveAndContinue(currentquestion, fileUrl, transcript || '');

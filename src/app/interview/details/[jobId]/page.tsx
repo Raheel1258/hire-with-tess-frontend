@@ -28,7 +28,7 @@ export default function CandidatesDetails() {
       candidate_name: '',
       email: '',
       phone: '',
-      resume: null,
+      resume: undefined,
       job_id: jobId,
     },
   });

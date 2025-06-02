@@ -13,7 +13,7 @@ import { DialogDescription, DialogTitle } from '@radix-ui/react-dialog';
 import { useState } from 'react';
 
 export default function AdminDashboardHome() {
-  const TITLE = ['ID', 'Name', 'Job Applied For', 'Applied On', 'Interview Status', 'Score'];
+  const TITLE = ['ID', 'Name', 'Job Applied For', 'Applied On', 'Interview Status', 'Score', 'Action'];
   const [currentPage, setCurrentPage] = useState(1);
 
   const {
@@ -60,15 +60,7 @@ export default function AdminDashboardHome() {
   }
   const DATA =
     DashboardTableData?.items?.map((item: any) => [
-      <div key={`actions-${item.id}`} className="flex gap-2 items-center">
-        <Eye
-          onClick={() => {
-            setSelectedCandidate(item);
-            setIsDialogOpen(true);
-          }}
-          className="w-5 h-5 text-gray-600 cursor-pointer"
-        />
-      </div>,
+      item.id,
       item.candidate_name,
       item.job_title,
       new Date(item.created_at).toLocaleDateString(),
@@ -97,6 +89,15 @@ export default function AdminDashboardHome() {
       ),
 
       item.ai_score === null ? 0 : item.ai_score,
+      <div key={`actions-${item.id}`} className="flex gap-2 items-center">
+      <Eye
+        onClick={() => {
+          setSelectedCandidate(item);
+          setIsDialogOpen(true);
+        }}
+        className="w-5 h-5 text-gray-600 cursor-pointer"
+      />
+    </div>,
     ]) || [];
 
   return (

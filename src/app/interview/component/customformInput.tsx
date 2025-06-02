@@ -174,9 +174,9 @@ const CustomInputForm: React.FC<CustomInputProps> = ({
                 fontWeight: 400,
               },
               '& .MuiInputBase-input': {
-                color: 'black', // User input or value
+                color: 'black',   
                 '&::placeholder': {
-                  color: 'gray', // Placeholder hint
+                  color: 'gray',
                   opacity: 1,
                   fontSize: '14px',
                   fontWeight: 400,

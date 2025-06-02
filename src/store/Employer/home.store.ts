@@ -75,6 +75,15 @@ const useHomeStore = create<HomeState>()(
             responsibilities: [],
             requirements: [],
           }),
+          resetmanualresponse: () =>
+          set({
+            jobId: '',
+            jobDescription: '',
+            jobTitle: '',
+            jobType: '',
+            companyName: '',
+            location: '',
+          }),
       }),
       {
         name: 'Ai-Response',

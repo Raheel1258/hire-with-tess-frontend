@@ -50,7 +50,9 @@ export default function DashboardHome() {
   const handleAnalyzeInterview = (interviewId: string) => {
     setAnalyzingInterviewId(interviewId);
     Interviewmutation.mutate(
-      { interview_id: interviewId },
+      { interview_id: interviewId 
+        
+      },
       {
         onSuccess: (response) => {
           setAIResult(response?.final_report);
@@ -75,7 +77,7 @@ export default function DashboardHome() {
       item.job_title,
       new Date(item.created_at).toLocaleDateString(),
 
-      <StatusBadge status={item.status} />,
+      <StatusBadge status={item.status} key={`status-${item.id}`} />,
       item?.interview_link ? (
         <Button
           variant="ghost"

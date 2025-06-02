@@ -7,7 +7,7 @@ import { AxiosError } from 'axios';
 
 export default function useGenerateResponse() {
   const router = useRouter();
-  const { setJobId, setJobDescription, setRequirements, setResponsibilities, setSkills } = useHomeStore();
+  const { setJobId, setJobDescription, setRequirements, setResponsibilities, setSkills,setJobTitle } = useHomeStore();
 
   return useMutation({
     mutationFn: GenerateJobDetails,
@@ -15,6 +15,7 @@ export default function useGenerateResponse() {
       if (data?.id) {
         setJobId(data.id);
         setJobDescription(data.job_description);
+        setJobTitle(data.job_title);
         setRequirements(data.requirements || []);
         setResponsibilities(data.responsibilities || []);
         setSkills(data.skills || []);

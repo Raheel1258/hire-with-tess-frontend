@@ -13,22 +13,25 @@ import { Loader } from 'lucide-react';
 import { useQueryClient } from '@tanstack/react-query';
 import StatusBadge from './status.badge';
 
+
 export default function UserProfile({ data, isSuperAdmin }: any) {
   const [openVideoURL, setOpenVideoURL] = useState<string | null>(null);
   const [isShortlisting, setIsShortlisting] = useState(false);
   const [isRejecting, setIsRejecting] = useState(false);
+  const [isPending, setIsPending] = useState(false);
   const queryClient = useQueryClient();
 
   if (!data) return null;
-  console.log("data", data)
   const answers = data.answers;
   const questions = Object.keys(answers || {});
   const updatejobstatus = UseUpdateInterviewStatus();
 
-  const handleStatusUpdate = async (status: 'shortlisted' | 'reject') => {
+  const handleStatusUpdate = async (status: 'shortlisted' | 'reject' | 'pending') => {
     try {
       if (status === 'shortlisted') {
         setIsShortlisting(true);
+      } else if (status === 'pending') {
+        setIsPending(true);
       } else {
         setIsRejecting(true);
       }
@@ -37,8 +40,12 @@ export default function UserProfile({ data, isSuperAdmin }: any) {
         interview_id: data.id,
         status: status,
       });
-      toast.success(`Candidate ${status === 'shortlisted' ? 'shortlisted' : 'rejected'} successfully`);
-
+      toast.success(
+        `Candidate ${status === 'shortlisted' ?
+          'shortlisted' : status === 'pending' ?
+            'pending' : 
+            'rejected'} successfully`
+      );
 
       await queryClient.invalidateQueries({ queryKey: ['interviews'] });
     } catch (error) {
@@ -46,6 +53,8 @@ export default function UserProfile({ data, isSuperAdmin }: any) {
     } finally {
       if (status === 'shortlisted') {
         setIsShortlisting(false);
+      } else if (status === 'pending') {
+        setIsPending(false);
       } else {
         setIsRejecting(false);
       }
@@ -80,8 +89,12 @@ export default function UserProfile({ data, isSuperAdmin }: any) {
                   <StatusBadge status={data.status} />
                 </div>
                 <div className="flex flex-col sm:flex-row sm:items-center gap-1">
-                  <h1>AI Rating:</h1>
-                  <h1 className="font-normal sm:ml-2">{data.ai_score || 'N/A'}</h1>
+                  <h1>Email:</h1>
+                  <h1 className="font-normal sm:ml-2">{data.email}</h1>
+                </div>
+                <div className="flex flex-col sm:flex-row sm:items-center gap-1">
+                  <h1>Phone:</h1>
+                  <h1 className="font-normal sm:ml-2">{data.phone}</h1>
                 </div>
               </div>
 
@@ -95,6 +108,10 @@ export default function UserProfile({ data, isSuperAdmin }: any) {
                   <h1 className="font-normal sm:ml-2">
                     {new Date(data.created_at).toLocaleDateString()}
                   </h1>
+                </div>
+                <div className="flex flex-col sm:flex-row sm:items-center gap-1">
+                  <h1>AI Rating:</h1>
+                  <h1 className="lowercase font-normal sm:ml-2">{data.ai_score || 'N/A'}</h1>
                 </div>
               </div>
             </CardContent>
@@ -122,6 +139,17 @@ export default function UserProfile({ data, isSuperAdmin }: any) {
                   <Loader className="w-4 h-4 animate-spin" />
                 ) : (
                   'Reject'
+                )}
+              </Button>
+              <Button
+                disabled={isShortlisting || isRejecting || isPending}
+                onClick={() => handleStatusUpdate('pending')}
+                className="w-full sm:w-1/2 lg:w-full bg-[#f7941D] hover:bg-[#f7941D] cursor-pointer h-[50px] text-white"
+              >
+                {isPending ? (
+                  <Loader className="w-4 h-4 animate-spin" />
+                ) : (
+                  'Pending'
                 )}
               </Button>
             </div>
@@ -155,18 +183,6 @@ export default function UserProfile({ data, isSuperAdmin }: any) {
                       </div>
                     )}
 
-                    {answer?.submission_type === 'screen' && (
-                      <div className="flex flex-row items-center justify-between p-2">
-                        <span className="text-sm font-medium text-[#1E4B8E] ">
-                          Screen Recorded Video
-                        </span>
-                        <div
-                          onClick={() => setOpenVideoURL(answer.temp_url || answer.url)}
-                        >
-                          <CirclePlay className="w-10 h-8" color="#1e4b8e" />
-                        </div>
-                      </div>
-                    )}
                   </div>
                 </div>
               </InputBox>
