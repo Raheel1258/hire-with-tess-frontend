@@ -44,7 +44,7 @@ export const useResponseStore = create<RecordingState>()(
           return get().savedResponses.find((r) => r.question_text === question);
         },
 
-        clearResponses: () => {
+        clearUserResponses: () => {
           set({ savedResponses: [] });
           set({ question_text: '' });
           set({ temp_url: '' });

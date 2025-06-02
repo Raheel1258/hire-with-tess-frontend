@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { UpdateInterviewStatusByID } from '@/Routes/Employer/Api/employer.route';
-
+import { AxiosError } from 'axios';
 export default function UseUpdateInterviewStatus() {
   const queryClient = useQueryClient();
   return useMutation({
@@ -10,8 +10,12 @@ export default function UseUpdateInterviewStatus() {
     onSuccess: (_, { interview_id }) => {
       queryClient.invalidateQueries({ queryKey: ['interview', interview_id] });
     },
-    onError: () => {
-      toast.error('Unable to update status');
+    onError: async (error) => {
+      const axiosError = error as AxiosError<{ detail: string }>;
+      toast.error('Failed to update interview status', {
+        description:
+          axiosError.response?.data?.detail || 'An error occurred during interview status update.',
+      });
     },
   });
 }

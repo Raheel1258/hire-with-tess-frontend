@@ -9,6 +9,9 @@ interface InterviewLayoutProps {
   title?: string;
   subtitle?: string;
   description?: string;
+  jobTitle?: string;
+  jobCompany?: string;
+
   showTitle?: boolean;
   showStepper?: boolean;
   currentStep?: number;
@@ -18,6 +21,8 @@ interface InterviewLayoutProps {
   titleClassName?: string;
   subtitleClassName?: string;
   descriptionClassName?: string;
+  jobTitleClassName?: string;
+  showJobTitleSeparator?: boolean;
 }
 
 export default function InterviewLayout({
@@ -25,15 +30,19 @@ export default function InterviewLayout({
   title = 'Hirewithtess',
   subtitle = 'Create an AI-Powered Interview in Seconds',
   description = 'Enter the job details, and let AI generate tailored interview questions for you.',
+  jobTitle = '',
+  jobCompany = '',
   showTitle = true,
   showStepper = true,
   currentStep = 1,
   showGoogleLogin = false,
   useCard = true,
   buttons = [],
+  showJobTitleSeparator = false,
   titleClassName = 'text-center items-center justify-center text-[30px] mt-6 font-normal text-black leading-[28px] font-spaceGrotesk sm:font-spaceGrotesk sm:font-normal text-[20px] leading-[28px]',
   subtitleClassName = 'text-center text-[#170F49] items-center justify-center font-bold text-[34px] leading-[46px] mt-6 font-roboto sm:font-bold sm:text-[24px] sm:leading-[46px] font-roboto',
   descriptionClassName = 'text-center items-center justify-center text-[18px] font-normal text-[#6F6C90] font-openSans sm:font-roboto sm:font-normal sm:text-[16px] sm:leading-[30px]',
+  jobTitleClassName = 'capitalize font-roboto font-bold text-xl sm:text-2xl text-center mt-4',
 }: InterviewLayoutProps) {
   const Content = (
     <div className="w-full border-[1px] mt-6 rounded-[34px] md:p-8 flex flex-col justify-center text-center items-center sm:p-6  shadow-xl">
@@ -65,6 +74,11 @@ export default function InterviewLayout({
     <div className="flex flex-col items-center justify-center px-6 md:px-20 py-4 text-center">
       <div>
         {showTitle && <h1 className={titleClassName}>{title}</h1>}
+        <span className={jobTitleClassName}>
+          {jobTitle}
+          {showJobTitleSeparator && jobTitle && jobCompany && ' - '}
+          {jobCompany}
+        </span>
         <h2 className={subtitleClassName}>{subtitle}</h2>
         <p className={descriptionClassName}>{description}</p>
       </div>

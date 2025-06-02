@@ -4,6 +4,7 @@ import { useParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 import useCandidateInfoStore from '@/store/candidate/userinfo';
 import { toast } from 'sonner';
+import { AxiosError } from 'axios';
 
 export default function RegeisterCandidatehook() {
   const { jobId } = useParams<{ jobId: string }>();
@@ -18,8 +19,12 @@ export default function RegeisterCandidatehook() {
       setPhone(response.data.phone);
       router.push(`/interview/choose-option/${jobId}`);
     },
-    onError: (error) => {
-      toast.error(error.message);
+    onError: async (error) => {
+      const axiosError = error as AxiosError<{ detail: string }>;
+      toast.error('Failed to submit details', {
+        description:
+          axiosError.response?.data?.detail || 'An error occurred during starting Interview.',
+      });
     },
   });
 }

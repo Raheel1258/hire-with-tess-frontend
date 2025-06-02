@@ -26,14 +26,14 @@ import { useState } from 'react';
 
 export default function AdminJobPosting() {
   const TITLE = [
-    'Action',
+    'ID',
     'Jobs',
     'Status',
     'Shortlisted',
     'Shortlisted Rate (%)',
     'Job Type',
     'Job Posted Date',
-    'Link',
+    'Interview Link',
   ];
   const [currentPage, setCurrentPage] = useState(1);
   const { data: jobdata } = UseDashboardCardStats();
@@ -71,14 +71,15 @@ export default function AdminJobPosting() {
 
   const DATA =
     (filteredJobs ?? []).map((item: postedJobProps) => [
-      <Eye
-        onClick={() => {
-          setpostedjobdata(item);
-          setIsDialogOpen(true);
-        }}
-        key={item.id}
-        className="w-5 h-5 text-gray-600 cursor-pointer"
-      />,
+      item?.id,
+      // <Eye
+      //   onClick={() => {
+      //     setpostedjobdata(item);
+      //     setIsDialogOpen(true);
+      //   }}
+      //   key={item.id}
+      //   className="w-5 h-5 text-gray-600 cursor-pointer"
+      // />,
       item?.job_title,
       item.status,
       item?.shortlisted_stats?.shortlisted,
@@ -123,10 +124,17 @@ export default function AdminJobPosting() {
 
     const jobIds = filteredJobs?.map((item: { id: string }) => item.id) ?? [];
     const jobId = jobIds[rowIndex];
-    console.log(jobId);
+
     deleteJobMutation.mutate(jobId);
   };
 
+  const handleViewJob = (rowIndex: number) => {
+    const selectedJob = filteredJobs?.[rowIndex];
+    if (selectedJob) {
+      setpostedjobdata(selectedJob);
+      setIsDialogOpen(true);
+    }
+  };
   return (
     <>
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
@@ -176,6 +184,8 @@ export default function AdminJobPosting() {
           onPageChange={(page: number) => setCurrentPage(page)}
           onDelete={deleteJob}
           showTrashIcon={true}
+          showEyeIcon={true}
+          onView={handleViewJob} 
           isLoading={tableLoading}
         />
       </div>

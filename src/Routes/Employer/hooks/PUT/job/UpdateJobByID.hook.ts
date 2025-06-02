@@ -1,7 +1,8 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { UpdateJobByID } from '../../Api/employer.route';
+import { UpdateJobByID } from '@/Routes/Employer/Api/employer.route';
 import { toast } from 'sonner';
 import { UserJobResponse } from '@/Types/userJob';
+import { AxiosError } from 'axios';
 
 export default function UseUpdateJobByID() {
   const queryClient = useQueryClient();
@@ -18,8 +19,12 @@ export default function UseUpdateJobByID() {
       queryClient.invalidateQueries({ queryKey: ['userjobid'] });
     },
 
-    onError: () => {
-      toast.error('There was a problem with your request.');
+    onError: async (error) => {
+          const axiosError = error as AxiosError<{ detail: string }>;
+          toast.error('There was a problem with your request.', {
+            description:
+              axiosError.response?.data?.detail || 'An error occurred during job update.',
+          });
     },
   });
 }

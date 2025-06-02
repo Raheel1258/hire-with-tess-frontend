@@ -53,7 +53,7 @@ const CustomInputForm: React.FC<CustomInputProps> = ({
 
   const { showPassword, toggleShowPassword } = useToggleStore();
   const actualType = type === 'password' ? (showPassword ? 'text' : 'password') : type;
-console.log("salaryTypeName",salaryTypeName,name)
+
   return (
     <Controller
       name={name}
@@ -174,9 +174,9 @@ console.log("salaryTypeName",salaryTypeName,name)
                 fontWeight: 400,
               },
               '& .MuiInputBase-input': {
-                color: 'black', // User input or value
+                color: 'black',   
                 '&::placeholder': {
-                  color: 'gray', // Placeholder hint
+                  color: 'gray',
                   opacity: 1,
                   fontSize: '14px',
                   fontWeight: 400,

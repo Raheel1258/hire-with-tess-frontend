@@ -39,7 +39,7 @@ export function ChartComponent() {
   return (
     <ChartContainer
       config={chartConfig}
-      className="min-h-[200px] w-xl bg-white rounded-xl"
+      className="w-full h-[300px] bg-white rounded-xl"
     >
       <h1 className="text-[14px] font-[open sans] font-semibold ml-2 mb-4 p-2">
         Job Posting Trend Over Time

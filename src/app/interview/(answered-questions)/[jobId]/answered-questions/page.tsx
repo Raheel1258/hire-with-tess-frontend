@@ -1,12 +1,11 @@
 'use client';
-
 import { useRecordingStore } from '@/store/candidate/Recording.store';
 import FetchQuestions from '@/Routes/Client/hook/GET/FetchQuestions.hook';
 import InterviewLayout from '@/components/layout/InterviewLayout';
 import { useParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import Waveform from '@/app/interview/component/Waveform';
-import { Check, CirclePlay, X } from 'lucide-react';
+import { Check, CirclePlay, Loader2, X } from 'lucide-react';
 import EmojiRatingSlider from '@/app/interview/component/emojislider';
 import { useRef } from 'react';
 import { Textarea } from '@/components/ui/textarea';
@@ -16,21 +15,31 @@ import { useResponseStore } from '@/store/candidate/responsestore';
 import { useState } from 'react';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import router from 'next/router';
+import { useAudioStore } from '@/store/candidate/audio.store';
+import useCandidateInfoStore from '@/store/candidate/userinfo';
+import { toast } from 'sonner';
+import { Skeleton } from '@/components/ui/skeleton';
 
 
 export default function AnsweredQuestionList() {
-  const params = useParams();
-  const jobId = params?.jobId as string;
+  const { jobId } = useParams<{ jobId: string }>();
 
-  const { data } = FetchQuestions(jobId);
-
-  const interview_id = useRecordingStore((state) => state.interviewId);
+  const { data,isLoading } = FetchQuestions(jobId);
   const savedResponses = useResponseStore((state) => state.savedResponses);
+
+  const {interviewId} = useRecordingStore();
 
   const feedback = useRef<HTMLFormElement>(null);
   const { mutate, isPending, isError } = useSubmitInterview();
   const [openVideoURL, setOpenVideoURL] = useState<string | null>(null);
 
+
+  const EmptyStore = () => {
+    useResponseStore.getState().clearUserResponses();
+    useRecordingStore.getState().ResetRecording();
+    useAudioStore.getState().ResetAudioStore();
+    useCandidateInfoStore.getState().ResetUserInfoStore();
+  }
 
   const onSubmitFeedback = async () => {
     const form = feedback.current;
@@ -41,15 +50,13 @@ export default function AnsweredQuestionList() {
   };
 
   const onSubmitInterview = async () => {
-    const interviewId = useRecordingStore.getState().interviewId;
-
     if (!interviewId) {
-      console.error('Interview ID is missing!');
+      toast.error('Interview ID is missing!')
       return;
     }
 
     if (!savedResponses.length) {
-      console.warn('No saved responses found in localStorage.');
+      toast.error('No saved responses found')
       return;
     }
 
@@ -59,9 +66,10 @@ export default function AnsweredQuestionList() {
     }, {} as Record<string, string>);
 
     const payload: SubmitInterviewPayload = {
-      interview_id: interview_id,
+      interview_id: interviewId,
       data: questions_data,
       onsuccess: () => {
+        EmptyStore();
         router.push('/interview/finished');
       }
     };
@@ -82,63 +90,70 @@ export default function AnsweredQuestionList() {
             Interview Questions
           </div>
 
-          {data?.questions.map((question: any, index: number) => {
-            const matchedResponse = savedResponses.find(
-              (res) => res.question_text.trim().toLowerCase() === question.text.trim().toLowerCase()
-            );
-
-            const hasResponse = !!matchedResponse;
-
-            return (
+          {isLoading ? (
+            // Show skeleton loaders while loading
+            Array.from({ length: 3 }).map((_, index) => (
               <div key={index} className="mb-6 p-4 border rounded-md shadow">
                 <div className="flex items-center gap-2 font-normal text-[14px] mb-2">
-                  {hasResponse ? (
-                    <Check className="w-5 h-5 text-[#f7941D]" />
-                  ) : (
-                    <X className="w-5 h-5 text-[#f7941D]" />
-                  )}
-                  <span>{question?.text}</span>
+                  <Skeleton className="w-5 h-5 rounded-full" />
+                  <Skeleton className="h-4 w-3/4" />
                 </div>
+                <div className="mt-4">
+                  <Skeleton className="h-12 w-full rounded-full" />
+                </div>
+              </div>
+            ))
+          ) : (
+            data?.questions.map((question: any, index: number) => {
+              const matchedResponse = savedResponses.find(
+                (res) => res.question_text.trim().toLowerCase() === question.text.trim().toLowerCase()
+              );
 
-                {hasResponse ? (
-                  <div className="mb-4 space-y-2">
-                    {matchedResponse.content_type.startsWith('audio') && (
-                      <div className="rounded-full p-3 border">
-                        <Waveform
-                          recordedVoiceURL={matchedResponse.temp_url}
-                          seconds={matchedResponse.length || 0}
-                        />
-                      </div>
-                    )}
-                    {matchedResponse.content_type.startsWith('video') && (
-                      <div className="flex items-center justify-between p-4 border rounded-full">
-                        <span className="text-sm font-medium text-[#1E4B8E] ">
-                          Camera Recorded Video
-                        </span>
-                        <div
-                          onClick={() => setOpenVideoURL(matchedResponse.temp_url)}
-                        >
-                         <CirclePlay className="w-10 h-8" color="#1e4b8e" /> 
-                        </div>
-                       
-                      </div>
-                    )}
+              const hasResponse = !!matchedResponse;
 
-                    {matchedResponse.content_type.startsWith('screen') && (
-                      <div className="items-center justify-center flex p-4">
-                        <video controls width={400} src={matchedResponse.temp_url} />
-                      </div>
+              return (
+                <div key={index} className="mb-6 p-4 border rounded-md shadow">
+                  <div className="flex items-center gap-2 font-normal text-[14px] mb-2">
+                    {hasResponse ? (
+                      <Check className="w-5 h-5 text-[#f7941D]" />
+                    ) : (
+                      <X className="w-5 h-5 text-red-600" />
                     )}
+                    <span>{question?.text}</span>
                   </div>
 
-                ) : (
-                  <p className="text-sm italic text-gray-500 ml-7">
-                    No response recorded.
-                  </p>
-                )}
-              </div>
-            );
-          })}
+                  {hasResponse ? (
+                    <div className="mb-4 space-y-2">
+                      {matchedResponse.content_type.startsWith('audio') && (
+                        <div className="rounded-full p-3 border">
+                          <Waveform
+                            recordedVoiceURL={matchedResponse.temp_url}
+                            seconds={matchedResponse.length || 0}
+                          />
+                        </div>
+                      )}
+                      {matchedResponse.content_type.startsWith('video') && (
+                        <div className="flex items-center justify-between p-4 border rounded-full">
+                          <span className="text-sm font-medium text-[#1E4B8E] ">
+                            Screen Recorded Video
+                          </span>
+                          <div
+                            onClick={() => setOpenVideoURL(matchedResponse.temp_url)}
+                          >
+                           <CirclePlay className="w-10 h-8" color="#1e4b8e" /> 
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  ) : (
+                    <p className="text-sm italic text-gray-500 ml-7">
+                      No response recorded.
+                    </p>
+                  )}
+                </div>
+              );
+            })
+          )}
 
           {isError && (
             <p className="text-red-500 text-sm mt-2">
@@ -162,7 +177,7 @@ export default function AnsweredQuestionList() {
         </div>
 
         <Button onClick={onSubmitInterview} className="mt-4" disabled={isPending}>
-          {isPending ? 'Submitting...' : 'Save and Finish'}
+          {isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Save and Finish'}
         </Button>
       </InterviewLayout>
 

@@ -35,6 +35,7 @@ export default function JobpProfile({ data }: { data: any }) {
           <div>
             <h2 className="font-semibold text-gray-900 mb-2">Salary & Date</h2>
             <p><span className="font-medium">Salary:</span> {data.currency} {data.salary}</p>
+            <p><span className=" font-medium">Type:</span> {data.salary_type}</p>
             <p><span className="font-medium">Posted on:</span> {new Date(data.created_at).toLocaleDateString()}</p>
           </div>
         </CardContent>

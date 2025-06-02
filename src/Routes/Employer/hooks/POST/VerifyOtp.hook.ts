@@ -3,6 +3,7 @@ import { VerifyOTP } from '../../Api/employer.route';
 import { toast } from 'sonner';
 import { useForgotPasswordStore } from '@/store/Employer/forgotpassword.store';
 import { useRouter } from 'next/navigation';
+import { AxiosError } from 'axios';
 
 export default function useVerifyOtp() {
   const router = useRouter();
@@ -19,8 +20,12 @@ export default function useVerifyOtp() {
       toast.success('Password reset successfully');
       router.push('/login');
     },
-    onError: () => {
-      toast.error('Failed to reset password');
+      onError: async (error) => {
+        const axiosError = error as AxiosError<{ detail: string }>;
+        toast.error('Failed to reset password', {
+          description:
+            axiosError.response?.data?.detail || 'An error occurred during password reset.',
+        });
     },
   });
 }

@@ -23,12 +23,14 @@ import OverviewStore from '@/store/EmployeeDashboard/dashboard/overview/overview
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import handleCopyLink from '@/Utils/helper/copylink';
+import StatusBadge from '../components/status.badge';
 
 export default function DashboardHome() {
   const [currentPage, setCurrentPage] = useState(1);
   const { data: interviewCardData } = UseDashboardCardStats();
   const { data: DashboardTableData, refetch: refetchInterviews } = UseGetAllInterview({ page: currentPage });
   const Interviewmutation = AnalyzeInterviewHook();
+
   const router = useRouter();
   const {
     selectedCandidate,
@@ -48,7 +50,9 @@ export default function DashboardHome() {
   const handleAnalyzeInterview = (interviewId: string) => {
     setAnalyzingInterviewId(interviewId);
     Interviewmutation.mutate(
-      { interview_id: interviewId },
+      { interview_id: interviewId 
+        
+      },
       {
         onSuccess: (response) => {
           setAIResult(response?.final_report);
@@ -67,43 +71,34 @@ export default function DashboardHome() {
   };
 
   const DATA =
-  DashboardTableData?.items?.map((item: any) => [
-    item?.id,
-    item.candidate_name,
-    item.job_title,
-    new Date(item.created_at).toLocaleDateString(),
+    DashboardTableData?.items?.map((item: any) => [
+      item?.id,
+      item.candidate_name,
+      item.job_title,
+      new Date(item.created_at).toLocaleDateString(),
 
-    item.status === 'reject' ? (
-      <Badge key={`status-${item.status}`} className="capitalize bg-red-100 text-red-800">
-        {item.status}
-      </Badge>
-    ) : item.status === 'pending' ? (
-      <Badge key={`status-${item.status}`} className="capitalize bg-yellow-100 text-[#f7941D]">
-        {item.status}
-      </Badge>
-    ) : (
-      <Badge key={`status-${item.status}`} className="capitalize bg-green-100 text-green-800">
-        {item.status}
-      </Badge>
-    ),
+      <StatusBadge status={item.status} key={`status-${item.id}`} />,
+      item?.interview_link ? (
+        <Button
+          variant="ghost"
+          size="sm"
+          className="flex items-center gap-2"
+          onClick={() => handleCopyLink(item.interview_link)}
+        >
+          <Copy className="w-4 h-4" />
+          <span>Copy Link</span>
+        </Button>
+      ) : (
+        'No link available'
+      ),
 
-    item?.interview_link ? (
-      <Button
-        variant="ghost"
-        size="sm"
-        className="flex items-center gap-2"
-        onClick={() => handleCopyLink(item.interview_link)}
-      >
-        <Copy className="w-4 h-4" />
-        <span>Copy Link</span>
-      </Button>
-    ) : (
-      'No link available'
-    ),
 
-    item.ai_score === null ? (
-      analyzingInterviewId === item.id ? (
-        <Loader className="w-4 h-4 animate-spin text-[#f7941D] mx-auto" />
+      item.ai_score !== null ? (
+        <Badge className="bg-[#f7941D] text-white">{item.ai_score}</Badge>
+      ) : analyzingInterviewId === item.id ? (
+        <Button size="sm" className="text-xs flex items-center gap-2" disabled>
+          <Loader className="w-4 h-4 animate-spin" />
+        </Button>
       ) : item.status === 'pending' ? (
         <p>Pending</p>
       ) : (
@@ -114,20 +109,19 @@ export default function DashboardHome() {
         >
           Analyze
         </Button>
-      )
-    ) : (
-      <Badge className="bg-[#f7941D] text-white">{item.ai_score}</Badge>
-    ),
-    <div key={`actions-${item.id}`} className="flex justify-center">
-      <Eye
-        onClick={() => {
-          setSelectedCandidate(item);
-          setIsDialogOpen(true);
-        }}
-        className="w-5 h-5 text-gray-600 cursor-pointer hover:text-[#f7941D] transition"
-      />
-    </div>,
-  ]) || [];
+      ),
+
+      <div key={`actions-${item.id}`} className="flex justify-center">
+        <Eye
+          onClick={() => {
+            setSelectedCandidate(item);
+            setIsDialogOpen(true);
+          }}
+          className="w-5 h-5 text-gray-600 cursor-pointer hover:text-[#f7941D] transition"
+        />
+      </div>,
+    ]) || [];
+
 
 
   return (
@@ -182,7 +176,7 @@ export default function DashboardHome() {
             header={HomeTableTile}
             subheader={DATA}
             paginationstart={DashboardTableData?.current_page}
-            paginationend={DashboardTableData?.pages}
+            paginationend={DashboardTableData?.total}
             onPageChange={(page: number) => setCurrentPage(page)}
           />
         </div>

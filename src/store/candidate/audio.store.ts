@@ -32,4 +32,12 @@ export const useAudioStore = create<AudioStore>((set) => ({
 
   isListening: false,
   setIsListening: (isListening) => set({ isListening }),
+
+  ResetAudioStore: () => set({
+    audioURL: '',
+    seconds: 0,
+    isRecording: false,
+    isPlaying: false,
+    isListening: false,
+  }),
 }));

@@ -32,7 +32,6 @@ export default function JobPosting() {
   const { data: JobPostedTableData } = UseGetAllJob({ page: currentPage });
   const deleteJobMutation = UseDeleteJobByID();
   const updatejobstatus = UseUpdateJobStatus();
-  console.log(JobPostedTableData);
   // const { data: FilteredJobData } = UseGetFilteredJob({});
 
   const {
@@ -142,7 +141,7 @@ export default function JobPosting() {
             header={JobPostingTableTitle}
             subheader={DATA}
             paginationstart={JobPostedTableData?.current_page}
-            paginationend={JobPostedTableData?.pages}
+            paginationend={JobPostedTableData?.total}
             onPageChange={(page: number) => setCurrentPage(page)}
             showTrashIcon
             onDelete={deleteJob}

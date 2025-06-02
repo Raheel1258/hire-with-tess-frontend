@@ -1,8 +1,7 @@
 'use client';
 import React, { useEffect, useRef, useState } from 'react';
 import { useSpeechRecognition } from 'react-speech-recognition';
-import { Mic, MicOff, MonitorUp } from 'lucide-react';
-import { Skeleton } from '@/components/ui/skeleton';
+import { Mic, MonitorUp } from 'lucide-react';
 import { useRecordingStore } from '@/store/candidate/Recording.store';
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
@@ -13,6 +12,7 @@ import useVoiceRecorder from '@/Utils/helper/useVoiceRecorder';
 import useUploadFileMutation from '@/Routes/Client/hook/POST/UploadFilehook';
 import { useResponseStore } from '@/store/candidate/responsestore';
 import { startScreenShare } from '@/Utils/helper/useScreenSharing';
+import RecordingSkelton from './recordingskelton';
 
 type SpeechRecordingInputProps = {
   placeholder?: string;
@@ -28,28 +28,43 @@ const SpeechRecordingInput: React.FC<SpeechRecordingInputProps> = ({
   placeholder = 'Your response will appear here as you speak...',
   onSaveAndContinue,
 }) => {
-  const { hasRecorded, setIsPlaying } = useRecordingStore();
 
+  // States
+  const [isMobile, setIsMobile] = useState(false);
   const [isRecordingStream, setIsRecordingStream] = useState(false);
   const [ScreenShareUrl, setScreenShareUrl] = useState<string | null>(null);
   const [AudioUrl, setAudioUrl] = useState('');
-
   const [isVoiceRecording, setIsVoiceRecording] = useState(false);
   const [seconds, setSeconds] = useState(0);
   const [activeTool, setActiveTool] = useState<'mic' | 'screen' | null>(null);
+  const [inputTranscript, setInputTranscript] = useState('');
 
+  // Refs
   const audioStream = useRef<MediaRecorder | null>(null);
+  const mediaStreamRef = useRef<MediaStream | null>(null);
   const recordedChunksRef = useRef<Blob[]>([]);
 
-  const mediaStreamRef = useRef<MediaStream | null>(null);
-
+  // Hooks
+  const { hasRecorded, setIsPlaying, setActiveType,  } = useRecordingStore();
   const { mutate: uploadFile } = useUploadFileMutation();
+  const { resetTranscript } = useSpeechRecognition();
+  const { transcript, startSpeechRecognition, stopSpeechRecognition, listening, resetRecording } = useVoiceRecorder();
 
-  const { resetTranscript, browserSupportsSpeechRecognition } = useSpeechRecognition();
-  const { transcript, startSpeechRecognition, stopSpeechRecognition, listening,resetRecording } =
-    useVoiceRecorder();
+ // Check for mobile device
+ useEffect(() => {
+  const checkMobile = () => {
+    const userAgent = navigator.userAgent || navigator.vendor || (window as any).opera;
+    setIsMobile(/android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(userAgent.toLowerCase()));
+  };
+  checkMobile();
+}, []);
 
-  const [inputTranscript, setInputTranscript] = useState('');
+// Update transcript
+useEffect(() => {
+  if (transcript) {
+    setInputTranscript(transcript);
+  }
+}, [transcript]);
 
   const startVoiceRecording = async () => {
     setIsVoiceRecording(true);
@@ -103,7 +118,10 @@ const SpeechRecordingInput: React.FC<SpeechRecordingInputProps> = ({
   };
 
   const setupMediaRecorder = (stream: MediaStream) => {
-    const recorder = new MediaRecorder(stream);
+    const recorder = new MediaRecorder(stream, {
+      mimeType: 'video/webm;codecs=vp9',
+      videoBitsPerSecond: 2500000 
+    });
     audioStream.current = recorder;
 
     recorder.ondataavailable = (event) => {
@@ -123,6 +141,7 @@ const SpeechRecordingInput: React.FC<SpeechRecordingInputProps> = ({
 
     recorder.start();
   };
+
   const startScreenRecording = async () => {
     const screenStream = await startScreenShare();
 
@@ -150,20 +169,24 @@ const SpeechRecordingInput: React.FC<SpeechRecordingInputProps> = ({
     }
 
     const blob = await fetch(fileUrl).then((res) => res.blob());
+    const fileType = activeType === 'audio' ? 'audio/mp3' : 'video/webm';
+    const fileExtension = activeType === 'audio' ? 'mp3' : 'webm';
 
     const formData = new FormData();
     formData.append('question_text', currentquestion);
-    formData.append('answer_file', blob, `${activeType}-answer.webm`);
+    formData.append('answer_file', blob, `${activeType}-answer.${fileExtension}`);
 
     uploadFile(
       { interview_id: interviewId, data: formData },
+      
       {
         onSuccess: (response) => {
           const newEntry = {
             question_text: currentquestion,
             temp_url: response?.temp_url || fileUrl,
-            content_type: blob.type,
+            content_type: fileType,
           };
+
           setInputTranscript('');
           useResponseStore.getState().addResponse(newEntry);
           onSaveAndContinue(currentquestion, fileUrl, transcript || '');
@@ -172,13 +195,6 @@ const SpeechRecordingInput: React.FC<SpeechRecordingInputProps> = ({
     );
   };
 
-  useEffect(() => {
-    if (transcript) {
-      setInputTranscript(transcript);
-    }
-  }, [transcript]);
-
-  const setActiveType = useRecordingStore.getState().setActiveType;
 
   const resetAllState = () => {
     if (listening) {
@@ -203,7 +219,6 @@ const SpeechRecordingInput: React.FC<SpeechRecordingInputProps> = ({
     recordedChunksRef.current = [];
     resetTranscript();
     setInputTranscript('');
-    useResponseStore.getState().clearResponses();
   };
 
   const handleRestartRecording = async () => {
@@ -223,7 +238,7 @@ const SpeechRecordingInput: React.FC<SpeechRecordingInputProps> = ({
     recordedChunksRef.current = [];
     resetTranscript();
     stopSpeechRecognition();
-    setInputTranscript('');            
+    setInputTranscript('');
   };
 
   const getRecordAgainLabel = () => {
@@ -239,18 +254,6 @@ const SpeechRecordingInput: React.FC<SpeechRecordingInputProps> = ({
         setActiveType('audio');
         toggleSpeechRecognition();
       },
-      disabled: isVoiceRecording,
-      disabledTitle: 'Recording...',
-      disabledIcon: <MicOff className="w-4 h-4" />,
-      disabledColor: 'bg-gray-200',
-      disabledTextColor: 'text-gray-500',
-      disabledBorderColor: 'border-gray-200',
-      disabledBorderWidth: 'border-2',
-      disabledBorderRadius: 'rounded-full',
-      disabledBorderStyle: 'solid',
-      disabledBorderOpacity: 'opacity-50',
-      disabledBorderShadow: 'shadow-none',
-      disabledBorderShadowColor: 'shadow-gray-200',
       icon: <Mic />,
       title: 'Listening...',
     },
@@ -262,35 +265,11 @@ const SpeechRecordingInput: React.FC<SpeechRecordingInputProps> = ({
         startScreenRecording();
       },
       icon: <MonitorUp />,
-      disabled: isRecordingStream,
-      disabledTitle: 'Recording...',
-      disabledIcon: <MonitorUp className="w-4 h-4" />,
-      disabledColor: 'bg-gray-200',
-      disabledTextColor: 'text-gray-500',
-      disabledBorderColor: 'border-gray-200',
-      disabledBorderWidth: 'border-2',
-      disabledBorderRadius: 'rounded-full',
-      disabledBorderStyle: 'solid',
-      disabledBorderOpacity: 'opacity-50',
-      disabledBorderShadow: 'shadow-none',
-      disabledBorderShadowColor: 'shadow-gray-200',
       title: 'Sharing...',
     },
   ];
 
-  if (!browserSupportsSpeechRecognition) {
-    return (
-      <div className="w-full">
-        <div>
-          <Skeleton className="w-full h-10 mb-4" />
-        </div>
-        <Skeleton className="h-[125px] w-full rounded-xl" />
-        <div className=" flex flex-col mt-8 items-center justify-center">
-          <Skeleton className="w-20 h-20 rounded-full z-10 relative" />
-        </div>
-      </div>
-    );
-  }
+  RecordingSkelton();
 
   return (
     <div className="relative w-full space-y-4">
@@ -300,13 +279,9 @@ const SpeechRecordingInput: React.FC<SpeechRecordingInputProps> = ({
         value={inputTranscript}
         disabled
         autoFocus
-        autoComplete="off"
-        autoCorrect="off"
-        autoCapitalize="off"
-        spellCheck="false"
         placeholder={placeholder}
         onChange={(e) => {
-          console.log("e.target.value",e.target.value)
+          console.log("e.target.value", e.target.value)
           setInputTranscript(e.target.value);
           if (e.target.value === '') {
             resetTranscript();
@@ -322,7 +297,7 @@ const SpeechRecordingInput: React.FC<SpeechRecordingInputProps> = ({
         readOnly
       />
 
-      {/* Media Player Section - Audio, Video, or Screen Recording */}
+      {/* Media Player Section - Audio, or Screen Recording */}
       {(AudioUrl || ScreenShareUrl) && (
         <div className="space-y-4">
           {/* Audio Player */}
@@ -354,32 +329,32 @@ const SpeechRecordingInput: React.FC<SpeechRecordingInputProps> = ({
         </div>
       )}
 
-      {/* Recording Tool Buttons */}
+      {/* Recording  Buttons */}
       {!hasRecorded && !AudioUrl && !ScreenShareUrl && activeTool !== 'screen' && (
         <div className="flex justify-center gap-2 mt-12">
           {activeTool
             ? tools
-                .filter((tool) => tool.key === activeTool)
-                .map((tool) => (
-                  <EnhancedButton
-                    key={tool.key}
-                    action={tool.condition}
-                    onClick={tool.onClick}
-                    icon={tool.icon}
-                    defaultTitle=""
-                    onpressTitle={tool.title}
-                  />
-                ))
-            : tools.map((tool) => (
+              .filter((tool) => tool.key === activeTool)
+              .map((tool) => (
                 <EnhancedButton
                   key={tool.key}
-                  action={false}
+                  action={tool.condition}
                   onClick={tool.onClick}
                   icon={tool.icon}
                   defaultTitle=""
                   onpressTitle={tool.title}
                 />
-              ))}
+              ))
+            : tools.map((tool) => (
+              <EnhancedButton
+                key={tool.key}
+                action={false}
+                onClick={tool.onClick}
+                icon={tool.icon}
+                defaultTitle=""
+                onpressTitle={tool.title}
+              />
+            ))}
         </div>
       )}
     </div>

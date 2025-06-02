@@ -86,7 +86,7 @@ export default function Analytics() {
       </h1>
       <div className="mt-6 flex flex-row gap-4">
         <ChartComponent />
-        <PieChartComponent />
+        {/* <PieChartComponent /> */}
       </div>
     </div>
   );

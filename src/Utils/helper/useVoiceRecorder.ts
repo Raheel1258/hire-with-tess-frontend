@@ -1,6 +1,7 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
 import { useAudioStore } from '@/store/candidate/audio.store';
+import { toast } from 'sonner';
 
 interface UseVoiceRecorderResult {
   isRecording: boolean;
@@ -16,7 +17,7 @@ interface UseVoiceRecorderResult {
   stopSpeechRecognition: () => Promise<void>;
 }
 
-const useVoiceRecorder = (): UseVoiceRecorderResult => {
+export const useVoiceRecorder = (): UseVoiceRecorderResult => {
   const { transcript, listening, resetTranscript } = useSpeechRecognition();
   const [error, setError] = useState<Error | null>(null);
 
@@ -35,6 +36,23 @@ const useVoiceRecorder = (): UseVoiceRecorderResult => {
   const recordedChunksRef = useRef<Blob[]>([]);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
+  const getSupportedMimeType = () => {
+    const types = [
+      'audio/webm;codecs=opus',
+      'audio/webm',
+      'audio/ogg;codecs=opus',
+      'audio/mp4',
+      'audio/mpeg'
+    ];
+    
+    for (const type of types) {
+      if (MediaRecorder.isTypeSupported(type)) {
+        return type;
+      }
+    }
+    return null;
+  };
+
   const startSpeechRecognition = async () => {
     await SpeechRecognition.startListening({ continuous: true });
     setIsListening(true);
@@ -46,15 +64,30 @@ const useVoiceRecorder = (): UseVoiceRecorderResult => {
   };
 
   const startVoiceRecording = async () => {
+    setIsRecording(true);
+    setError(null);
     try {
       setSeconds(0);
-      setIsRecording(true);
-
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const stream = await navigator.mediaDevices.getUserMedia({ 
+        audio: {
+          echoCancellation: true,
+          noiseSuppression: true,
+          sampleRate: 44100,
+          channelCount: 1
+        } 
+      });
+      
       mediaStreamRef.current = stream;
+      
+      const mimeType = getSupportedMimeType();
+      if (!mimeType) {
+        throw new Error('No supported MIME type found');
+      }
 
-      mediaRecorderRef.current = new MediaRecorder(stream);
-      recordedChunksRef.current = [];
+      mediaRecorderRef.current = new MediaRecorder(stream, {
+        mimeType: mimeType,
+        audioBitsPerSecond: 128000
+      });
 
       mediaRecorderRef.current.ondataavailable = (e) => {
         if (e.data.size > 0) {
@@ -62,39 +95,32 @@ const useVoiceRecorder = (): UseVoiceRecorderResult => {
         }
       };
 
+      timerRef.current = setInterval(() => setSeconds(prev => prev + 1), 1000);
+
       mediaRecorderRef.current.onstop = () => {
-        if (timerRef.current) clearInterval(timerRef.current);
-        const blob = new Blob(recordedChunksRef.current, { type: 'audio/mp3' });
-        const url = URL.createObjectURL(blob);
+        const recordedBlob = new Blob(recordedChunksRef.current, { 
+          type: mimeType 
+        });
+        const url = URL.createObjectURL(recordedBlob);
         setAudioURL(url);
         recordedChunksRef.current = [];
+        if (timerRef.current) clearInterval(timerRef.current);
       };
 
-      mediaRecorderRef.current.start();
-
-      timerRef.current = setInterval(() => {
-        setSeconds((prev) => prev + 1);
-      }, 1000);
+      mediaRecorderRef.current.start(1000); // Collect data every second
     } catch (error) {
-      console.error(error);
-      setError(error as Error);
-      setIsRecording(false);
+      console.error('Recording error:', error);
+      setError(error instanceof Error ? error : new Error('Recording failed'));
+      toast.error('Error starting voice recording');
+      resetRecording();
     }
   };
 
   const stopVoiceRecording = () => {
     setIsRecording(false);
-
-    if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
+    if (mediaRecorderRef.current) {
       mediaRecorderRef.current.stop();
-    }
-
-    if (mediaStreamRef.current) {
-      mediaStreamRef.current.getTracks().forEach((track) => track.stop());
-    }
-
-    if (timerRef.current) {
-      clearInterval(timerRef.current);
+      mediaStreamRef.current?.getTracks().forEach((track) => track.stop());
     }
   };
 
@@ -109,7 +135,26 @@ const useVoiceRecorder = (): UseVoiceRecorderResult => {
     setAudioURL('');
     setSeconds(0);
     setError(null);
+
+    if (mediaStreamRef.current) {
+      mediaStreamRef.current.getTracks().forEach((track) => track.stop());
+      mediaStreamRef.current = null;
+    }
+
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+      timerRef.current = null;
+    }
+
+    recordedChunksRef.current = [];
   };
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      resetRecording();
+    };
+  }, []);
 
   return {
     isRecording,

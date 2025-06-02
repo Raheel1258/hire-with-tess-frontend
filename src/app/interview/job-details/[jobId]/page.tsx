@@ -12,6 +12,7 @@ import InterviewLayout from '@/components/layout/InterviewLayout';
 import CustomInputForm from '@/app/interview/component/customformInput';
 import { useParams } from 'next/navigation';
 import { useUpdateJob } from '@/Routes/Client/hook/PUT/UpdateJobDetails.hook';
+import { Loader2 } from 'lucide-react';
 
 
 export default function InterviewForm() {
@@ -27,7 +28,7 @@ export default function InterviewForm() {
     resolver: zodResolver(customformSchema),
     defaultValues: {
       jobDescription: jobDescription,
-      jobTitle: jobTitle,
+      jobTitle: jobTitle || '',
       jobType: jobType,
       companyName: companyName || companyNameStore,
       location: location,
@@ -107,7 +108,7 @@ export default function InterviewForm() {
                       {...field}
                       name="jobTitle"
                       label="Job Title"
-                      placeholder="Job Title here"
+                      placeholder={jobTitle || 'Job Title here'}
                     />
                   </FormItem>
                 )}
@@ -184,7 +185,7 @@ export default function InterviewForm() {
                   className=" cursor-pointer"
                 >
                   <Image src="/images/Vector.png" alt="alt" width={20} height={20} />
-                  Review Details
+                  {generateMutation.isPending ?  <Loader2 className='animate-spin' /> : 'Review Details'}
                 </Button>
               </div>
             </form>

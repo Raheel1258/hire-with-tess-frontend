@@ -88,6 +88,20 @@ export const useRecordingStore = create<RecordingState>()(
             ],
           }));
         },
+        ResetRecording: () => set({
+          isListening: false,
+          isRecording: false,
+          isPlaying: false,
+          audioURL: '',
+          screenURL: '',
+          hasRecorded: false,
+          audioData: [],
+          activeType: 'audio',
+          storedResponses: [],
+          interviewId: '',
+          currentquestion: '',
+        }),
+
       }),
       {
         name: 'Recording-storage',
