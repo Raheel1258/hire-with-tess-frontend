@@ -16,7 +16,7 @@ export const EMPLOYERAPI = {
     `/api/v1/admin/interview/${interview_id}`,
   UPDATE_INTERVIEW_STATUS_BYID: (interview_id: string) =>
     `/api/v1/admin/interview/${interview_id}/status`,
-
+  
   // Employer Dashboard
   DASHBOARD_CARD_STATS: `/api/v1/admin/dashboard-stats`,
   CANDIDATE_CARD_STATS: `/api/v1/admin/candidates-stats`,

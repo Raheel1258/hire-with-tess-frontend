@@ -161,7 +161,7 @@ export default function CandidatePage() {
             header={CandidateTableTitle}
             subheader={DATA}
             paginationstart={CandidateTableData?.current_page}
-            paginationend={CandidateTableData?.total}
+            paginationend={CandidateTableData?.pages}
             onPageChange={(page: number) => setCurrentPage(page)}
             isLoading={tableLoading}
           />

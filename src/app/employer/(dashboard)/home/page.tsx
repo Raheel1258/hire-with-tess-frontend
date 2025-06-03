@@ -176,7 +176,7 @@ export default function DashboardHome() {
             header={HomeTableTile}
             subheader={DATA}
             paginationstart={DashboardTableData?.current_page}
-            paginationend={DashboardTableData?.total}
+            paginationend={DashboardTableData?.pages}
             onPageChange={(page: number) => setCurrentPage(page)}
           />
         </div>

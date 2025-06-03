@@ -1,15 +1,9 @@
 "use client"
 import { useRouter } from "next/navigation"
-import { BellIcon } from "lucide-react"
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
-import { Badge } from "@/components/ui/badge"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { Separator } from "@/components/ui/separator"
 import UseProfileInfo from "@/Routes/Employer/hooks/GET/profile/Profileinfo.hook"
 import UseProfileSuperAdmin from "@/Routes/Admin/hook/GET/Profileinfo.hook"
 import { getAuthRole } from "@/Utils/Providers/auth"
-import UseAdminNotification from "@/Routes/Employer/hooks/GET/Notification/GetNotificationhook"
 import CustomNotification from "./notification"
 
 export default function Header() {

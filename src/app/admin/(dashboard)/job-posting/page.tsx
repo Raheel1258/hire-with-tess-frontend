@@ -72,20 +72,13 @@ export default function AdminJobPosting() {
   const DATA =
     (filteredJobs ?? []).map((item: postedJobProps) => [
       item?.id,
-      // <Eye
-      //   onClick={() => {
-      //     setpostedjobdata(item);
-      //     setIsDialogOpen(true);
-      //   }}
-      //   key={item.id}
-      //   className="w-5 h-5 text-gray-600 cursor-pointer"
-      // />,
       item?.job_title,
       item.status,
       item?.shortlisted_stats?.shortlisted,
       item?.shortlisted_stats?.shortlist_ratio,
       item?.job_type,
       new Date(item.created_at).toLocaleDateString(),
+      
       item?.interview_link ? (
         <Button
           variant="ghost"

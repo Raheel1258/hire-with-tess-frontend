@@ -15,7 +15,7 @@ export const APIEndpoint = {
   // Interview Management
   INTERVIEW: (job_id: string) => `/api/v1/interview/${job_id}`,
   INTERVIEW_ANALYZER: (interview_id: string) => `/api/v1/analyze/${interview_id}`,
-
+  
   UPLOAD_FILE: (interview_id: string) => `/api/v1/upload-files/${interview_id}`,
   SUBMIT_INTERVIEW: (interview_id: string) =>
     `/api/v1/submit-answers-dashboard/${interview_id}`,

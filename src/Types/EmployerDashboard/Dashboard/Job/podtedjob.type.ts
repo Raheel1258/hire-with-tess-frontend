@@ -10,4 +10,5 @@ export default interface postedJobProps{
     created_at: string;
     expiry_date: string;
     interview_link?: string;
+    total_interviews?: number;
 }

@@ -1,16 +1,23 @@
 'use client';
 import { Card, CardContent } from "@/components/ui/card";
-import InputBox from "./fieldbox";
+
 
 interface Postedjobprops {
-    description: string;
-    company: string;
-    type: string;
-    currency: string;
-    salary: string;
+  job_title?: string;
+  job_description?: string;
+  company_name?: string;
+  location?: string;
+  job_type?: string;
+  currency?: string;
+  salary?: string;
+  salary_type?: string;
+  created_at?: string;
+    requirements?: string[];
+  responsibilities?: string[];
+  skills?: string[];
 }
 
-export default function JobpProfile({ data }: { data: any }) {
+export default function JobpProfile({ data }: { data: Postedjobprops }) {
   if (!data) return null;
 
   return (
@@ -49,7 +56,7 @@ export default function JobpProfile({ data }: { data: any }) {
       <div>
         <h2 className="text-lg font-semibold text-gray-800 mb-2">Requirements</h2>
         <ul className="list-decimal list-inside space-y-1 text-sm text-gray-700">
-          {data.requirements.map((req: string, idx: number) => (
+          {data.requirements?.map((req: string, idx: number) => (
             <li key={idx}>{req}</li>
           ))}
         </ul>
@@ -58,7 +65,7 @@ export default function JobpProfile({ data }: { data: any }) {
       <div>
         <h2 className="text-lg font-semibold text-gray-800 mb-2">Responsibilities</h2>
         <ul className="list-disc list-inside space-y-1 text-sm text-gray-700">
-          {data.responsibilities.map((res: string, idx: number) => (
+          {data.responsibilities?.map((res: string, idx: number) => (
             <li key={idx}>{res}</li>
           ))}
         </ul>
@@ -67,7 +74,7 @@ export default function JobpProfile({ data }: { data: any }) {
       <div>
         <h2 className="text-lg font-semibold text-gray-800 mb-2">Skills</h2>
         <div className="flex flex-wrap gap-2">
-          {data.skills.map((skill: string, idx: number) => (
+          {data.skills?.map((skill: string, idx: number) => (
             <span key={idx} className="bg-[#f7941D] text-white text-xs px-3 py-1 rounded-full">
               {skill}
             </span>

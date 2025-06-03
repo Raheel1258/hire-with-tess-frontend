@@ -7,6 +7,7 @@
     'Shortlisted (%)',
     'Job Type',
     'Posted Date',
+    'Interviews',
     'Link',
   ];
 

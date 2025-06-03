@@ -1,5 +1,5 @@
 'use client';
-import { BriefcaseBusiness, Copy, Eye, Users } from 'lucide-react';
+import { BriefcaseBusiness, Copy, Users } from 'lucide-react';
 import CardComponent from '../components/card';
 import TableComponent from '../components/table';
 import Searchbar from '../components/searchbar';
@@ -20,11 +20,10 @@ import { DropDownCustomStatus } from '../components/statusfeature';
 import UseUpdateJobStatus from '@/Routes/Employer/hooks/PUT/job/UpdateJobStatus.hook';
 import postedJobProps from '@/Types/EmployerDashboard/Dashboard/Job/podtedjob.type';
 import JobStore from '@/store/EmployeeDashboard/dashboard/job-posting/job.store';
-import UseGetFilteredJob from '@/Routes/Employer/hooks/GET/jobposting/GetFilterJob.hook';
 import { Button } from '@/components/ui/button';
-import { toast } from 'sonner';
 import { useState } from 'react';
 import handleCopyLink from '@/Utils/helper/copylink';
+import CustomJobDetailDialogue from '@/app/employer/(dashboard)/components/jobdetaildialogue';
 
 export default function JobPosting() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -32,7 +31,6 @@ export default function JobPosting() {
   const { data: JobPostedTableData } = UseGetAllJob({ page: currentPage });
   const deleteJobMutation = UseDeleteJobByID();
   const updatejobstatus = UseUpdateJobStatus();
-  // const { data: FilteredJobData } = UseGetFilteredJob({});
 
   const {
     isDialogOpen,
@@ -41,7 +39,11 @@ export default function JobPosting() {
     setpostedjobdata,
     searchTerm,
     setSearchTerm,
+    selectedCandidate,
+    setSelectedCandidate,
   } = JobStore();
+
+  const [isInterviewDialogOpen, setIsInterviewDialogOpen] = useState(false);
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
@@ -50,44 +52,61 @@ export default function JobPosting() {
   const filteredJobs = JobPostedTableData?.items?.filter((item: { job_title: string }) =>
     item.job_title.toLowerCase().includes(searchTerm.toLowerCase()),
   );
+
   const deleteJob = (rowIndex: number) => {
     const jobIds = filteredJobs?.map((item: { id: string }) => item.id) ?? [];
     const jobId = jobIds[rowIndex];
     deleteJobMutation.mutate(jobId);
   };
 
-  const DATA = (filteredJobs ?? []).map((item: postedJobProps) => [
-    item?.id,
-    item?.job_title,
-    <DropDownCustomStatus
-      key={item.status}
-      Status={item?.status}
-      updateStatus={(newStatus) =>
-        updatejobstatus.mutate({
-          job_id: item.id,
-          status: newStatus,
-        })
-      }
-    />,
-    item?.shortlisted_stats?.shortlisted,
-    item?.shortlisted_stats?.shortlist_ratio,
-    item?.job_type,
-    new Date(item.created_at).toLocaleDateString(),
-    item?.interview_link ? (
+  const DATA = (filteredJobs ?? []).map((item: postedJobProps) => {
+    return [
+      item?.id,
+      item?.job_title,
+      <DropDownCustomStatus
+        key={item.status}
+        Status={item?.status}
+        updateStatus={(newStatus) =>
+          updatejobstatus.mutate({
+            job_id: item.id,
+            status: newStatus,
+          })
+        }
+      />,
+      item?.shortlisted_stats?.shortlisted,
+      item?.shortlisted_stats?.shortlist_ratio,
+      item?.job_type,
+      new Date(item.created_at).toLocaleDateString(),
       <Button
         variant="ghost"
         size="sm"
-        className="flex items-center gap-2"
-        onClick={() => handleCopyLink(item.interview_link)}
+        className="w-10 flex items-center gap-2 bg-green-100 border-2 border-green-400"
+        key={item.id}
+        onClick={() => {
+          setSelectedCandidate(item.id);
+          setIsInterviewDialogOpen(true); 
+        }}
       >
-        <Copy className="w-4 h-4" />
-        <span>Copy Link</span>
-      </Button>
-    ) : (
-      'No link available'
-    ),
-  ]);
-  
+        <span>{item.total_interviews}</span>
+      </Button>,
+      item?.interview_link ? (
+        <Button
+          variant="ghost"
+          size="sm"
+          className="flex items-center gap-2"
+          onClick={() => {
+            handleCopyLink(item.interview_link);
+          }}
+        >
+          <Copy className="w-4 h-4" />
+          <span>Copy Link</span>
+        </Button>
+      ) : (
+        'No link available'
+      ),
+    ];
+  });
+
   const handleViewJob = (rowIndex: number) => {
     const selectedJob = filteredJobs?.[rowIndex];
     if (selectedJob) {
@@ -95,9 +114,10 @@ export default function JobPosting() {
       setIsDialogOpen(true);
     }
   };
-  
+
   return (
     <>
+      {/* Job Details Dialog */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent>
           <DialogHeader>
@@ -106,6 +126,26 @@ export default function JobPosting() {
           </DialogHeader>
           <JobpProfile data={postedjobdata} />
           <DialogClose asChild />
+        </DialogContent>
+      </Dialog>
+
+      {/* Interview Details Dialog */}
+      <p>Interview Dialog: {selectedCandidate}</p>
+      <Dialog open={isInterviewDialogOpen} onOpenChange={setIsInterviewDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+          </DialogHeader>
+          <DialogTitle>Interview Details</DialogTitle>
+          {selectedCandidate && (
+            <CustomJobDetailDialogue 
+              jobId={selectedCandidate}
+              isOpen={isInterviewDialogOpen}
+              onClose={() => {
+                setIsInterviewDialogOpen(false);
+                setSelectedCandidate(''); 
+              }}
+            />
+          )}
         </DialogContent>
       </Dialog>
 
@@ -141,12 +181,12 @@ export default function JobPosting() {
             header={JobPostingTableTitle}
             subheader={DATA}
             paginationstart={JobPostedTableData?.current_page}
-            paginationend={JobPostedTableData?.total}
+            paginationend={JobPostedTableData?.pages}
             onPageChange={(page: number) => setCurrentPage(page)}
             showTrashIcon
             onDelete={deleteJob}
             showEyeIcon={true}
-            onView={handleViewJob} 
+            onView={handleViewJob}
           />
         </div>
       </div>
