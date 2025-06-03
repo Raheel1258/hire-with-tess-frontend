@@ -28,18 +28,19 @@ export default function CandidateInstructions() {
       useCard={false}
       description="Let's get started. Record your response at your own pace and put your best foot forward!"
       subtitle="Your next opportunity starts here!"
-      showTitle={false}
+      showTitle={true}
       subtitleClassName="font-roboto font-bold text-[34px] leading-[46px] mt-8"
       descriptionClassName="mt-4 text-[#6F6C90] leading-[30px] font-roboto font-normal"
-      jobTitle={data?.job_title}
-      jobCompany={data?.company_name}
+      // jobTitle={data?.job_title}
+      // jobCompany={data?.company_name}
       showJobTitleSeparator={true}
+      
     >
       
       <div className="flex flex-col items-center justify-center px-4 ">
-        {/* <h1 className="font-roboto font-bold text-[22px] sm:text-[26px] text-center">
+        <h1 className="font-roboto font-bold text-[22px] sm:text-[26px] text-center">
           {data?.job_title} - {data?.company_name}
-        </h1> */}
+        </h1>
         <p className="font-roboto text-[14px] sm:text-[16px] font-normal text-[#6F6C90] mt-4 text-center">
           Take your time, be yourself, and show what you can do!
         </p>

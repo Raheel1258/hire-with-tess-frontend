@@ -7,10 +7,12 @@ interface JobProps {
     searchTerm:string,
     postedjobdata:postedJobProps,
     isDialogOpen: boolean,
+    selectedCandidate: string,
 
     setSearchTerm: (value: string) => void;
     setpostedjobdata: (value: postedJobProps) => void;
     setIsDialogOpen: (value: boolean) => void;
+    setSelectedCandidate: (value: string) => void;
 }
 const JobStore = create<JobProps>()(
     devtools(
@@ -18,10 +20,12 @@ const JobStore = create<JobProps>()(
             isDialogOpen:false,
             postedjobdata:"",
             searchTerm:"",
+            selectedCandidate:"",
 
             setSearchTerm:(value) => set({searchTerm: value}),
             setpostedjobdata:(value) => set({postedjobdata: value}),
-            setIsDialogOpen:(value) => set({isDialogOpen: value})
+            setIsDialogOpen:(value) => set({isDialogOpen: value}),
+            setSelectedCandidate:(value) => set({selectedCandidate: value})
 
         }),
 

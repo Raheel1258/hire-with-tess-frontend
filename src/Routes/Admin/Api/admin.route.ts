@@ -24,11 +24,6 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    // const originalRequest = error.config;
-
-    // const isLoginRequest =
-    //   originalRequest?.url?.includes(EMPLOYERAPI.EMPLOYER_LOGIN) &&
-    //   originalRequest?.method === 'post';
 
     if (error.response && error.response.status === 401) {
       clearAuthToken();
@@ -96,7 +91,7 @@ export const GetDashboardStats = async () => {
 };
 
 //Super Admin Notification
-export const GetNotification = async () => {
+export const GetSuperAdminNotification = async () => {
   const response = await api.get(AdminEndpoint.SUPERADMIN_GET_NOTIFICATION);
   return response.data;
 };

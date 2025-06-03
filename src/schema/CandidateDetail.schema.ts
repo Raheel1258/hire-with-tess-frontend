@@ -7,7 +7,7 @@ export const CandidateDetailSchema = z.object({
     .optional(),
   job_id: z.string().min(1, { message: 'Job ID is required.' }),
 
-  candidate_name: z.string().min(3, { message: 'Please provide your User name.' }),
+  candidate_name: z.string().min(2, { message: 'Please provide your Full Name.' }),
   email: z
     .string()
     .min(1, { message: 'Email field has to be filled.' })

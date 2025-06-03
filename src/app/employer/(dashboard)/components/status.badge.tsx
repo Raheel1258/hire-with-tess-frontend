@@ -1,6 +1,6 @@
 import { Badge } from '@/components/ui/badge';
 
-type StatusType = 'reject' | 'pending' | 'shortlisted' | 'Completed';
+type StatusType = 'reject' | 'pending' | 'shortlisted' | 'Completed' | string;
 
 interface StatusBadgeProps {
   status: StatusType;
