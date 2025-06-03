@@ -4,10 +4,7 @@ const phoneRegex = new RegExp(/^([+]?[\s0-9]+)?(\d{3}|[(]?[0-9]+[)])?([-]?[\s]?[
 export const CandidateDetailSchema = z.object({
   resume: z
     .any()
-    .optional()
-    .refine((file) => file instanceof File || file === undefined, {
-      message: 'Invalid file',
-    }),
+    .optional(),
   job_id: z.string().min(1, { message: 'Job ID is required.' }),
 
   candidate_name: z.string().min(3, { message: 'Please provide your User name.' }),
