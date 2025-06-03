@@ -117,7 +117,7 @@ export default function JobPosting() {
 
   return (
     <>
-      {/* Job Details Dialog */}
+
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent>
           <DialogHeader>
@@ -129,8 +129,6 @@ export default function JobPosting() {
         </DialogContent>
       </Dialog>
 
-      {/* Interview Details Dialog */}
-      <p>Interview Dialog: {selectedCandidate}</p>
       <Dialog open={isInterviewDialogOpen} onOpenChange={setIsInterviewDialogOpen}>
         <DialogContent>
           <DialogHeader>
