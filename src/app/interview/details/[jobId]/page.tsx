@@ -6,10 +6,7 @@ import CustomInputForm from '@/app/interview/component/customformInput';
 import React, { useRef, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import {
-  CandidateDetailSchema,
-  CandidateDetailsValidator,
-} from '@/schema/CandidateDetail.schema';
+import {CandidateDetailSchema,CandidateDetailsValidator,} from '@/schema/CandidateDetail.schema';
 import { Button } from '@/components/ui/button';
 import { useParams } from 'next/navigation';
 import { X } from 'lucide-react';
@@ -34,7 +31,6 @@ export default function CandidatesDetails() {
   });
 
   const mutation = RegeisterCandidatehook();
-
   const onSubmit = async (data: CandidateDetailsValidator) => {
     const formData = new FormData();
     formData.append('job_id', jobId);
@@ -44,7 +40,6 @@ export default function CandidatesDetails() {
     if (data.resume instanceof File) {
       formData.append('resume', data.resume);
     }
-
     mutation.mutate(formData, {
       onSuccess: () => {
         toast.success(`${data.candidate_name} registered successfully`);
