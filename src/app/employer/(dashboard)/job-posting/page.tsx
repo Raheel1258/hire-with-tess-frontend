@@ -117,7 +117,6 @@ export default function JobPosting() {
 
   return (
     <>
-
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent>
           <DialogHeader>
@@ -128,7 +127,6 @@ export default function JobPosting() {
           <DialogClose asChild />
         </DialogContent>
       </Dialog>
-
       <Dialog open={isInterviewDialogOpen} onOpenChange={setIsInterviewDialogOpen}>
         <DialogContent>
           <DialogHeader>
