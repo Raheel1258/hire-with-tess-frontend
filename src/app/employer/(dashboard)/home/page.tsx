@@ -24,6 +24,20 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import handleCopyLink from '@/Utils/helper/copylink';
 import StatusBadge from '../components/status.badge';
+import Interviewplatform from '../components/interviewplatform';
+
+interface InterviewItem {
+  id: string;
+  candidate_name: string;
+  job_title: string;
+  created_at: string;
+  status: string;
+  interview_link?: string;
+  ai_score: number | null;
+  interview_metadata?: {
+    interview_source: string;
+  };
+}
 
 export default function DashboardHome() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -71,7 +85,7 @@ export default function DashboardHome() {
   };
 
   const DATA =
-    DashboardTableData?.items?.map((item: any) => [
+    DashboardTableData?.items?.map((item: InterviewItem) => [
       item?.id,
       item.candidate_name,
       item.job_title,
@@ -91,8 +105,7 @@ export default function DashboardHome() {
       ) : (
         'No link available'
       ),
-
-
+      <Interviewplatform platform={item.interview_metadata} key={`platform-${item.id}`} />,
       item.ai_score !== null ? (
         <Badge className="bg-[#f7941D] text-white">{item.ai_score}</Badge>
       ) : analyzingInterviewId === item.id ? (
@@ -110,7 +123,7 @@ export default function DashboardHome() {
           Analyze
         </Button>
       ),
-
+ 
       <div key={`actions-${item.id}`} className="flex justify-center">
         <Eye
           onClick={() => {

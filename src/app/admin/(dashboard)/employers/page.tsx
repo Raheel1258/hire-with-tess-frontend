@@ -3,16 +3,18 @@ import { Badge } from '@/components/ui/badge';
 import TableComponent from '@/app/employer/(dashboard)/components/table';
 import { useState } from 'react';
 import { useGetEmployers } from '@/Routes/Admin/hook/GET/employer/Getemployer';
+import { Button } from '@/components/ui/button';
 
 export default function EmployersList() {
   const [currentPage, setCurrentPage] = useState(1);
   const { data: employersData, isLoading } = useGetEmployers({ page: currentPage });
+  console.log("employersData",employersData)
 
   const TITLE = [
     'Employer Name',
     'Email',
     'Organization',
-    'Total Job Posting',
+    'Total Job Posted',
     'Subscription Status',
     'Date Joined',
   ];
@@ -22,7 +24,18 @@ export default function EmployersList() {
       employer.name,
       employer.email,
       employer.organization_name,
-      employer.stats.total_jobs,
+      <Button
+      variant="ghost"
+      size="sm"
+      className="w-10 flex items-center gap-2 bg-green-100 border-2 border-green-400"
+      key={employer.id}
+      // onClick={() => {
+      //   setSelectedCandidate(employer.id);
+      //   setIsInterviewDialogOpen(true); 
+      // }}
+    >
+      <span>{employer.stats.total_jobs}</span>
+    </Button>,
       <Badge
         key={employer.id}
         className={`${
@@ -39,7 +52,7 @@ export default function EmployersList() {
   return (
     <div>
       <h1 className="font-[roboto] text-[24px] font-semibold leading-[30px] mb-4">
-        Employers test
+        Employers 
       </h1>
       <TableComponent
         header={TITLE}

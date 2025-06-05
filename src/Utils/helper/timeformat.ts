@@ -1,4 +1,12 @@
-export const formatTimeAgo = (dateString: string) => {
+export interface NotificationItem {
+    id: string;
+    notification_type: string;
+    message: string;
+    created_at: string;
+    read: boolean;
+  }
+
+export default function TimeFormat(dateString: string): string {
     const date = new Date(dateString)
     const now = new Date()
     const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000)

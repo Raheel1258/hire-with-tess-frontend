@@ -18,6 +18,8 @@ const StatusBadge = ({ status, className = '' }: StatusBadgeProps) => {
         return 'bg-green-100 text-green-800';
       case 'Completed':
         return 'capitalize bg-green-100 text-green-800';
+      case 'closed':
+        return 'capitalize bg-red-100 text-red-800'; 
       default:
         return 'capitalize bg-green-100 text-green-800';
     }

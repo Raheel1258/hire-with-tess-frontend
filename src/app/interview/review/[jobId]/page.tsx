@@ -50,15 +50,16 @@ export default function InterviewReview() {
   });
   const { setValue } = form;
   const setJobId = useHomeStore((state) => state.setJobId);  
+
   useEffect(() => {
     if (jobData) {
       setValue('jobTitle', jobData.job_title || '');
       setValue('jobType', jobData.job_type || '');
       setValue('companyName', jobData.company_name || '');
       setValue('location', jobData.location || '');
-      setValue('salary', jobData.salary || '');
       setValue('currency', jobData.currency || 'USD');
       setValue('salaryType', jobData.salary_type || 'per_hour');
+      setValue('salary', jobData.salary || '');
     }
   }, [jobData, setValue]);
 
@@ -129,7 +130,7 @@ export default function InterviewReview() {
                     <CustomInputForm
                       {...field}
                       name="companyName"
-                      label="Company Name"
+                      label="Organization Name"
                       readOnly
                     />
                   </FormControl>
@@ -145,7 +146,7 @@ export default function InterviewReview() {
                     <CustomInputForm
                       {...field}
                       name="location"
-                      label="Location"
+                      label="Organization Location"
                       readOnly
                     />
                   </FormControl>
@@ -166,7 +167,7 @@ export default function InterviewReview() {
                       readOnly
                       currencyName="currency"
                       salaryTypeName="salaryType"
-                      value={jobData.salary}
+                      placeholder={jobData.salary}
                       currencyValue={jobData.currency}
                       salaryTypeValue={jobData.salary_type}
                     />
@@ -249,7 +250,7 @@ export default function InterviewReview() {
               </DialogTrigger>
               <DialogContent className="items-center bg-white shadow-2xl rounded-lg w-5xl">
                 <DialogTitle></DialogTitle>
-                <SignupDialogue />
+                <SignupDialogue jobId={jobId} />
               </DialogContent>
             </Dialog>
           )}

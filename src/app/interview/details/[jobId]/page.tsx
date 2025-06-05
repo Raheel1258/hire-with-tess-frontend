@@ -75,6 +75,7 @@ export default function CandidatesDetails() {
     >
       <FormProvider {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} ref={ref} className="space-y-8 px-4">
+          {/* <Audioresume /> */}
           <FormField
             control={form.control}
             name="resume"

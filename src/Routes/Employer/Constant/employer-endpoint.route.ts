@@ -33,6 +33,7 @@ export const EMPLOYERAPI = {
 
   //Notification
   NOTIFICATION: `/api/v1/admin/notifications`,
+  UNREAD_NOTIFICATIONS_CHECK: `/api/v1/admin/unread-notifications-check`,
   PROFILE_PERMISSION_NOTIFICATION_SETTING: `/api/v1/admin/notification-settings`,
   UPDATE_PROFILE_NOTIFICATION: (notification_type: string) =>
     `/api/v1/admin/notification-settings/${notification_type}`,

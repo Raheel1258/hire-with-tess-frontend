@@ -183,6 +183,12 @@ export const AdminNotification = async () => {
   return response.data;
 };
 
+//Admin Unread Notification
+export const AdminUnreadNotification = async () => {
+  const response = await api.get(EMPLOYERAPI.UNREAD_NOTIFICATIONS_CHECK);
+  return response.data;
+};
+
 //Admin Notificaation Setting
 export const ProfileNotificationPermission = async () => {
   const response = await api.get(EMPLOYERAPI.PROFILE_PERMISSION_NOTIFICATION_SETTING);
@@ -190,9 +196,10 @@ export const ProfileNotificationPermission = async () => {
 };
 
 //Update Notification Setting
-export const UpdateNotificationType = async (notification_type: string) => {
+export const UpdateNotificationType = async (notification_type: string,data: {enabled: boolean}) => {
   const response = await api.put(
     EMPLOYERAPI.UPDATE_PROFILE_NOTIFICATION(notification_type),
+    data
   );
   return response.data;
 };

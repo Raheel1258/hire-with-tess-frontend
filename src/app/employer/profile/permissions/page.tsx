@@ -1,17 +1,37 @@
-import { Card } from "@/components/ui/card";
-import { Switch } from "@/components/ui/switch";
-import { UpdateNotificationType } from "@/Routes/Employer/Api/employer.route";
-import UseProfilePermision from "@/Routes/Employer/hooks/GET/profile/Permission.hook";
-import RedirectToDashboard from "../components/breadcrumb";
-// import { useEffect } from 'react';
+'use client';
+import { Card } from '@/components/ui/card';
+import { Switch } from '@/components/ui/switch';
+import RedirectToDashboard from '../components/breadcrumb';
+import UseAdminProfilePermision from '@/Routes/Employer/hooks/GET/profile/Permission.hook';
+import UseUpdateNotificationPermission from '@/Routes/Employer/hooks/PUT/profile/NotificationPermission.hook';
+import { useEffect, useState } from 'react';
+
+interface Permission {
+  enabled: boolean;
+  name: string;
+  type: string;
+}
 
 export default function UserProfilePermission() {
-  // const {data:permission} = UseProfilePermision();
-  // useEffect(() => {
-  //   if (permission) {
-  //     console.log("Permission data", permission);
-  //   }
-  // }, [permission]);
+  const { data: permission } = UseAdminProfilePermision();
+  const { mutate: updateNotificationPermission } = UseUpdateNotificationPermission();
+
+  const [permissions, setPermissions] = useState<Permission[]>([]);
+
+  useEffect(() => {
+    if (permission) {
+      setPermissions(permission);
+    }
+  }, [permission]);
+
+  const handleUpdateNotificationPermission = (type: string, enabled: boolean) => {
+    updateNotificationPermission({ notification_type: type, enabled });
+    setPermissions((prev) =>
+      prev.map((perm) => (perm.type === type ? { ...perm, enabled } : perm))
+    );
+  };
+  
+
   return (
     <div className="space-y-6">
       <div className="space-y-2">
@@ -25,52 +45,29 @@ export default function UserProfilePermission() {
         <h1 className="text-2xl font-semibold text-slate-800">Permissions</h1>
       </div>
       <Card className="p-4">
-        {/* Permission 1 */}
-        <div className="gap-2 mb-2">
-          <div className="flex flex-row items-center justify-between">
-            <div>
-              <h1 className="font-[open Sans] text-[#1E293B] font-semibold">
-                Receive Interview Completion Alerts
-              </h1>
-              <p className="font-thin text-sm">
-                Get updates with candidates finish interviews{" "}
-              </p>
+        {permissions.map((permission, index) => (
+          <div
+            key={permission.type}
+            className={`gap-2 ${index !== permissions.length - 1 ? 'mb-2' : ''}`}
+          >
+            <div className="flex flex-row items-center justify-between">
+              <div>
+                <h1 className="font-[open Sans] text-[#1E293B] font-semibold">
+                  {permission.name}
+                </h1>
+                <p className="font-thin text-sm">
+                  Get updates when {permission.name.toLowerCase()}
+                </p>
+              </div>
+              <Switch
+                checked={permission.enabled}
+                onCheckedChange={(checked) =>
+                  handleUpdateNotificationPermission(permission.type, checked)
+                }
+              />
             </div>
-            <Switch />
           </div>
-        </div>
-
-        {/* Permission 2 */}
-        <div className="gap-2 mb-2">
-          <div className="flex flex-row items-center justify-between">
-            <div>
-              <h1 className="font-[open Sans] text-[#1E293B] font-semibold">
-                Receive Notification for New Applicants
-              </h1>
-              <p className="font-thin text-sm">
-                Get notofied whenever a candidates completes an interview or
-                submits application{" "}
-              </p>
-            </div>
-            <Switch />
-          </div>
-        </div>
-
-        {/* Permission 3 */}
-        <div className="gap-2">
-          <div className="flex flex-row items-center justify-between">
-            <div>
-              <h1 className="font-[open Sans] text-[#1E293B] font-semibold">
-                Show Company Brand on Job Listings{" "}
-              </h1>
-              <p className="font-thin text-sm">
-                Display your company logo and details on job postings for better
-                visibility{" "}
-              </p>
-            </div>
-            <Switch />
-          </div>
-        </div>
+        ))}
       </Card>
     </div>
   );

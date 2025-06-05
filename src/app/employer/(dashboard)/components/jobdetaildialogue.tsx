@@ -3,7 +3,6 @@ import UseGetJobInterviewByID from '@/Routes/Employer/hooks/GET/jobposting/GetJo
 import { Card, CardContent } from "@/components/ui/card";
 import JobInterviewProps from '@/Types/EmployerDashboard/Dashboard/jobposted/postedjob';
 import StatusBadge from './status.badge';
-// import AudiVideodialogue from './Audi_videodialogue';
 
 interface CustomJobDetailDialogueProps {
   jobId: string;
@@ -84,7 +83,7 @@ const CustomJobDetailDialogue = ({ jobId}: CustomJobDetailDialogueProps) => {
                     <p><span className="font-medium">Status:</span> 
                       <StatusBadge status={interview.status} key={`status-${interview.id}`} />,
                     </p>
-                    <p><span className="font-medium">AI Score:</span> {interview.ai_score ? `${interview.ai_score}%` : 'N/A'}</p>
+                    <p><span className="font-medium">AI Score:</span> {interview.ai_score !== null ? `${interview.ai_score}%` : 'N/A'}</p>
                     <p><span className="font-medium">Interview Date:</span> {new Date(interview.created_at).toLocaleDateString()}</p>
                   </div>
                 </div>

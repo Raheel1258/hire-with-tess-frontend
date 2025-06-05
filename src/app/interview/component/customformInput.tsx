@@ -11,8 +11,7 @@ import {
 } from '@/components/ui/select';
 import FormControl from '@mui/material/FormControl';
 import { useSkillStore } from '@/store/Employer/InputStore';
-import React, { useRef } from 'react';
-import { useToggleStore } from '@/store/Employer/Toggle.store';
+import React, { useRef, useState } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
 
 interface CustomInputProps {
@@ -50,9 +49,8 @@ const CustomInputForm: React.FC<CustomInputProps> = ({
   const { control } = useFormContext();
   const inputRef = useRef<HTMLInputElement>(null);
   const { isEditable } = useSkillStore();
-
-  const { showPassword, toggleShowPassword } = useToggleStore();
-  const actualType = type === 'password' ? (showPassword ? 'text' : 'password') : type;
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const actualType = type === 'password' ? (isPasswordVisible ? 'text' : 'password') : type;
 
   return (
     <Controller
@@ -155,11 +153,11 @@ const CustomInputForm: React.FC<CustomInputProps> = ({
                       onClick={(e) => {
                         e.preventDefault();
                         e.stopPropagation();
-                        toggleShowPassword();
+                        setIsPasswordVisible(!isPasswordVisible);
                       }}
                       style={{ cursor: 'pointer' }}
                     >
-                      {showPassword ? <Eye /> : <EyeOff />}
+                      {isPasswordVisible ? <Eye /> : <EyeOff />}
                     </span>
                   </InputAdornment>
                 ) : icon ? (

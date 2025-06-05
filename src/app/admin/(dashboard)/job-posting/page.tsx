@@ -1,5 +1,5 @@
 'use client';
-import { Eye, Copy, BriefcaseBusiness, Users } from 'lucide-react';
+import {  Copy, BriefcaseBusiness, Users } from 'lucide-react';
 import {
   Dialog,
   DialogClose,
@@ -10,19 +10,20 @@ import {
 } from '@/components/ui/dialog';
 import TableComponent from '@/app/employer/(dashboard)/components/table';
 import Searchbar from '@/app/employer/(dashboard)/components/searchbar';
-import UseDashboardJobCardStats from '@/Routes/Employer/hooks/GET/jobposting/GetJobCardstats.hook';
 import UseGetAllJob from '@/Routes/Employer/hooks/GET/jobposting/GetAllJobs.hook';
 import UseDeleteJobByID from '@/Routes/Employer/hooks/DELETE/DeleteJobById.hook';
 import UseUpdateJobStatus from '@/Routes/Employer/hooks/PUT/job/UpdateJobStatus.hook';
 import JobStore from '@/store/EmployeeDashboard/dashboard/job-posting/job.store';
 import postedJobProps from '@/Types/EmployerDashboard/Dashboard/Job/podtedjob.type';
-import { DropDownCustomStatus } from '@/app/employer/(dashboard)/components/statusfeature';
 import CardComponent from '@/app/employer/(dashboard)/components/card';
 import JobpProfile from '@/app/employer/(dashboard)/components/postedjobdialogue';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import UseDashboardCardStats from '@/Routes/Employer/hooks/GET/Overview/GetOverviewCardStats.hook';
 import { useState } from 'react';
+import StatusBadge from '@/app/employer/(dashboard)/components/status.badge';
+import CustomJobDetailDialogue from '@/app/employer/(dashboard)/components/jobdetaildialogue';
+import OverviewStore from '@/store/EmployeeDashboard/dashboard/overview/overview.store';
 
 export default function AdminJobPosting() {
   const TITLE = [
@@ -34,6 +35,8 @@ export default function AdminJobPosting() {
     'Job Type',
     'Job Posted Date',
     'Interview Link',
+    'Total Interviews',
+
   ];
   const [currentPage, setCurrentPage] = useState(1);
   const { data: jobdata } = UseDashboardCardStats();
@@ -49,6 +52,10 @@ export default function AdminJobPosting() {
     searchTerm,
     setSearchTerm,
   } = JobStore();
+  const { selectedCandidate, setSelectedCandidate } =
+    OverviewStore();
+
+  const [isInterviewDialogOpen, setIsInterviewDialogOpen] = useState(false);
 
   const filteredJobs = JobPostedTableData?.items?.filter((item: { job_title: string }) =>
     item?.job_title?.toLowerCase()?.includes(searchTerm.toLowerCase()),
@@ -73,12 +80,12 @@ export default function AdminJobPosting() {
     (filteredJobs ?? []).map((item: postedJobProps) => [
       item?.id,
       item?.job_title,
-      item.status,
+      <StatusBadge status={item.status} key={`status-${item.id}`} />,
       item?.shortlisted_stats?.shortlisted,
       item?.shortlisted_stats?.shortlist_ratio,
       item?.job_type,
       new Date(item.created_at).toLocaleDateString(),
-      
+
       item?.interview_link ? (
         <Button
           variant="ghost"
@@ -92,6 +99,19 @@ export default function AdminJobPosting() {
       ) : (
         'No link available'
       ),
+      <Button
+      variant="ghost"
+      size="sm"
+      className="w-10 flex items-center gap-2 bg-green-100 border-2 border-green-400"
+      key={item.id}
+      onClick={() => {
+        setSelectedCandidate(item.id);
+        setIsInterviewDialogOpen(true); 
+      }}
+    >
+      <span>{item.total_interviews}</span>
+    </Button>,
+    
     ]) || [];
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -138,6 +158,24 @@ export default function AdminJobPosting() {
           </DialogHeader>
           <JobpProfile data={postedjobdata} />
           <DialogClose asChild />
+        </DialogContent>
+      </Dialog>
+      
+      <Dialog open={isInterviewDialogOpen} onOpenChange={setIsInterviewDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+          </DialogHeader>
+          <DialogTitle>Interview Details</DialogTitle>
+          {selectedCandidate && (
+            <CustomJobDetailDialogue 
+              jobId={selectedCandidate}
+              isOpen={isInterviewDialogOpen}
+              onClose={() => {
+                setIsInterviewDialogOpen(false);
+                setSelectedCandidate(''); 
+              }}
+            />
+          )}
         </DialogContent>
       </Dialog>
       <div>

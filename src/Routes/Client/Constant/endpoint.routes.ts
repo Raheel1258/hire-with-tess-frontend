@@ -1,6 +1,6 @@
 export const APIEndpoint = {
   // JOB Management
-  GENERATE_JOB_DETAILS: `/api/v1/generate-job-details/`,
+  GENERATE_JOB_DETAILS: `/api/v1/generate-job-details`,
   GENERATE_QUESTION: (job_id: string) => `/api/v1/generate-questions/${job_id}`,
   REGENERATE_QUESTION: (job_id: string) => `/api/v1/add-question-from-list/${job_id}`,
 

@@ -16,7 +16,8 @@ interface LoginPayload {
   password: string;
 }
 
-export default function useLoginMutation() {
+export default function useLoginMutation(jobId?: string) {
+
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -25,19 +26,27 @@ export default function useLoginMutation() {
     onSuccess: (data) => {
       const { access_token, role } = data;
       const returnTo = searchParams.get('returnTo');
-
+    
       if (!access_token) {
         toast.error('You are not authenticated.');
         return;
       }
-
+    
       setAuthToken(access_token, role);
       toast.success('Login successful');
+    
       if (returnTo) {
         router.push(returnTo);
         return;
       }
-      // role-based redirect
+    
+      //  go to review page if jobId is present
+      if (jobId) {
+        router.push(`/interview/review/${jobId}`);
+        return;
+      }
+    
+      // role-based redirect fallback
       switch (role) {
         case 'admin':
           router.push('/employer/home');
@@ -49,7 +58,7 @@ export default function useLoginMutation() {
           toast.error('You are not allowed.');
           break;
       }
-    },
+    },    
     onError: (error) => {
       const errorMessage =
         error.response?.data?.detail || 'An unexpected error occurred during sign-in.';

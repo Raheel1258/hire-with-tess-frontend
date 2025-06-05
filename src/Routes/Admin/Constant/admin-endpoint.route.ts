@@ -23,9 +23,15 @@ export const AdminEndpoint = {
   SUPERADMIN_GET_NOTIFICATION: `/api/v1/superadmin/notifications`,
   SUPERADMIN_GET_NOTIFICATION_SETTING: `/api/v1/superadmin/notification-settings`,
 
-  //Super Admin Profile
+  //Super Admin Notification Setting
   SUPERADMIN_UPDATE_NOTIFICATION: (notification_type: string) =>
     `/api/v1/superadmin/notification-settings/${notification_type}`,
+  SUPERADMIN_GET_UNREAD_COUNT: `/api/v1/superadmin/unread-notifications-check`,
+
+    //Graph Data
+  SUPERADMIN_MONTHLY_JOB_STATS: `/api/v1/admin/monthly-job-stats`,
+
+  //Super Admin Profile
   SUPERADMIN_GET_PROFILE: `/api/v1/superadmin/profile`,
   SUPERADMIN_UPDATE_PROFILE: `/api/v1/superadmin/profile`,
 };

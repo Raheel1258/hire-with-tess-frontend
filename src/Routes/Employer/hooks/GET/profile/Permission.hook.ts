@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { ProfileNotificationPermission } from "@/Routes/Employer/Api/employer.route";
 
-export default function UseProfilePermision(){
+export default function UseAdminProfilePermision(){
     return useQuery({
         queryKey: ['permission'],
         queryFn: ProfileNotificationPermission,

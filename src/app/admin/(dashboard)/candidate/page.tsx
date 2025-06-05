@@ -68,7 +68,9 @@ export default function AdminCandidatePage() {
         </Badge>
       ),
 
-      item.ai_score === null ? 0 : item.ai_score,
+      <Badge key={`status-${item.status}`} className='w-10 flex items-center gap-2 bg-orange-100 border-1 border-orange-400 text-orange-800'>
+      {item.ai_score === null ? 0 : item.ai_score}
+    </Badge>,
       <div key={`actions-${item.id}`} className="flex justify-center">
       <Eye
         onClick={() => {

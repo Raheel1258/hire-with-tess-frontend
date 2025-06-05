@@ -73,7 +73,7 @@ export default function EmployerLayout({ children }: { children: React.ReactNode
                     Login
                   </Button>
                 </Link>
-                <Dialog>
+                 <Dialog>
                   <DialogTrigger asChild>
                     <Button className="bg-tess-blue text-white px-4 py-2 rounded-md hover:bg-[#1E4B8E]-700 cursor-pointer">
                       Sign up
@@ -83,7 +83,7 @@ export default function EmployerLayout({ children }: { children: React.ReactNode
                     <DialogTitle></DialogTitle>
                     <SignupDialogue />
                   </DialogContent>
-                </Dialog>
+                </Dialog> 
               </>
             )}
           </nav>
