@@ -1,4 +1,3 @@
-// routes/api-endpoints.ts
 import { getRolePrefix } from '@/Utils/helper/roleprefix';
 
 export const API = {

@@ -4,7 +4,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
 import UseProfileInfo from "@/Routes/Employer/hooks/GET/profile/Profileinfo.hook"
 import UseProfileSuperAdmin from "@/Routes/Admin/hook/GET/Profileinfo.hook"
 import { getAuthRole } from "@/Utils/Providers/auth"
-import CustomNotification from "./notification"
+import CustomNotification from "@/app/employer/(dashboard)/components/notification"
 
 export default function Header() {
   const router = useRouter()

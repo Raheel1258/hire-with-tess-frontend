@@ -12,17 +12,13 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import z from 'zod';
 import { Loader2 } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import { toast } from 'sonner';
 import Link from 'next/link';
-import Image from 'next/image';
 import { GoogleLoginButton } from './googleloginbtn';
 
 export default function SignupDialogue() {
   const GoogleLoginMutation = useGoogleLoginHook();
 
   const jobId = useHomeStore((state) => state.jobId);
-  const router = useRouter();
 
   const form = useForm<z.infer<typeof signupFormSchema>>({
     resolver: zodResolver(signupFormSchema),
@@ -221,9 +217,7 @@ export default function SignupDialogue() {
         </div>
         <p className="text-sm text-gray-500 text-center">
           Already have an account?{' '}
-          <Link href="/login" className="text-[#F7941D]">
-            Login
-          </Link>
+          <Link className="text-[#F7941D]" href={`/login?returnTo=/interview/review/${jobId}`}>Login</Link>
         </p>
       </div>
     </div>

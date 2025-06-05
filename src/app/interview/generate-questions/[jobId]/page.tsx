@@ -16,12 +16,12 @@ import QuestionType from '@/Types/Employer/question.type';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Loader2 } from 'lucide-react';
 
+
 export default function Questionnaire() {
   const { jobId } = useParams<{ jobId: string }>();
 
   const { editableQuestionIndex, setEditableQuestionIndex, setIsEditable } =
     useSkillStore();
-
   const {
     editedQuestions,
     manualQuestion,

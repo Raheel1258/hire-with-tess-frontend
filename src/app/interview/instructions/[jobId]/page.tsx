@@ -64,8 +64,7 @@ export default function CandidateInstructions() {
             </h1>
             <ul className="list-disc pl-5 font-openSans text-[14px] leading-[26px] text-black text-left">
               <li>
-                You will answer a few questions, each requiring an audio, video, or screen
-                sharing response.
+                You will answer a few questions, each requiring an audio response.
               </li>
               <li>You can redo your responses before submitting your final answer.</li>
               <li>

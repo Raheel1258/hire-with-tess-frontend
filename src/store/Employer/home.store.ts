@@ -77,12 +77,12 @@ const useHomeStore = create<HomeState>()(
           }),
           resetmanualresponse: () =>
           set({
-            jobId: '',
-            jobDescription: '',
-            jobTitle: '',
             jobType: '',
             companyName: '',
             location: '',
+            salaryType: '',
+            currency: '',
+            salary: '',
           }),
       }),
       {

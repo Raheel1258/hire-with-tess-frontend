@@ -20,12 +20,13 @@ export default function Home() {
 
   const ResetAll = () => {
     resetmanualresponse();
-    resetQuestionStore();
+    resetQuestionStore(); 
     resetInterviewLink();
   };
   const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!jobDescription.trim()) return;
+    ResetAll();
     generateMutation.mutate({
       job_description: jobDescription,
     });

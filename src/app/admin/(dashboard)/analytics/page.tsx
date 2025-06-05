@@ -1,20 +1,10 @@
 "use client";
-import { BriefcaseBusiness, Eye, Search, Users } from "lucide-react";
+import { BriefcaseBusiness, Users } from "lucide-react";
 import CardComponent from "@/app/employer/(dashboard)/components/card";
 import { ChartComponent } from "../component/chart";
-import { PieChartComponent } from "../component/piechart";
 import useAnalyses from "@/Routes/Employer/hooks/GET/analysis/GetAnalyses.hook";
 
 export default function Analytics() {
-  const TITLE = [
-    "Action",
-    "Employer Name",
-    "Subscription Type",
-    "Package ",
-    "Status",
-    "Start Date",
-    "Expiry Date",
-  ];
 
 
   const {data: analysisdata} = useAnalyses();

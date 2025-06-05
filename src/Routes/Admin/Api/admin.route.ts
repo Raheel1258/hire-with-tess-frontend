@@ -2,8 +2,6 @@ import axios from 'axios';
 import { AdminEndpoint } from '../Constant/admin-endpoint.route';
 import { toast } from 'sonner';
 import { clearAuthToken } from '@/Utils/Providers/auth';
-import { EMPLOYERAPI } from '@/Routes/Employer/Constant/employer-endpoint.route';
-
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BACKEND_URL,
   headers: {
@@ -101,11 +99,15 @@ export const GetNotificationSetting = async () => {
   return response.data;
 };
 
-//Super Admin Profile
 export const UpdateNotification = async (notification_type: string) => {
   const response = await api.put(
     AdminEndpoint.SUPERADMIN_UPDATE_NOTIFICATION(notification_type),
   );
+  return response.data;
+};
+
+export const GetUnreadCount = async () => {
+  const response = await api.get(AdminEndpoint.SUPERADMIN_GET_UNREAD_COUNT);
   return response.data;
 };
 
@@ -131,6 +133,11 @@ export const GetEmployers = async (page: number = 1, limit: number = 10) => {
 
 export const GetSuperAdminProfile = async () => {
   const response = await api.get(AdminEndpoint.SUPERADMIN_GET_PROFILE);
+  return response.data;
+};
+
+export const SuperAdminMonthlyJobStats = async () => {
+  const response = await api.get(AdminEndpoint.SUPERADMIN_MONTHLY_JOB_STATS);
   return response.data;
 };
 

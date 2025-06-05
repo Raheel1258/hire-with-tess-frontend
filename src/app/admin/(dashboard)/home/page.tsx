@@ -11,9 +11,10 @@ import OverviewStore from '@/store/EmployeeDashboard/dashboard/overview/overview
 import { Loader } from 'lucide-react';
 import { DialogDescription, DialogTitle } from '@radix-ui/react-dialog';
 import { useState } from 'react';
+import Interviewplatform from '@/app/employer/(dashboard)/components/interviewplatform';
 
 export default function AdminDashboardHome() {
-  const TITLE = ['ID', 'Name', 'Job Applied For', 'Applied On', 'Interview Status', 'Score', 'Action'];
+  const TITLE = ['ID', 'Name', 'Job Applied For', 'Applied On', 'Interview Platform','Interview Status', 'AI Score', 'Action'];
   const [currentPage, setCurrentPage] = useState(1);
 
   const {
@@ -26,19 +27,9 @@ export default function AdminDashboardHome() {
     isLoading: tableLoading,
     error: tableError,
   } = UseGetAllInterview({ page: currentPage });
-
   const { selectedCandidate, isDialogOpen, setSelectedCandidate, setIsDialogOpen } =
     OverviewStore();
 
-  // Add error logging
-  if (cardError) {
-    console.error('Card stats error:', cardError);
-  }
-  if (tableError) {
-    console.error('Table data error:', tableError);
-  }
-
-  // Add loading states
   if (cardLoading || tableLoading) {
     return (
       <div className="flex items-center justify-center h-screen">
@@ -64,7 +55,7 @@ export default function AdminDashboardHome() {
       item.candidate_name,
       item.job_title,
       new Date(item.created_at).toLocaleDateString(),
-
+      <Interviewplatform platform={item.interview_metadata} key={`platform-${item.id}`} />,
       item.status === 'reject' ? (
         <Badge
           key={`status-${item.status}`}
@@ -87,8 +78,10 @@ export default function AdminDashboardHome() {
           {item.status}
         </Badge>
       ),
-
-      item.ai_score === null ? 0 : item.ai_score,
+ 
+      <Badge key={`status-${item.status}`} className='w-10 flex items-center gap-2 bg-orange-100 border-1 border-orange-400 text-orange-800'>
+        {item.ai_score === null ? 0 : item.ai_score}
+      </Badge>,
       <div key={`actions-${item.id}`} className="flex gap-2 items-center">
       <Eye
         onClick={() => {

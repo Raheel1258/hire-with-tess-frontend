@@ -111,7 +111,7 @@ export default function UserProfile({ data, isSuperAdmin }: any) {
                 </div>
                 <div className="flex flex-col sm:flex-row sm:items-center gap-1">
                   <h1>AI Rating:</h1>
-                  <h1 className="lowercase font-normal sm:ml-2">{data.ai_score || 'N/A'}</h1>
+                  <h1 className="lowercase font-normal sm:ml-2">{data.ai_score !==null ? `${data.ai_score}%` : 'N/A'}</h1>
                 </div>
               </div>
             </CardContent>

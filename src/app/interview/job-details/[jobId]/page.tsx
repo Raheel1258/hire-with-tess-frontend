@@ -133,8 +133,8 @@ export default function InterviewForm() {
                     <CustomInputForm
                       {...field}
                       name="companyName"
-                      label="Company Name"
-                      placeholder="Company Name here"
+                      label="Organization Name"
+                      placeholder="Organization Name here"
                     />
                   </FormItem>
                 )}
@@ -147,8 +147,8 @@ export default function InterviewForm() {
                     <CustomInputForm
                       {...field}
                       name="location"
-                      label="Location "
-                      placeholder="Location here"
+                      label="Organization Location "
+                      placeholder="Organization Location here"
                     />
                   </FormItem>
                 )}
