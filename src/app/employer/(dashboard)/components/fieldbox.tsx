@@ -31,7 +31,7 @@ const InputBox: React.FC<CustomInputProps> = ({ label, placeholder, children }) 
         slotProps={{ inputLabel: { shrink: true } }}
         sx={{
           '& .MuiOutlinedInput-root': {
-            height: '174px',
+            height: '250px',
             borderRadius: '14px',
             fontSize: '16px',
             fontWeight: 400,

@@ -6,7 +6,7 @@ import FetchJobDetails from '@/Routes/Client/hook/GET/FetchJobDetails.hook';
 import FetchQuestions from '@/Routes/Client/hook/GET/FetchQuestions.hook';
 import { Form, FormControl, FormField, FormItem } from '@/components/ui/form';
 import { customformSchema } from '@/schema/customform.schema';
-import { useRef, useEffect, useState } from 'react';
+import { useRef, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import {
@@ -86,12 +86,13 @@ export default function InterviewReview() {
       showGoogleLogin={false}
       useCard={false}
     >
-      <div className="w-full p-6 mt-8">
+      <div className="w-full p-6 mt-6">
+        {/* <h1 className="text-lg font-openSans text-c text-black text-left font-semibold mb-6">AI Created Job Details: </h1> */}
         <Form {...form}>
           <form ref={ref} className="space-y-8">
             <FormField
               control={form.control}
-              name="jobTitle"
+              name="jobTitle"  
               render={({ field }) => (
                 <FormItem>
                   <FormControl>

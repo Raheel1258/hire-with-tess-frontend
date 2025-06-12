@@ -9,7 +9,7 @@ import {
 } from '@/components/ui/dialog';
 
 import SignupDialogue from '@/app/interview/component/signupDialogue';
-import { clearAuthToken, getAuthRole, getAuthToken } from '@/Utils/Providers/auth';
+import { clearAuthToken, getAuthCookie, getAuthRole, getAuthToken } from '@/Utils/Providers/auth';
 import { useRouter } from 'next/navigation';
 import { useDashboardRedirect } from '@/Utils/helper/dashboardredirect';
 import { useQuestionStore } from '@/store/Employer/questionStore';
@@ -18,6 +18,7 @@ import { useToggleStore } from '@/store/Employer/Toggle.store';
 
 export default function EmployerLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
+
   const handleSignOut = () => {
     clearAuthToken();
     ResetAll();
@@ -28,7 +29,7 @@ export default function EmployerLayout({ children }: { children: React.ReactNode
     useDashboardRedirect(router);
     if (getAuthToken() && getAuthRole() === 'superadmin') {
       router.push('/superadmin/home');
-    } else if (getAuthToken()) {
+    } else if (getAuthToken() && getAuthRole() === 'admin') {
       router.push('/employer/home');
     }
   };

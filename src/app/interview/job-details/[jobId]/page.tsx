@@ -12,14 +12,12 @@ import InterviewLayout from '@/components/layout/InterviewLayout';
 import CustomInputForm from '@/app/interview/component/customformInput';
 import { useParams } from 'next/navigation';
 import { useUpdateJob } from '@/Routes/Client/hook/PUT/UpdateJobDetails.hook';
-import { Loader2 } from 'lucide-react';
+import { DollarSign, Loader2 } from 'lucide-react';
 
 
 export default function InterviewForm() {
-  const { jobDescription } = useHomeStore();
  
-
-  const { jobTitle, jobType, companyName, location, salary } = useHomeStore();
+  const { jobTitle,jobDescription, jobType, companyName, location,salary } = useHomeStore();
   const { jobId } = useParams<{ jobId: string }>();
   const generateMutation = useUpdateJob();
   const { companyName: companyNameStore } = useHomeStore();
@@ -32,7 +30,7 @@ export default function InterviewForm() {
       jobType: jobType,
       companyName: companyName || companyNameStore,
       location: location,
-      salary: salary,
+      salary: salary || '0',
       currency: 'USD',
       salaryType: 'per_hour',
     },
@@ -46,7 +44,7 @@ export default function InterviewForm() {
       job_type: data.jobType || '',
       company_name: data.companyName || '',
       location: data.location || '',
-      salary: data.salary || '',
+      salary: data.salary || '0',
       currency: data.currency || '',
       salary_type: data.salaryType || '',
     });
@@ -63,7 +61,7 @@ export default function InterviewForm() {
       job_type: formData.jobType,
       company_name: formData.companyName,
       location: formData.location,
-      salary: formData.salary,
+      salary: formData.salary || '0',
       currency: formData.currency,
       salary_type: formData.salaryType,
     });
@@ -84,7 +82,7 @@ export default function InterviewForm() {
               ref={ref}
               className="space-y-8 px-4"
             >
-              <FormField
+              {/* <FormField
                 control={form.control}
                 name="jobDescription"
                 render={({ field }) => (
@@ -98,7 +96,7 @@ export default function InterviewForm() {
                     />
                   </FormItem>
                 )}
-              />
+              /> */}
               <FormField
                 control={form.control}
                 name="jobTitle"
@@ -109,6 +107,7 @@ export default function InterviewForm() {
                       name="jobTitle"
                       label="Job Title"
                       placeholder={jobTitle || 'Job Title here'}
+                      readOnly={true}
                     />
                   </FormItem>
                 )}
@@ -116,13 +115,14 @@ export default function InterviewForm() {
               <FormField
                 control={form.control}
                 name="jobType"
-                render={({ field }) => (
+                render={() => (
+                  <FormItem>
                   <CustomInputForm
-                    {...field}
                     name="jobType"
                     label="Job Type"
                     jobTypeName="jobType"
                   />
+                </FormItem>
                 )}
               />
               <FormField
@@ -164,6 +164,7 @@ export default function InterviewForm() {
                       placeholder="Enter salary amount"
                       currencyName="currency"
                       salaryTypeName="salaryType"
+                      icon={<DollarSign />}
                     />
                   </FormItem>
                 )}

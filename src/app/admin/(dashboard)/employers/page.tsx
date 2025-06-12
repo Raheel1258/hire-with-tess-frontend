@@ -4,11 +4,18 @@ import TableComponent from '@/app/employer/(dashboard)/components/table';
 import { useState } from 'react';
 import { useGetEmployers } from '@/Routes/Admin/hook/GET/employer/Getemployer';
 import { Button } from '@/components/ui/button';
+import { Dialog, DialogHeader, DialogTitle ,DialogContent } from '@/components/ui/dialog';
+import OverviewStore from '@/store/EmployeeDashboard/dashboard/overview/overview.store';
+import useGetCandidateJobs from '@/Routes/Admin/hook/GET/candidate/GetCandidate.hook';
+import CustomEmployeDialogue from '../component/CustomEmployerDialogue';
 
 export default function EmployersList() {
   const [currentPage, setCurrentPage] = useState(1);
   const { data: employersData, isLoading } = useGetEmployers({ page: currentPage });
-  console.log("employersData",employersData)
+  const { selectedCandidate, setSelectedCandidate } = OverviewStore();
+  const [isInterviewDialogOpen, setIsInterviewDialogOpen] = useState(false);
+  const { data: candidateJobs,  } = useGetCandidateJobs(selectedCandidate);
+
 
   const TITLE = [
     'Employer Name',
@@ -29,10 +36,10 @@ export default function EmployersList() {
       size="sm"
       className="w-10 flex items-center gap-2 bg-green-100 border-2 border-green-400"
       key={employer.id}
-      // onClick={() => {
-      //   setSelectedCandidate(employer.id);
-      //   setIsInterviewDialogOpen(true); 
-      // }}
+      onClick={() => {
+        setSelectedCandidate(employer.id);
+        setIsInterviewDialogOpen(true); 
+      }}
     >
       <span>{employer.stats.total_jobs}</span>
     </Button>,
@@ -50,6 +57,24 @@ export default function EmployersList() {
     ]) || [];
 
   return (
+    <>
+       <Dialog open={isInterviewDialogOpen} onOpenChange={setIsInterviewDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+          </DialogHeader>
+          <DialogTitle>Interview Details</DialogTitle>
+          {selectedCandidate && candidateJobs && (
+            <CustomEmployeDialogue 
+              jobId={selectedCandidate}
+              isOpen={isInterviewDialogOpen}
+              onClose={() => {
+                setIsInterviewDialogOpen(false);
+                setSelectedCandidate(''); 
+              }}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
     <div>
       <h1 className="font-[roboto] text-[24px] font-semibold leading-[30px] mb-4">
         Employers 
@@ -63,5 +88,6 @@ export default function EmployersList() {
         isLoading={isLoading}
       />
     </div>
+    </>
   );
 }

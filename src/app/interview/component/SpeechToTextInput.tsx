@@ -1,7 +1,7 @@
 'use client';
 import React, { useEffect, useRef, useState } from 'react';
 import { useSpeechRecognition } from 'react-speech-recognition';
-import { Mic, MonitorUp } from 'lucide-react';
+import { Mic, MicOff, MonitorUp } from 'lucide-react';
 import { useRecordingStore } from '@/store/candidate/Recording.store';
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
@@ -30,7 +30,6 @@ const SpeechRecordingInput: React.FC<SpeechRecordingInputProps> = ({
 }) => {
 
   // States
-  const [isMobile, setIsMobile] = useState(false);
   const [isRecordingStream, setIsRecordingStream] = useState(false);
   const [ScreenShareUrl, setScreenShareUrl] = useState<string | null>(null);
   const [AudioUrl, setAudioUrl] = useState('');
@@ -50,14 +49,7 @@ const SpeechRecordingInput: React.FC<SpeechRecordingInputProps> = ({
   const { resetTranscript } = useSpeechRecognition();
   const { transcript, startSpeechRecognition, stopSpeechRecognition, listening, resetRecording } = useVoiceRecorder();
 
- // Check for mobile device
- useEffect(() => {
-  const checkMobile = () => {
-    const userAgent = navigator.userAgent || navigator.vendor || (window as any).opera;
-    setIsMobile(/android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(userAgent.toLowerCase()));
-  };
-  checkMobile();
-}, []);
+
 
 // Update transcript
 useEffect(() => {
@@ -204,7 +196,7 @@ useEffect(() => {
 
     setAudioUrl('');
     setScreenShareUrl(null);
-
+ 
     setSeconds(0);
     setIsPlaying(false);
     setIsVoiceRecording(false);
@@ -255,18 +247,18 @@ useEffect(() => {
         toggleSpeechRecognition();
       },
       icon: <Mic />,
-      title: 'Listening...',
+      title: 'Stop Recording',
     },
-    {
-      key: 'screen',
-      condition: isRecordingStream,
-      onClick: () => {
-        setActiveType('screen');
-        startScreenRecording();
-      },
-      icon: <MonitorUp />,
-      title: 'Sharing...',
-    },
+    // {
+    //   key: 'screen',
+    //   condition: isRecordingStream,
+    //   onClick: () => {
+    //     setActiveType('screen');
+    //     startScreenRecording();
+    //   },
+    //   icon: <MonitorUp />,
+    //   title: 'Sharing...',
+    // },
   ];
 
   RecordingSkelton();
@@ -281,7 +273,6 @@ useEffect(() => {
         autoFocus
         placeholder={placeholder}
         onChange={(e) => {
-          console.log("e.target.value", e.target.value)
           setInputTranscript(e.target.value);
           if (e.target.value === '') {
             resetTranscript();

@@ -63,7 +63,7 @@ export default function InterviewQuestionPage() {
           <Skeleton className="w-full h-6" />
         ) : (
           <>
-            <p className="text-sm font-medium mb-2">{`Question ${currentStep} (${currentQuestion?.type})`}</p>
+            <p className="text-sm font-medium mb-2">{`Question # ${currentStep}`}</p>
             <h2 className="text-lg font-bold mb-8">{currentQuestion?.text}</h2>
           </>
         )}

@@ -162,7 +162,7 @@ export default function UserProfile({ data, isSuperAdmin }: any) {
 
             return (
               <InputBox key={index} label={`Question ${index + 1}`}>
-                <p className="w-full font-normal text-[14px]">{question}</p>
+                <p className="w-full font-semibold text-[14px]">{question}</p>
                 <div className="rounded-full p-3 border mt-6 w-full">
 
                   <div className="flex items-center gap-2 ">
@@ -181,9 +181,14 @@ export default function UserProfile({ data, isSuperAdmin }: any) {
                           <CirclePlay className="w-8 h-8" color="#1e4b8e" />
                         </div>
                       </div>
+                      
                     )}
-
                   </div>
+               
+                </div>
+                <div className='flex flex-col gap-2 mt-2'>
+                  <p className='text-sm font-medium text-[#1E4B8E]'>Transcription:</p>
+                  <p className='text-sm font-normal text-[#505050]'>{answer.transcription || 'Transcription not available'}</p>
                 </div>
               </InputBox>
             );

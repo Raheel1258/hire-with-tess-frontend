@@ -8,6 +8,7 @@ export interface NotificationItem {
 
 export default function getNotificationTitle(type: string): string {
     switch (type) {
+      case "NEW_ADMIN_SIGNUP": return "New Admin Signup";
       case "INTERVIEW_SUBMITTED": return "Interview Submitted";
       case "APPLICATION_RECEIVED": return "New Application";
       case "PROFILE_UPDATED": return "Profile Updated";

@@ -13,7 +13,7 @@ export default function Interviewplatform({platform}:InterviewplatformProps) {
         case 'phone_interview':
             return <Badge className=' flex items-center gap-2 bg-orange-100 border-2 border-[#f7941D] text-orange-600 text-xs'>Phone Interview</Badge>
         default:
-            return <Badge>Unknown</Badge>
+            return <Badge className=' flex items-center gap-2 bg-gray-300 border-2 border-black text-black text-xs'>Not Submitted</Badge>
     }
 
 

@@ -11,6 +11,9 @@ import { cn } from '@/lib/utils';
 import Link from 'next/link';
 import { useQuestionStore } from '@/store/Employer/questionStore';
 import useHomeStore from '@/store/Employer/home.store';
+import { useParams } from 'next/navigation';
+import { getAuthCookie, getAuthToken } from '@/Utils/Providers/auth';
+import AdminDashboardNavigation from '../../component/dashboardnavigation';
 
 export default function GenerateLink() {
   const { interviewLink, qrCode } = useToggleStore();
@@ -51,15 +54,11 @@ export default function GenerateLink() {
     setShowQrSharedOptions();
   };
 
-  const { resetInterviewLink } = useToggleStore();
-  const { resetAIResponse } = useHomeStore();
-  const { resetQuestionStore } = useQuestionStore();
 
-  const ResetAll = () => {
-    resetAIResponse();
-    resetQuestionStore();
-    resetInterviewLink();
-  };
+  const { jobId } = useParams<{ jobId: string }>();
+  const accessToken = getAuthToken() || getAuthCookie();
+  const interviewId = jobId;
+  const phoneNumber = '+1-989-510-7499';
 
   return (
     <InterviewLayout
@@ -70,8 +69,20 @@ export default function GenerateLink() {
       useCard={false}
       showStepper={false}
     >
-      <div className="mt-8 flex flex-col sm:w-[384px] mx-auto px-4 mb-8">
-        <h1 className="font-[roboto] leading-[46px] font-bold text-[24px] text-center">
+      <div className=" flex flex-col sm:w-[384px] mx-auto px-4 mb-8">
+      <p className="text-gray-600 mb-4">
+          Call the number below to begin phone interview.
+        </p>
+
+        <div className="mb-4">
+          <p className="text-lg font-medium text-black">{phoneNumber}</p>
+        </div>
+
+        <div className="mb-4">
+          <span className="text-sm text-gray-500">Your Job ID:</span>
+          <p className="text-lg font-semibold text-[#1E4B8E]">{interviewId}</p>
+        </div>
+        <h1 className="font-[roboto] leading-[46px] font-semibold text-xl text-center">
           Interview Link
         </h1>
         <p className="font-openSans font-normal text-[16px] leading-[16px] text-center text-[#6F6C90] mt-2">
@@ -132,7 +143,7 @@ export default function GenerateLink() {
         </div>
 
         <div className="items-center text-center flex flex-col">
-          <h1 className="w-full sm:w-[680px] h-[46px] font-roboto text-[24px] leading-[46px] font-bold">
+          <h1 className="w-full sm:w-[680px] h-[46px] font-roboto text-xl leading-[46px] font-bold">
             QR Code
           </h1>
           <p className="w-full sm:w-[427px] h-[30px] font-openSans text-[16px] leading-[30px] font-normal text-gray-600 mb-4">
@@ -180,18 +191,11 @@ export default function GenerateLink() {
           )}
         </div>
       </div>
-      <div className="flex justify-end items-center mt-6 gap-4 mb-0 sm:mb-1 sm:ml-4">
-        <Link href={`/`}>
-          <Button
-            onClick={ResetAll}
-            variant={'secondary'}
-            className="sm:w-auto cursor-pointer bg-[#1E4B8E]"
-            type="button"
-          >
-            Generate New Interview
-          </Button>
-        </Link>
+      {accessToken && (
+      <div className="flex justify-end items-center mt-6 mb-0 sm:mb-1 sm:ml-4">
+        <AdminDashboardNavigation/>
       </div>
+      )}
     </InterviewLayout>
   );
 }

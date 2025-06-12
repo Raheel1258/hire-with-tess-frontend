@@ -131,6 +131,12 @@ export const GetEmployers = async (page: number = 1, limit: number = 10) => {
   return response.data;
 };
 
+//Super Admin Candidates
+export const GetCandidateJobs = async (user_id: string) => {
+  const response = await api.get(AdminEndpoint.SUPERADMIN_CANDIDATE_JOBS(user_id));
+  return response.data;
+};
+
 export const GetSuperAdminProfile = async () => {
   const response = await api.get(AdminEndpoint.SUPERADMIN_GET_PROFILE);
   return response.data;
