@@ -24,16 +24,19 @@ export default function useSignupMutation(jobId?: string) {
       if (response?.access_token) {
         setAuthToken(response.access_token, 'admin');
         setCompanyName(response.user.organization_name);
-        toast.success('Signup successful!');
+        toast.success('Welcome! Your account has been created successfully.',{
+          duration: 3000,
+          position: 'bottom-right',
+        });
         router.push(redirectTo);
-      } else {
-        toast.error('Signup failed');
       }
     },
 
     onError: async (error) => {
       const axiosError = error as AxiosError<{ detail: string }>;
-      toast.error('Signup Failed', {
+       toast.error('Failed to create account. Please try again', {
+        duration: 3000,
+        position: 'bottom-right',
         description:
           axiosError.response?.data?.detail || 'An error occurred during signup.',
       });

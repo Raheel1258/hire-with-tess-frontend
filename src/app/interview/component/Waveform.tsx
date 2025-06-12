@@ -1,4 +1,5 @@
-import React, { useEffect, useRef } from 'react';
+'use client'
+import React, { useEffect, useRef, useState } from 'react';
 import WaveSurfer from 'wavesurfer.js';
 import { CirclePause, CirclePlay } from 'lucide-react';
 import DialogueStore from '@/store/EmployeeDashboard/dashboard/overview/dialoguewave';
@@ -21,15 +22,13 @@ const activeWavesurfers = new Map<string, WaveSurfer>();
 const Waveform: React.FC<WaveformProps> = ({ recordedVoiceURL = '', onReady }) => {
   const waveformRef = useRef<HTMLDivElement | null>(null);
   const wavesurferRef = useRef<WaveSurfer | null>(null);
-  
+  const [duration, setDuration] = useState(0);
 
   const {
     isPlaying,
-    duration,
     currentlyPlayingId,
     setIsPlaying,
-    setDuration,
-    setCurrentlyPlayingId
+    setCurrentlyPlayingId,
   } = DialogueStore();
 
   useEffect(() => {
@@ -53,10 +52,15 @@ const Waveform: React.FC<WaveformProps> = ({ recordedVoiceURL = '', onReady }) =
     wavesurferRef.current = wavesurfer;
     activeWavesurfers.set(recordedVoiceURL, wavesurfer);
 
+    // Show clip duration
     wavesurfer.on('ready', () => {
       setDuration(wavesurfer.getDuration());
       onReady?.();
     });
+    wavesurfer.on('audioprocess', () => {
+      setDuration(wavesurfer.getCurrentTime());
+    });
+
     wavesurfer.on('play', () => {
       // Stop all other wavesurfers
       activeWavesurfers.forEach((ws, url) => {

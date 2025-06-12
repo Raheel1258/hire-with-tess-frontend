@@ -14,6 +14,9 @@ export const AdminEndpoint = {
   SUPERADMIN_GET_ALLANALYSIS: `/api/v1/superadmin/analyses`,
   SUPERADMIN_GET_SUBSCRIPTION_STATS: `/api/v1/superadmin/subscription-stats`,
 
+  //Super Admin Candidates
+   SUPERADMIN_CANDIDATE_JOBS: (user_id: string) => `/api/v1/superadmin/users/${user_id}/jobs`,
+
   //Super Admin Subscription
   SUPERADMIN_GET_EMPLOYERSUBSCRIPTION: `/api/v1/superadmin/subscriptions`,
   SUPERADMIN_GET_SUBSCRIPTION_FILTER: `/api/v1/superadmin/subscriptions/filter`,

@@ -113,7 +113,7 @@ export default function DashboardHome() {
           <Loader className="w-4 h-4 animate-spin" />
         </Button>
       ) : item.status === 'pending' ? (
-        <p>Pending</p>
+        <Badge className='capitalize bg-yellow-100 text-[#f7941D]'>Pending</Badge>
       ) : (
         <Button
           size="sm"

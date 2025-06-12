@@ -28,10 +28,11 @@ import OverviewStore from '@/store/EmployeeDashboard/dashboard/overview/overview
 export default function AdminJobPosting() {
   const TITLE = [
     'ID',
-    'Jobs',
+    'Job Title',
+    'Organization',
     'Status',
     'Shortlisted',
-    'Shortlisted Rate (%)',
+    'Shortlisted(%)',
     'Job Type',
     'Job Posted Date',
     'Interview Link',
@@ -41,6 +42,7 @@ export default function AdminJobPosting() {
   const [currentPage, setCurrentPage] = useState(1);
   const { data: jobdata } = UseDashboardCardStats();
   const { data: JobPostedTableData, isLoading: tableLoading } = UseGetAllJob({ page: currentPage });
+  console.log("JobPostedTableData",JobPostedTableData)
   const deleteJobMutation = UseDeleteJobByID();
   const updatejobstatus = UseUpdateJobStatus();
 
@@ -80,6 +82,7 @@ export default function AdminJobPosting() {
     (filteredJobs ?? []).map((item: postedJobProps) => [
       item?.id,
       item?.job_title,
+      item?.company_name,
       <StatusBadge status={item.status} key={`status-${item.id}`} />,
       item?.shortlisted_stats?.shortlisted,
       item?.shortlisted_stats?.shortlist_ratio,

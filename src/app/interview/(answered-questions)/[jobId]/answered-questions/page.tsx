@@ -20,6 +20,12 @@ import useCandidateInfoStore from '@/store/candidate/userinfo';
 import { toast } from 'sonner';
 import { Skeleton } from '@/components/ui/skeleton';
 
+interface RecordingProps {
+  seconds: number;
+  temp_url: string;
+  question_text: string;
+  content_type: string;
+}
 
 export default function AnsweredQuestionList() {
   const { jobId } = useParams<{ jobId: string }>();
@@ -76,7 +82,6 @@ export default function AnsweredQuestionList() {
 
     mutate(payload);
   };
-
   return (
     <>
       <InterviewLayout
@@ -91,7 +96,6 @@ export default function AnsweredQuestionList() {
           </div>
 
           {isLoading ? (
-            // Show skeleton loaders while loading
             Array.from({ length: 3 }).map((_, index) => (
               <div key={index} className="mb-6 p-4 border rounded-md shadow">
                 <div className="flex items-center gap-2 font-normal text-[14px] mb-2">
@@ -128,11 +132,11 @@ export default function AnsweredQuestionList() {
                         <div className="rounded-full p-3 border">
                           <Waveform
                             recordedVoiceURL={matchedResponse.temp_url}
-                            seconds={matchedResponse.length || 0}
                           />
                         </div>
+                  
                       )}
-                      {matchedResponse.content_type.startsWith('video') && (
+                      {/* {matchedResponse.content_type.startsWith('video') && (
                         <div className="flex items-center justify-between p-4 border rounded-full">
                           <span className="text-sm font-medium text-[#1E4B8E] ">
                             Screen Recorded Video
@@ -143,9 +147,10 @@ export default function AnsweredQuestionList() {
                            <CirclePlay className="w-10 h-8" color="#1e4b8e" /> 
                           </div>
                         </div>
-                      )}
+                      )} */}
                     </div>
-                  ) : (
+                  ) 
+                  : (
                     <p className="text-sm italic text-gray-500 ml-7">
                       No response recorded.
                     </p>
@@ -176,7 +181,7 @@ export default function AnsweredQuestionList() {
 
         </div>
 
-        <Button onClick={onSubmitInterview} className="mt-4" disabled={isPending}>
+        <Button onClick={onSubmitInterview} className="mt-4 bg-green-400 text-white hover:bg-green-500" disabled={isPending}>
           {isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Save and Finish'}
         </Button>
       </InterviewLayout>

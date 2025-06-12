@@ -24,6 +24,7 @@ export default function AdminCandidatePage() {
 
   const [currentPage, setCurrentPage] = useState(1);
   const { data: DashboardTableData, isLoading: tableLoading } = UseGetAllInterview({ page: currentPage });
+ 
   const { data: candidatestats } = UseDashboardCandidateCardStats();
 
   const { selectedCandidate, isDialogOpen, setSelectedCandidate, setIsDialogOpen } =
@@ -32,15 +33,6 @@ export default function AdminCandidatePage() {
   const DATA =
     DashboardTableData?.items?.map((item: any) => [
       item.id,
-      // <div key={`actions-${item.id}`} className="flex gap-2 items-center">
-      //   <Eye
-      //     onClick={() => {
-      //       setSelectedCandidate(item);
-      //       setIsDialogOpen(true);
-      //     }}
-      //     className="w-5 h-5 text-gray-600 cursor-pointer"
-      //   />
-      // </div>,
       item.candidate_name,
       item.job_title,
       new Date(item.created_at).toLocaleDateString(),

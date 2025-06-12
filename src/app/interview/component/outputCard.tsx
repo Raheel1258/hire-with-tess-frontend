@@ -117,7 +117,7 @@ export default function OutputCard({
             {res.length > 0 && (
               <div>
                 <div className="flex justify-between items-center mb-2">
-                  <h3 className="text-[14px] font-openSans text-black">Responsibilities</h3>
+                  <h3 className="text-[14px] font-openSans text-black font-semibold">Responsibilities</h3>
                   {!isEditable ? (
                     showEditIcon && (
                       <Pencil size={18} color="#718096" onClick={() => setIsEditable(true)} className="cursor-pointer" />
@@ -146,7 +146,7 @@ export default function OutputCard({
             {/* Requirements */}
             {req.length > 0 && (
               <div>
-                <h3 className="text-[14px] font-openSans text-black mb-2">Requirements</h3>
+                <h3 className="text-[14px] font-openSans text-black mb-2 font-semibold">Requirements</h3>
                 {!isEditable ? (
                   <ul className="list-disc pl-5 text-[14px] font-openSans text-black">
                     {req.map((item, idx) => <li key={idx}>{item}</li>)}
@@ -166,6 +166,8 @@ export default function OutputCard({
 
       {/* Skills */}
       {skills.length > 0 && (
+          <Card className="w-full rounded-2xl p-4 sm:p-6 ">
+            <h1 className="text-base font-openSans text-black text-left font-semibold">Skills:</h1>
         <div className="flex items-start gap-4">
           {showAvatar && (
             <Image src={avatarSrc} alt="bot" width={40} height={40} className="shrink-0" />
@@ -192,6 +194,7 @@ export default function OutputCard({
             ))}
           </div>
         </div>
+        </Card>
       )}
 
       {/* Generate Button */}

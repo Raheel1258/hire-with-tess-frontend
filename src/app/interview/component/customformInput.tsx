@@ -68,19 +68,20 @@ const CustomInputForm: React.FC<CustomInputProps> = ({
             placeholder={placeholder}
             autoComplete="off"
             variant="outlined"
-            type={actualType}
+            type={name === 'salary' ? 'number' : actualType}
             error={!!fieldState.error}
             helperText={fieldState.error?.message || ''}
             slotProps={{ inputLabel: { shrink: true } }}
-            value={value || field.value}
+            value={jobTypeName ? '' : (value || field.value)}
             InputProps={{
               readOnly,
+              inputProps: name === 'salary' ? { min: 0, step: 'any' } : undefined,
               startAdornment: jobTypeName ? (
                 <InputAdornment position="start">
                   <Controller
                     name={jobTypeName}
                     control={control}
-                    defaultValue="Onsite"
+                    defaultValue={jobTypeName}
                     render={({ field }) => (
                       <FormControl sx={{ minWidth: 140 }}>
                         <Select onValueChange={field.onChange} value={field.value}>
@@ -88,15 +89,9 @@ const CustomInputForm: React.FC<CustomInputProps> = ({
                             <SelectValue placeholder="Job Type" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="Onsite" className="text-black">
-                              Onsite
-                            </SelectItem>
-                            <SelectItem value="Hybrid" className="text-black">
-                              Hybrid
-                            </SelectItem>
-                            <SelectItem value="Remote" className="text-black">
-                              Remote
-                            </SelectItem>
+                            <SelectItem value="Onsite" className="text-black">Onsite</SelectItem>
+                            <SelectItem value="Hybrid" className="text-black">Hybrid</SelectItem>
+                            <SelectItem value="Remote" className="text-black">Remote</SelectItem>
                           </SelectContent>
                         </Select>
                       </FormControl>
@@ -122,7 +117,7 @@ const CustomInputForm: React.FC<CustomInputProps> = ({
                             </SelectContent>
                           </Select>
                         </FormControl>
-                      )}
+                      )} 
                     />
                     <Controller
                       name={salaryTypeName}
@@ -181,7 +176,7 @@ const CustomInputForm: React.FC<CustomInputProps> = ({
                 },
               },
               '& .MuiInputBase-input.Mui-disabled': {
-                WebkitTextFillColor: 'black', // Readonly still black
+                WebkitTextFillColor: 'black', 
                 color: 'black',
                 opacity: 1,
               },
@@ -193,7 +188,7 @@ const CustomInputForm: React.FC<CustomInputProps> = ({
                 color: 'black',
               },
               '& .MuiInputLabel-root.MuiInputLabel-shrink': {
-                color: 'black', // Floating label
+                color: 'black', 
               },
               '&:hover .MuiOutlinedInput-notchedOutline': {
                 borderColor: 'gray',

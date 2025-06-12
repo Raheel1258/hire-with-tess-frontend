@@ -28,7 +28,6 @@ const ChooseInterviewOption = () => {
       interview_id: interviewId,
       phone_number: phoneNumber,
     });
-    console.log('phone number from options', phoneNumber);
   };
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-6 py-12 bg-gray-50">
@@ -93,7 +92,7 @@ const ChooseInterviewOption = () => {
             Start Phone Interview
           </Button>
         </div>
-
+{/* 
         <div className="w-[400px] p-6 border rounded-xl shadow-md bg-white hover:shadow-lg transition flex flex-col justify-between">
           <div>
             <div className="flex items-center gap-3 mb-4">
@@ -119,7 +118,7 @@ const ChooseInterviewOption = () => {
           >
             Call HireWithTess Now
           </Button>
-        </div>
+        </div> */}
       </div>
     </div>
   );

@@ -22,6 +22,7 @@ import AnalyzeInterviewHook from '@/Routes/Employer/hooks/POST/AnalyzeInterview.
 import { toast } from 'sonner';
 import handleCopyLink from '@/Utils/helper/copylink';
 import StatusBadge from '../components/status.badge';
+import Interviewplatform from '../components/interviewplatform';
 
 export default function CandidatePage() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -73,6 +74,7 @@ export default function CandidatePage() {
     new Date(item.created_at).toLocaleDateString(),
 
     <StatusBadge status={item.status} key={`status-${item.id}`} />,
+ 
     item?.interview_link ? (
       <Button
         variant="ghost"
@@ -86,6 +88,7 @@ export default function CandidatePage() {
     ) : (
       'No link available'
     ),
+    <Interviewplatform platform={item.interview_metadata} key={`platform-${item.id}`} />,
 
     item.ai_score !== null ? (
       <Badge className="bg-[#f7941D] text-white">{item.ai_score}</Badge>
@@ -94,7 +97,7 @@ export default function CandidatePage() {
         <Loader className="w-4 h-4 animate-spin" />
       </Button>
     ) : item.status === 'pending' ? (
-      <p>Pending</p>
+      <Badge className='capitalize bg-yellow-100 text-[#f7941D]'>Pending</Badge>
     ) : (
       <Button
         size="sm"
