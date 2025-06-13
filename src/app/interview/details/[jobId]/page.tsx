@@ -9,7 +9,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import {CandidateDetailSchema,CandidateDetailsValidator,} from '@/schema/CandidateDetail.schema';
 import { Button } from '@/components/ui/button';
 import { useParams } from 'next/navigation';
-import { X } from 'lucide-react';
+import { X, Phone, Hash } from 'lucide-react';
 import RegeisterCandidatehook from '@/Routes/Client/hook/POST/RegeisterCandidatehook';
 import { toast } from 'sonner';
 import { Input } from '@/components/ui/input';
@@ -18,6 +18,8 @@ import 'react-phone-input-2/lib/style.css';
 
 export default function CandidatesDetails() {
   const { jobId } = useParams<{ jobId: string }>();
+  const interviewId = jobId;
+  const phoneNumber = '+1-989-510-7499';
 
   const form = useForm<CandidateDetailsValidator>({
     resolver: zodResolver(CandidateDetailSchema),
@@ -70,9 +72,37 @@ export default function CandidatesDetails() {
     <InterviewLayout
       showStepper={false}
       useCard={false}
-      subtitle="Fill In Your Details!"
-      description="Please fill out your details before starting your Interview"
+      subtitle="Start Your Interview"
+      description="Choose to fill the form or call with your Job ID to begin"
     >
+      <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 mb-8">
+        <h1 className="text-lg font-semibold text-[#1E4B8E] mb-1">Start Your Phone Interview</h1>
+        <p className="text-xs text-gray-600 mb-8">Call the number below and provide your Job ID to begin your interview process</p>
+        <div className="flex justify-between items-center">
+          <div className="flex items-center gap-3">
+            <div className="bg-blue-50 p-3 rounded-full">
+              <Phone className="h-5 w-5 text-[#1E4B8E]" />
+            </div>
+            <div>
+              <p className="text-sm text-gray-600">Call our interview line</p>
+              <p className="text-lg font-semibold text-[#1E4B8E]">{phoneNumber}</p>
+              <p className="text-xs text-gray-500 mt-1">Available 24/7 for your convenience</p>
+            </div>
+          </div>
+          
+          <div className="flex items-center gap-3">
+            <div className="bg-blue-50 p-3 rounded-full">
+              <Hash className="h-5 w-5 text-[#1E4B8E]" />
+            </div>
+            <div>
+              <p className="text-sm text-gray-600">Your Job ID</p>
+              <p className="text-lg font-semibold text-[#1E4B8E]">{interviewId}</p>
+              <p className="text-xs text-gray-500 mt-1">Have this remember when you call</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <FormProvider {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} ref={ref} className="space-y-8 px-4">
           {/* <Audioresume /> */}
