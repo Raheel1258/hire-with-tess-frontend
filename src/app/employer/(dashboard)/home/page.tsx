@@ -42,7 +42,9 @@ interface InterviewItem {
 export default function DashboardHome() {
   const [currentPage, setCurrentPage] = useState(1);
   const { data: interviewCardData } = UseDashboardCardStats();
-  const { data: DashboardTableData, refetch: refetchInterviews } = UseGetAllInterview({ page: currentPage });
+  const { data: DashboardTableData, refetch: refetchInterviews } = UseGetAllInterview({
+    page: currentPage,
+  });
   const Interviewmutation = AnalyzeInterviewHook();
 
   const router = useRouter();
@@ -64,9 +66,7 @@ export default function DashboardHome() {
   const handleAnalyzeInterview = (interviewId: string) => {
     setAnalyzingInterviewId(interviewId);
     Interviewmutation.mutate(
-      { interview_id: interviewId 
-        
-      },
+      { interview_id: interviewId },
       {
         onSuccess: (response) => {
           setAIResult(response?.final_report);
@@ -105,15 +105,29 @@ export default function DashboardHome() {
       ) : (
         'No link available'
       ),
-      <Interviewplatform platform={item.interview_metadata} key={`platform-${item.id}`} />,
+      <Interviewplatform
+        platform={item.interview_metadata}
+        key={`platform-${item.id}`}
+      />,
       item.ai_score !== null ? (
-        <Badge className="bg-[#f7941D] text-white">{item.ai_score}</Badge>
+        <Button
+         variant="ghost"
+        size="sm"
+         className="bg-orange-100 text-orange-400 w-10 flex items-center gap-2 border-2 border-orange-300">{item.ai_score}</Button>
       ) : analyzingInterviewId === item.id ? (
         <Button size="sm" className="text-xs flex items-center gap-2" disabled>
-          <Loader className="w-4 h-4 animate-spin" />
+          <Loader
+            className="w-4 h-4 animate-spin rounded-full"
+            style={{
+              background: 'conic-gradient(#f7941D, white, #1E4B8E)',
+              maskImage: 'radial-gradient(closest-side, transparent 60%, black 61%)',
+              WebkitMaskImage:
+                'radial-gradient(closest-side, transparent 60%, black 61%)',
+            }}
+          />
         </Button>
       ) : item.status === 'pending' ? (
-        <Badge className='capitalize bg-yellow-100 text-[#f7941D]'>Pending</Badge>
+        <Badge className="capitalize bg-yellow-100 text-[#f7941D]">Pending</Badge>
       ) : (
         <Button
           size="sm"
@@ -123,7 +137,7 @@ export default function DashboardHome() {
           Analyze
         </Button>
       ),
- 
+
       <div key={`actions-${item.id}`} className="flex justify-center">
         <Eye
           onClick={() => {
@@ -134,8 +148,6 @@ export default function DashboardHome() {
         />
       </div>,
     ]) || [];
-
-
 
   return (
     <>

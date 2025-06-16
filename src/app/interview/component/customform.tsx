@@ -38,6 +38,19 @@ export default function CustomForm() {
     console.log('SUCCESS', data);
     form.reset();
   };
+
+  const handleSalaryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let value = e.target.value.replace(/[^\d,]/g, '');
+
+    const commaCount = (value.match(/,/g) || []).length;
+    if (commaCount > 1) {
+      value = value.replace(/,/g, '');
+      value = value.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    }
+    
+    form.setValue('salary', value);
+  };
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} ref={ref} className="space-y-8">
@@ -110,7 +123,12 @@ export default function CustomForm() {
                   </SelectContent>
                 </Select>
                 <FormControl>
-                  <Input placeholder="write details here" type="text" {...field} />
+                  <Input 
+                    placeholder="write details here" 
+                    type="text" 
+                    value={field.value}
+                    onChange={handleSalaryChange}
+                  />
                 </FormControl>
               </div>
               <FormMessage />

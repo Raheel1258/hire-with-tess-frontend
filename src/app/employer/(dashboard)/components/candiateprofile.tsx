@@ -93,7 +93,7 @@ export default function UserProfile({ data, isSuperAdmin }: any) {
                   <h1 className="font-normal sm:ml-2">{data.email}</h1>
                 </div>
                 <div className="flex flex-col sm:flex-row sm:items-center gap-1">
-                  <h1>Phone:</h1>
+                  <h1>Caller ID:</h1>
                   <h1 className="font-normal sm:ml-2">{data.phone}</h1>
                 </div>
               </div>

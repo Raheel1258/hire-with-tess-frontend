@@ -109,7 +109,7 @@ export default function CandidatesDetails() {
           <FormField
             control={form.control}
             name="resume"
-            render={({ field }) => (
+            render={() => (
               <FormItem className="w-full h-full">
                 <Card
                   className="border-dashed border-[#6F6C90] h-[159px] px-4 flex items-center justify-center relative cursor-pointer"

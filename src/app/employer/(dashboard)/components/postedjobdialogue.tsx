@@ -15,6 +15,7 @@ interface Postedjobprops {
     requirements?: string[];
   responsibilities?: string[];
   skills?: string[];
+  interview_questions?: string[];
 }
 
 export default function JobpProfile({ data }: { data: Postedjobprops }) {
@@ -43,7 +44,7 @@ export default function JobpProfile({ data }: { data: Postedjobprops }) {
             <h2 className="font-semibold text-gray-900 mb-2">Salary & Date</h2>
             <p><span className="font-medium">Salary:</span> {data.currency} {data.salary}</p>
             <p><span className=" font-medium">Type:</span> {data.salary_type}</p>
-            <p><span className="font-medium">Posted on:</span> {new Date(data.created_at).toLocaleDateString()}</p>
+            {/* <p><span className="font-medium">Posted on:</span> {new Date(data.created_at).toLocaleDateString()}</p> */}
           </div>
         </CardContent>
       </Card>
@@ -70,11 +71,20 @@ export default function JobpProfile({ data }: { data: Postedjobprops }) {
         <h2 className="text-lg font-semibold text-gray-800 mb-2">Skills</h2>
         <div className="flex flex-wrap gap-2">
           {data.skills?.map((skill: string, idx: number) => (
-            <span key={idx} className="bg-[#f7941D] text-white text-xs px-3 py-1 rounded-full">
+            <span key={idx} className=" px-3 py-1 rounded-full gap-2 bg-green-100 border-2 border-green-400 text-green-600 text-xs">
               {skill}
+              
             </span>
           ))}
         </div>
+      </div>
+      <div>
+        <h2 className="text-lg font-semibold text-gray-800 mb-2">Questions</h2>
+        <ul className="list-decimal list-inside space-y-1 text-sm text-gray-700">
+          {data.interview_questions?.map((question: string, idx: number) => (
+            <li key={idx}>{question?.text}</li>
+          ))}
+        </ul>
       </div>
     </div>
   );

@@ -13,10 +13,26 @@ interface CustomInputProps {
   readOnly?: boolean;
   color?: string;
   children?: React.ReactNode;
+  value?: string | number;
+  onChange?: (value: string) => void;
+  isSalary?: boolean;
 }
 
-const InputBox: React.FC<CustomInputProps> = ({ label, placeholder, children }) => {
+const InputBox: React.FC<CustomInputProps> = ({ label, placeholder, children, value, onChange, isSalary = false }) => {
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const handleSalaryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!onChange) return;
+    let value = e.target.value.replace(/[^\d,]/g, '');
+  
+    const commaCount = (value.match(/,/g) || []).length;
+    if (commaCount > 1) {
+      value = value.replace(/,/g, '');
+      value = value.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    }
+    
+    onChange(value);
+  };
 
   return (
     <Box position="relative">
@@ -64,6 +80,8 @@ const InputBox: React.FC<CustomInputProps> = ({ label, placeholder, children }) 
             borderColor: 'gray',
           },
         }}
+        value={value}
+        onChange={isSalary ? handleSalaryChange : onChange}
       />
       {children && (
         <Box

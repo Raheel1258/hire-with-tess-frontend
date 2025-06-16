@@ -35,7 +35,7 @@ export default function SubscriptionCard({
   return (
     <>
       <Card
-        className="rounded-2xl p-6 shadow-2xl w-76 flex transition-transform duration-300 hover:scale-105 hover:shadow-3xl"
+        className="rounded-2xl p-6 shadow-2xl w-sm h-[500px] flex transition-transform duration-300 hover:scale-105 hover:shadow-3xl"
         style={{ backgroundColor: cardcolor }}
       >
         <div className="mb-4 flex flex-col items-center ">
@@ -51,7 +51,7 @@ export default function SubscriptionCard({
           >
             {amount}
           </div>
-          <Button className="rounded-2xl cursor-pointer mt-2 text-[#2A2A2A]">
+          <Button className="rounded-2xl cursor-pointer mt-2 text-white">
             {plantitle}
           </Button>
         </div>

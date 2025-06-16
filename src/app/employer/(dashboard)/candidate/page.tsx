@@ -23,6 +23,7 @@ import { toast } from 'sonner';
 import handleCopyLink from '@/Utils/helper/copylink';
 import StatusBadge from '../components/status.badge';
 import Interviewplatform from '../components/interviewplatform';
+import CandidateItem from '@/Types/Candidate/candiate.type';
 
 export default function CandidatePage() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -67,7 +68,8 @@ export default function CandidatePage() {
     );
   };
 
-  const DATA = (filteredJobs ?? []).map((item: any) => [
+
+  const DATA = (filteredJobs ?? []).map((item: CandidateItem) => [
     item?.id,
     item?.candidate_name,
     item?.job_title,
@@ -94,7 +96,15 @@ export default function CandidatePage() {
       <Badge className="bg-[#f7941D] text-white">{item.ai_score}</Badge>
     ) : analyzingInterviewId === item.id ? (
       <Button size="sm" className="text-xs flex items-center gap-2" disabled>
-        <Loader className="w-4 h-4 animate-spin" />
+          <Loader
+            className="w-4 h-4 animate-spin rounded-full"
+            style={{
+              background: 'conic-gradient(#f7941D, white, #1E4B8E)',
+              maskImage: 'radial-gradient(closest-side, transparent 60%, black 61%)',
+              WebkitMaskImage:
+                'radial-gradient(closest-side, transparent 60%, black 61%)',
+            }}
+          />
       </Button>
     ) : item.status === 'pending' ? (
       <Badge className='capitalize bg-yellow-100 text-[#f7941D]'>Pending</Badge>

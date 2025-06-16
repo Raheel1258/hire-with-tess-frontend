@@ -24,14 +24,9 @@ import { Button } from '@/components/ui/button';
 import { useState } from 'react';
 import handleCopyLink from '@/Utils/helper/copylink';
 import CustomJobDetailDialogue from '@/app/employer/(dashboard)/components/jobdetaildialogue';
+import UseGETJobBYID from '@/Routes/Employer/hooks/GET/candidates/GetJobByID.hook';
 
 export default function JobPosting() {
-  const [currentPage, setCurrentPage] = useState(1);
-  const { data: jobdata } = UseDashboardJobCardStats();
-  const { data: JobPostedTableData } = UseGetAllJob({ page: currentPage });
-  const deleteJobMutation = UseDeleteJobByID();
-  const updatejobstatus = UseUpdateJobStatus();
-
   const {
     isDialogOpen,
     setIsDialogOpen,
@@ -43,6 +38,15 @@ export default function JobPosting() {
     setSelectedCandidate,
   } = JobStore();
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const { data: jobdata } = UseDashboardJobCardStats();
+  const { data: JobPostedTableData } = UseGetAllJob({ page: currentPage });
+  const deleteJobMutation = UseDeleteJobByID();
+  const updatejobstatus = UseUpdateJobStatus();
+  const { data: jobDetails } = UseGETJobBYID(postedjobdata.id);
+
+ 
+  
   const [isInterviewDialogOpen, setIsInterviewDialogOpen] = useState(false);
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -58,7 +62,7 @@ export default function JobPosting() {
     const jobId = jobIds[rowIndex];
     deleteJobMutation.mutate(jobId);
   };
-
+ 
   const DATA = (filteredJobs ?? []).map((item: postedJobProps) => {
     return [
       item?.id,
@@ -123,7 +127,7 @@ export default function JobPosting() {
             <DialogTitle>Posted Job Details</DialogTitle>
             <DialogDescription />
           </DialogHeader>
-          <JobpProfile data={postedjobdata} />
+          <JobpProfile data={jobDetails} />
           <DialogClose asChild />
         </DialogContent>
       </Dialog>

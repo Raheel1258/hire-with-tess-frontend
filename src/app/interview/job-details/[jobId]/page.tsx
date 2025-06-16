@@ -82,21 +82,6 @@ export default function InterviewForm() {
               ref={ref}
               className="space-y-8 px-4"
             >
-              {/* <FormField
-                control={form.control}
-                name="jobDescription"
-                render={({ field }) => (
-                  <FormItem>
-                    <CustomInputForm
-                      {...field}
-                      name="jobDescription"
-                      label="Position Overview"
-                      type="textarea"
-                      placeholder={jobDescription || 'Position Overview here'}
-                    />
-                  </FormItem>
-                )}
-              /> */}
               <FormField
                 control={form.control}
                 name="jobTitle"
@@ -107,7 +92,6 @@ export default function InterviewForm() {
                       name="jobTitle"
                       label="Job Title"
                       placeholder={jobTitle || 'Job Title here'}
-                      readOnly={true}
                     />
                   </FormItem>
                 )}
@@ -156,15 +140,21 @@ export default function InterviewForm() {
               <FormField
                 control={form.control}
                 name="salary"
-                render={() => (
+                render={({ field }) => (
                   <FormItem>
                     <CustomInputForm
+                      {...field}
                       name="salary"
                       label="Salary"
                       placeholder="Enter salary amount"
                       currencyName="currency"
                       salaryTypeName="salaryType"
                       icon={<DollarSign />}
+                      onChange={(value) => {
+                        const numericValue = value.replace(/,/g, '');
+                        field.onChange(numericValue);
+                      }}
+                      value={field.value ? field.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') : ''}
                     />
                   </FormItem>
                 )}
