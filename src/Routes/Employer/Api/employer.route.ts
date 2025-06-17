@@ -5,6 +5,7 @@ import { clearAuthToken } from '@/Utils/Providers/auth';
 import { JobFilterType } from '@/Types/EmployerDashboard/jobfilter';
 import { SubscriptionsResponse, SubscriptionStats } from '@/Types/Admin/subscription';
 import { AnalysisResponse } from '@/Types/Admin/analysis';
+import { UserJobResponse } from '@/Types/userJob';
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BACKEND_URL,
   headers: {
@@ -75,15 +76,7 @@ export const DeleteJobByID = async (job_id: string) => {
 //Update Job Details BYID
 export const UpdateJobByID = async (
   job_id: string,
-  data: {
-    job_description: string;
-    job_title: string;
-    job_type: string;
-    company_name: string;
-    location: string;
-    salary: string;
-    currency: string;
-  },
+  data: UserJobResponse,
 ) => {
   const response = await api.put(EMPLOYERAPI.UPDATE_JOB_BYID(job_id), data);
   return response.data;

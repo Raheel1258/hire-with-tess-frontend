@@ -13,7 +13,7 @@ export default function UseGetAllJob({ page = 1, limit = 10 }: UseGetAllJobProps
     refetchOnWindowFocus: true,
     refetchInterval: 90000,
     refetchIntervalInBackground: false,
-    staleTime: 0, // Consider data stale immediately
-    gcTime: 0, // Don't keep data in cache
+    staleTime: 0, 
+    gcTime: 0, 
   });
 }
