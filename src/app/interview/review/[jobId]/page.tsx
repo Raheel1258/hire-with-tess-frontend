@@ -23,7 +23,7 @@ import Link from 'next/link';
 import { getAuthCookie, getAuthToken } from '@/Utils/Providers/auth';
 import useFetchInterviewLink from '@/Routes/Client/hook/POST/GenerateInterviewLink.hook';
 import useHomeStore from '@/store/Employer/home.store';
-import { Loader2 } from 'lucide-react';
+import { DollarSign, Loader2 } from 'lucide-react';
 
 
 export default function InterviewReview() {
@@ -171,6 +171,12 @@ export default function InterviewReview() {
                       placeholder={jobData.salary}
                       currencyValue={jobData.currency}
                       salaryTypeValue={jobData.salary_type}
+                      icon={<DollarSign />}
+                      onChange={(value) => {
+                        const numericValue = value.replace(/,/g, '');
+                        field.onChange(numericValue);
+                      }}
+                      value={field.value ? field.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') : ''}
                     />
                   </FormControl>
                 </FormItem>

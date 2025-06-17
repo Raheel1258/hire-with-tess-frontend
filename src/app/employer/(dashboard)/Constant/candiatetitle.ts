@@ -6,7 +6,7 @@ const CandidateTableTitle = [
     'Interview Status',
     'Interview Link',
     'Interview Platform',
-    'Ai Score',
+    'AI Score',
     'Action',
   ];
 

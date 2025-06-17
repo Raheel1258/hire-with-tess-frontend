@@ -35,8 +35,6 @@ function InterviewForm() {
     responsibilities,
     setResponsibilities,
     jobDescription,
-    jobTitle,
-    setJobTitle,
   } = useHomeStore();
 
   const handleCancel = () => {
@@ -105,24 +103,6 @@ function InterviewForm() {
       >
         
         <div className="flex flex-col ">
-          {/* <h1 className='text-[14px] font-openSans text-black text-left ml-4 font-bold text-lg'>AI Powered Job Breakdown</h1> */}
-          {/* <div className="flex items-start gap-4 mt-6">
-            <Image
-              src="/images/AIAvatar.png"
-              alt="bot"
-              width={40}
-              height={40}
-              className="shrink-0"
-            />
-            
-            <Textarea
-              placeholder="Enter Job Title"
-              value={jobTitle}
-              onChange={(e) => setJobTitle(e.target.value)}
-              className="w-full h-sm p-2 border rounded-xl resize-none font-openSans text-[14px]"
-            />
-          </div> */}
-
           <div className="flex items-start mt-4">
             <Image
               src="/images/AIAvatar.png"

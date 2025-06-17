@@ -29,6 +29,7 @@ interface CustomInputProps {
   value?: string | number;
   currencyValue?: string;
   salaryTypeValue?: string;
+  onChange?: (value: string) => void;
 }
 
 const CustomInputForm: React.FC<CustomInputProps> = ({
@@ -45,12 +46,30 @@ const CustomInputForm: React.FC<CustomInputProps> = ({
   value,
   currencyValue,
   salaryTypeValue,
+  onChange,
 }) => {
   const { control } = useFormContext();
   const inputRef = useRef<HTMLInputElement>(null);
   const { isEditable } = useSkillStore();
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const actualType = type === 'password' ? (isPasswordVisible ? 'text' : 'password') : type;
+
+  const handleSalaryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!onChange) return;
+    
+    // Allow only digits and commas
+    let value = e.target.value.replace(/[^\d,]/g, '');
+    
+    // Format the number with commas
+    if (value) {
+      // Remove existing commas first
+      value = value.replace(/,/g, '');
+      // Add commas in the correct positions
+      value = value.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    }
+    
+    onChange(value);
+  };
 
   return (
     <Controller
@@ -68,14 +87,15 @@ const CustomInputForm: React.FC<CustomInputProps> = ({
             placeholder={placeholder}
             autoComplete="off"
             variant="outlined"
-            type={name === 'salary' ? 'number' : actualType}
+            type={name === 'salary' ? 'text' : actualType}
             error={!!fieldState.error}
             helperText={fieldState.error?.message || ''}
             slotProps={{ inputLabel: { shrink: true } }}
-            value={jobTypeName ? '' : (value || field.value)}
+            value={jobTypeName ? '' : (name === 'salary' ? (value || field.value || '') : (value || field.value || ''))}
+            onChange={name === 'salary' ? handleSalaryChange : field.onChange}
             InputProps={{
               readOnly,
-              inputProps: name === 'salary' ? { min: 0, step: 'any' } : undefined,
+              inputProps: name === 'salary' ? { min: 0 } : undefined,
               startAdornment: jobTypeName ? (
                 <InputAdornment position="start">
                   <Controller
@@ -98,27 +118,9 @@ const CustomInputForm: React.FC<CustomInputProps> = ({
                     )}
                   />
                 </InputAdornment>
-              ) : currencyName && salaryTypeName ? (
+              ) : currencyName ? (
                 <InputAdornment position="start">
                   <div className="flex gap-2">
-                    <Controller
-                      name={currencyName}
-                      control={control}
-                      defaultValue={currencyValue}
-                      render={({ field }) => (
-                        <FormControl>
-                          <Select onValueChange={field.onChange} value={currencyValue || field.value}>
-                            <SelectTrigger className="w-[100px] text-black text-[16px] font-normal">
-                              <SelectValue placeholder={currencyValue || "USD"} />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="USD" className="text-black">USD</SelectItem>
-                              <SelectItem value="PKR" className="text-black">PKR</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </FormControl>
-                      )} 
-                    />
                     <Controller
                       name={salaryTypeName}
                       control={control}
@@ -133,6 +135,23 @@ const CustomInputForm: React.FC<CustomInputProps> = ({
                               <SelectItem value="per_hour" className="text-black">Per Hour</SelectItem>
                               <SelectItem value="per_month" className="text-black">Per Month</SelectItem>
                               <SelectItem value="per_year" className="text-black">Per Year</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </FormControl>
+                      )}
+                    />
+                    <Controller
+                      name={currencyName}
+                      control={control}
+                      defaultValue={currencyValue}
+                      render={({ field }) => (
+                        <FormControl>
+                          <Select onValueChange={field.onChange} value={currencyValue || field.value}>
+                            <SelectTrigger className="w-[100px] text-black text-[16px] font-normal">
+                              <SelectValue placeholder={currencyValue || "USD"} />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="USD" className="text-black">USD</SelectItem>
                             </SelectContent>
                           </Select>
                         </FormControl>

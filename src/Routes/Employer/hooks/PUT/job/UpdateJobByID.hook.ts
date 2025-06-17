@@ -13,7 +13,7 @@ export default function UseUpdateJobByID() {
 
     onSuccess: (apiData, { job_id }) => {
       queryClient.setQueryData(['userjobid'], (userdata: UserJobResponse[] = []) =>
-        userdata.map((job) => (job.job_id === job_id ? apiData : job)),
+        userdata.map((job) => (job.id === job_id ? apiData : job)),
       );
 
       queryClient.invalidateQueries({ queryKey: ['userjobid'] });

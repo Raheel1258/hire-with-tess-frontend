@@ -2,7 +2,7 @@ import React from 'react';
 import UseGetJobInterviewByID from '@/Routes/Employer/hooks/GET/jobposting/GetJobInterviewByID.hook';
 import { Card, CardContent } from "@/components/ui/card";
 import JobInterviewProps from '@/Types/EmployerDashboard/Dashboard/jobposted/postedjob';
-import StatusBadge from './status.badge';
+import StatusBadge from './status.badge'; 
 
 interface CustomJobDetailDialogueProps {
   jobId: string;
@@ -13,8 +13,6 @@ interface CustomJobDetailDialogueProps {
 
 const CustomJobDetailDialogue = ({ jobId}: CustomJobDetailDialogueProps) => {
   const { data: response, isLoading, error } = UseGetJobInterviewByID(jobId);
-
-
 
   if (isLoading) {
     return (
