@@ -45,7 +45,7 @@ export default function EmployerLayout({ children }: { children: React.ReactNode
   };
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-br from-[#f7941D] via-[#ffbfbf] to-[#1e4b8e]">
-      <header className="flex justify-between items-center p-6 text-white">
+      <header className="flex justify-between items-center text-white">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <Link href="/">
             <h1 className="text-xl font-semibold text-black">Hirewithtess</h1>

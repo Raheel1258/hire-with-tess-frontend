@@ -254,7 +254,7 @@ function InterviewForm() {
           </div>
         )}
 
-        <div className="flex justify-end items-center mt-6 gap-4 mb-0">
+        <div className="flex justify-end items-center mt-6 gap-4 mb-0 p-4 sm:p-0">
           <Link href="/">
             <Button variant="secondary" type="button" className="cursor-pointer">
               Cancel

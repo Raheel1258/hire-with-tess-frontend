@@ -12,9 +12,9 @@ export const CandidateDetailSchema = z.object({
     .string()
     .min(1, { message: 'Email field has to be filled.' })
     .email('This is not a valid email.'),
-  phone: z
+    callback_number: z
     .string()
-    .min(11, { message: 'Telephone field has to be filled.' })
+    .min(11, { message: 'Phone Number field has to be filled.' })
     .regex(phoneRegex, 'Invalid Number!'),
 });
 

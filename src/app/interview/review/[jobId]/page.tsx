@@ -171,7 +171,6 @@ export default function InterviewReview() {
                       placeholder={jobData.salary}
                       currencyValue={jobData.currency}
                       salaryTypeValue={jobData.salary_type}
-                      icon={<DollarSign />}
                       onChange={(value) => {
                         const numericValue = value.replace(/,/g, '');
                         field.onChange(numericValue);
@@ -222,7 +221,7 @@ export default function InterviewReview() {
             </form>
           </Form>
         </div>
-        <div className="flex float-right gap-2 mt-8">
+        <div className="flex float-right gap-2 mt-8 pb-2">
           <div>
             <Button
               onClick={() => {

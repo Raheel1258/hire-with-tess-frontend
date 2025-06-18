@@ -142,7 +142,7 @@ export default function Questionnaire() {
         useCard={false}
         description="Review, Edit, or regenerate questions before finalizing your interview"
       >
-        <div className="text-left space-y-2 w-full">
+        <div className="text-left space-y-2 w-full p-4 sm:p-0">
           <h2 className="text-lg font-semibold mt-4 mb-6">AI Powered Questions:</h2>
           <ul className="space-y-4 w-full">
             {Aiquestions.length === 0 ? (
@@ -294,7 +294,7 @@ export default function Questionnaire() {
         </div>
 
         {editedQuestions?.length > 0 && (
-          <div className="flex justify-end items-center mt-6 gap-4">
+          <div className="flex justify-end items-center mt-6 gap-4 p-4 ">
             <Link href={`/interview?job_id=${jobId}`}>
               <Button
                 type="button"
