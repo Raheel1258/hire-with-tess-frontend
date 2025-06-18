@@ -34,8 +34,46 @@ const InputBox: React.FC<CustomInputProps> = ({ label, placeholder, children, va
     onChange(value);
   };
 
+  if (children) {
+    return (
+      <Box className="w-full">
+        <Box
+          className="w-full border border-gray-300 rounded-[14px] p-4 min-h-[200px] bg-white"
+          sx={{
+            '@media (max-width: 768px)': {
+              padding: '12px',
+              minHeight: '150px',
+            },
+          }}
+        >
+          <Box
+            className="text-sm font-medium text-gray-700 mb-3"
+            sx={{
+              '@media (max-width: 768px)': {
+                fontSize: '14px',
+                marginBottom: '8px',
+              },
+            }}
+          >
+            {label}
+          </Box>
+          <Box
+            className="w-full space-y-3"
+            sx={{
+              '@media (max-width: 768px)': {
+                gap: '8px',
+              },
+            }}
+          >
+            {children}
+          </Box>
+        </Box>
+      </Box>
+    );
+  }
+
   return (
-    <Box position="relative">
+    <Box position="relative" className="w-full">
       <TextField
         inputRef={inputRef}
         fullWidth
@@ -47,18 +85,28 @@ const InputBox: React.FC<CustomInputProps> = ({ label, placeholder, children, va
         slotProps={{ inputLabel: { shrink: true } }}
         sx={{
           '& .MuiOutlinedInput-root': {
-            height: '250px',
+            minHeight: '60px',
             borderRadius: '14px',
             fontSize: '16px',
             fontWeight: 400,
+            padding: '16px 14px',
+            '@media (max-width: 768px)': {
+              fontSize: '14px',
+              padding: '12px 10px',
+            },
           },
           '& .MuiInputBase-input': {
             color: 'black',
+            wordWrap: 'break-word',
+            overflowWrap: 'break-word',
             '&::placeholder': {
               color: 'gray',
               opacity: 1,
               fontSize: '14px',
               fontWeight: 400,
+              '@media (max-width: 768px)': {
+                fontSize: '12px',
+              },
             },
           },
           '& .MuiInputBase-input.Mui-disabled': {
@@ -69,6 +117,9 @@ const InputBox: React.FC<CustomInputProps> = ({ label, placeholder, children, va
           '& .MuiInputLabel-root': {
             color: 'gray',
             transition: 'color 0.2s',
+            '@media (max-width: 768px)': {
+              fontSize: '14px',
+            },
           },
           '& .MuiInputLabel-root.Mui-focused': {
             color: 'black',
@@ -83,16 +134,6 @@ const InputBox: React.FC<CustomInputProps> = ({ label, placeholder, children, va
         value={value}
         onChange={isSalary ? handleSalaryChange : onChange}
       />
-      {children && (
-        <Box
-          position="absolute"
-          top="50%"
-          left="16px"
-          sx={{ transform: 'translateY(-50%)' }}
-        >
-          {children}
-        </Box>
-      )}
     </Box>
   );
 };
