@@ -7,7 +7,7 @@ import Waveform from '@/app/interview/component/Waveform';
 import { useState } from 'react';
 import UseUpdateInterviewStatus from '@/Routes/Employer/hooks/PUT/overview/UpdateInterviewStatus.hook';
 import { toast } from 'sonner';
-import { Loader } from 'lucide-react';
+import { Loader, Type } from 'lucide-react';
 import { useQueryClient } from '@tanstack/react-query';
 import StatusBadge from './status.badge';
 import downloadAudio from '@/Utils/helper/aduioDownloader';
@@ -129,11 +129,21 @@ export default function UserProfile({ data, isSuperAdmin }: UserProfileProps) {
                   <h1>Email:</h1>
                   <h1 className="font-normal sm:ml-2">{data.email}</h1>
                 </div>
-                <div className="flex flex-col sm:flex-row sm:items-center gap-1">
-                  <h1>Caller ID:</h1>
-                  <h1 className="font-normal sm:ml-2">{data.phone}</h1>
-                </div>
-              </div>
+                {data.interview_metadata === "phone_interview" ? (
+                       <div className="flex flex-col sm:flex-row sm:items-center gap-1">
+                       <h1>Caller ID:</h1>
+                       <h1 className="font-normal sm:ml-2">{data.phone}</h1>
+                     </div>
+                   
+                ) : (
+                  <div className="flex flex-col sm:flex-row sm:items-center gap-1">
+                    <h1>Interview Type:</h1>
+                    <h1 className="font-normal sm:ml-2">
+                      {data.interview_metadata === "web_interview" ? 'Web Interview' : 'Phone Interview'}
+                    </h1>
+                  </div>
+                )}
+            </div>
 
               <div className="flex flex-col text-[14px] font-roboto font-bold gap-2">
                 <div className="flex flex-col sm:flex-row sm:items-center gap-1">
@@ -152,21 +162,14 @@ export default function UserProfile({ data, isSuperAdmin }: UserProfileProps) {
                     {data.ai_score !== null ? `${data.ai_score}%` : 'N/A'}
                   </h1>
                 </div>
-                {data.interview_metadata === "phone_interview" ? (
+               
                       <div className="flex flex-col sm:flex-row sm:items-center gap-1">
                       <h1>Callback Number:</h1>
                       <h1 className="font-normal sm:ml-2">
                         {data.callback_number === null ? 'N/A' : data.callback_number}
                       </h1>
                     </div>
-                ) : (
-                  <div className="flex flex-col sm:flex-row sm:items-center gap-1">
-                    <h1>Interview Type:</h1>
-                    <h1 className="font-normal sm:ml-2">
-                      {data.interview_metadata === "web_interview" ? 'Web Interview' : 'Phone Interview'}
-                    </h1>
-                  </div>
-                )}
+             
             
               </div>
             </CardContent>
