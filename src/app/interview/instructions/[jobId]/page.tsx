@@ -83,7 +83,7 @@ export default function CandidateInstructions() {
           <Link href={`/interview/details/${jobId}`}>
           <Button 
               onClick={() => EmptyStore()}
-              className="w-full sm:w-[351px] h-[50px] rounded-md"
+              className="w-full sm:w-[351px] h-[50px] rounded-md cursor-pointer"
               disabled={data?.status === "closed"}
             >
               {data?.status === "closed" ? "Job Closed" : "Continue"}

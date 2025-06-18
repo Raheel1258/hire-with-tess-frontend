@@ -25,19 +25,9 @@ import { useState } from 'react';
 import handleCopyLink from '@/Utils/helper/copylink';
 import StatusBadge from '../components/status.badge';
 import Interviewplatform from '../components/interviewplatform';
+import InterviewItem from '@/Types/EmployerDashboard/Dashboard/Job/interviewitem.type';
 
-interface InterviewItem {
-  id: string;
-  candidate_name: string;
-  job_title: string;
-  created_at: string;
-  status: string;
-  interview_link?: string;
-  ai_score: number | null;
-  interview_metadata?: {
-    interview_source: string;
-  };
-}
+
 
 export default function DashboardHome() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -45,6 +35,7 @@ export default function DashboardHome() {
   const { data: DashboardTableData, refetch: refetchInterviews } = UseGetAllInterview({
     page: currentPage,
   });
+
   const Interviewmutation = AnalyzeInterviewHook();
 
   const router = useRouter();

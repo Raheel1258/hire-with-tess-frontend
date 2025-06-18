@@ -26,7 +26,7 @@ export default function CandidatesDetails() {
     defaultValues: {
       candidate_name: '',
       email: '',
-      phone: '',
+      callback_number: '',
       resume: undefined,
       job_id: jobId,
     },
@@ -38,7 +38,7 @@ export default function CandidatesDetails() {
     formData.append('job_id', jobId);
     formData.append('candidate_name', data.candidate_name);
     formData.append('email', data.email);
-    formData.append('phone', data.phone);
+    formData.append('callback_number', data.callback_number);
     if (data.resume instanceof File) {
       formData.append('resume', data.resume);
     }
@@ -105,7 +105,6 @@ export default function CandidatesDetails() {
 
       <FormProvider {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} ref={ref} className="space-y-8 px-4">
-          {/* <Audioresume /> */}
           <FormField
             control={form.control}
             name="resume"
@@ -170,16 +169,19 @@ export default function CandidatesDetails() {
           />
           <FormField
             control={form.control}
-            name="phone"
+            name="callback_number"
             render={({ field }) => (
               <FormItem>
                 <PhoneInput
                   country={'us'}
                   value={field.value}
                   onChange={(phone) => {
-                    const formattedPhone = phone.startsWith('+') ? phone : `+${phone}`;
-                    field.onChange(formattedPhone);
+                    field.onChange(phone);
                   }}
+                  // onChange={(phone) => {
+                  //   const formattedPhone = phone.startsWith('+') ? phone : `+${phone}`;
+                  //   field.onChange(formattedPhone);
+                  // }}
                   inputProps={{
                     name: 'phone',
                     required: true,
