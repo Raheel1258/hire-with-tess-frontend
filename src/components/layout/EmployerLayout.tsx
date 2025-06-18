@@ -28,7 +28,7 @@ export default function EmployerLayout({ children }: { children: React.ReactNode
   const DashboardRedirect = () => {
     useDashboardRedirect(router);
     if (getAuthToken() && getAuthRole() === 'superadmin') {
-      router.push('/superadmin/home');
+      router.push('/admin/home');
     } else if (getAuthToken() && getAuthRole() === 'admin') {
       router.push('/employer/home');
     }
