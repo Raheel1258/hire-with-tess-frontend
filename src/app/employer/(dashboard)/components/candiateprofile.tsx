@@ -7,7 +7,7 @@ import Waveform from '@/app/interview/component/Waveform';
 import { useState } from 'react';
 import UseUpdateInterviewStatus from '@/Routes/Employer/hooks/PUT/overview/UpdateInterviewStatus.hook';
 import { toast } from 'sonner';
-import { Loader, Type } from 'lucide-react';
+import { Loader } from 'lucide-react';
 import { useQueryClient } from '@tanstack/react-query';
 import StatusBadge from './status.badge';
 import downloadAudio from '@/Utils/helper/aduioDownloader';
