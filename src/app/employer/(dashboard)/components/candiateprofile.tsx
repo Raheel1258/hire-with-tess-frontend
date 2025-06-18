@@ -15,7 +15,7 @@ import StatusBadge from './status.badge';
 
 
 export default function UserProfile({ data, isSuperAdmin }: any) {
-  const [openVideoURL, setOpenVideoURL] = useState<string | null>(null);
+  // const [openVideoURL, setOpenVideoURL] = useState<string | null>(null);
   const [isShortlisting, setIsShortlisting] = useState(false);
   const [isRejecting, setIsRejecting] = useState(false);
   const [isPending, setIsPending] = useState(false);
@@ -63,10 +63,10 @@ export default function UserProfile({ data, isSuperAdmin }: any) {
 
   return (
     <>
-      <Videopreviewdialogue
+      {/* <Videopreviewdialogue
         videoURL={openVideoURL}
         onClose={() => setOpenVideoURL(null)}
-      />
+      /> */}
       <div>
         <div className="flex flex-col lg:flex-row w-full gap-4 p-4 mt-4">
           <Avatar className="w-24 h-24 lg:w-40 lg:h-40 self-center lg:self-start">
@@ -112,6 +112,10 @@ export default function UserProfile({ data, isSuperAdmin }: any) {
                 <div className="flex flex-col sm:flex-row sm:items-center gap-1">
                   <h1>AI Rating:</h1>
                   <h1 className="lowercase font-normal sm:ml-2">{data.ai_score !==null ? `${data.ai_score}%` : 'N/A'}</h1>
+                </div>
+                <div className="flex flex-col sm:flex-row sm:items-center gap-1">
+                  <h1>Callback Number:</h1>
+                  <h1 className="font-normal sm:ml-2">{data.callback_number === null ? 'N/A' : data.callback_number}</h1>
                 </div>
               </div>
             </CardContent>
@@ -162,14 +166,14 @@ export default function UserProfile({ data, isSuperAdmin }: any) {
 
             return (
               <InputBox key={index} label={`Question ${index + 1}`}>
-                <p className="w-full font-semibold text-[14px]">{question}</p>
+                <p className="w-full font-semibold text-[14px] ">{question}</p>
                 <div className="rounded-full p-3 border mt-6 w-full">
 
                   <div className="flex items-center gap-2 ">
                     {answer?.submission_type === 'audio' && (
                       <Waveform recordedVoiceURL={answer.url} />
                     )}
-                    {answer?.submission_type === 'video' && (
+                    {/* {answer?.submission_type === 'video' && (
                       <div className="flex flex-row items-center justify-between w-full px-2 rounded">
                         <span className="text-sm font-medium text-[#1E4B8E]">
                           Camera Recorded Video
@@ -182,7 +186,7 @@ export default function UserProfile({ data, isSuperAdmin }: any) {
                         </div>
                       </div>
                       
-                    )}
+                    )} */}
                   </div>
                
                 </div>

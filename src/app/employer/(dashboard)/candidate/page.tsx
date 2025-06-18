@@ -93,21 +93,24 @@ export default function CandidatePage() {
     <Interviewplatform platform={item.interview_metadata} key={`platform-${item.id}`} />,
 
     item.ai_score !== null ? (
-      <Badge className="bg-[#f7941D] text-white">{item.ai_score}</Badge>
+      <Button
+       variant="ghost"
+      size="sm"
+       className="bg-orange-100 text-orange-400 w-10 flex items-center gap-2 border-2 border-orange-300">{item.ai_score}</Button>
     ) : analyzingInterviewId === item.id ? (
       <Button size="sm" className="text-xs flex items-center gap-2" disabled>
-          <Loader
-            className="w-4 h-4 animate-spin rounded-full"
-            style={{
-              background: 'conic-gradient(#f7941D, white, #1E4B8E)',
-              maskImage: 'radial-gradient(closest-side, transparent 60%, black 61%)',
-              WebkitMaskImage:
-                'radial-gradient(closest-side, transparent 60%, black 61%)',
-            }}
-          />
+        <Loader
+          className="w-4 h-4 animate-spin rounded-full"
+          style={{
+            background: 'conic-gradient(#f7941D, white, #1E4B8E)',
+            maskImage: 'radial-gradient(closest-side, transparent 60%, black 61%)',
+            WebkitMaskImage:
+              'radial-gradient(closest-side, transparent 60%, black 61%)',
+          }}
+        />
       </Button>
     ) : item.status === 'pending' ? (
-      <Badge className='capitalize bg-yellow-100 text-[#f7941D]'>Pending</Badge>
+      <Badge className="capitalize bg-yellow-100 text-[#f7941D]">Pending</Badge>
     ) : (
       <Button
         size="sm"
