@@ -24,6 +24,7 @@ import { useState } from 'react';
 import StatusBadge from '@/app/employer/(dashboard)/components/status.badge';
 import CustomJobDetailDialogue from '@/app/employer/(dashboard)/components/jobdetaildialogue';
 import OverviewStore from '@/store/EmployeeDashboard/dashboard/overview/overview.store';
+import UseGETJobBYID from '@/Routes/Employer/hooks/GET/candidates/GetJobByID.hook';
 
 export default function AdminJobPosting() {
   const TITLE = [
@@ -39,13 +40,6 @@ export default function AdminJobPosting() {
     'Total Interviews',
 
   ];
-  const [currentPage, setCurrentPage] = useState(1);
-  const { data: jobdata } = UseDashboardCardStats();
-  const { data: JobPostedTableData, isLoading: tableLoading } = UseGetAllJob({ page: currentPage });
-  console.log("JobPostedTableData",JobPostedTableData)
-  const deleteJobMutation = UseDeleteJobByID();
-  const updatejobstatus = UseUpdateJobStatus();
-
   const {
     isDialogOpen,
     setIsDialogOpen,
@@ -54,6 +48,15 @@ export default function AdminJobPosting() {
     searchTerm,
     setSearchTerm,
   } = JobStore();
+  const [currentPage, setCurrentPage] = useState(1);
+  const { data: jobdata } = UseDashboardCardStats();
+  const { data: JobPostedTableData, isLoading: tableLoading } = UseGetAllJob({ page: currentPage });
+  const deleteJobMutation = UseDeleteJobByID();
+  const updatejobstatus = UseUpdateJobStatus();
+  const { data: jobDetails } = UseGETJobBYID(postedjobdata.id);
+
+
+ 
   const { selectedCandidate, setSelectedCandidate } =
     OverviewStore();
 
@@ -159,7 +162,7 @@ export default function AdminJobPosting() {
             <DialogTitle>Posted Job Details</DialogTitle>
             <DialogDescription />
           </DialogHeader>
-          <JobpProfile data={postedjobdata} />
+          <JobpProfile data={jobDetails} />
           <DialogClose asChild />
         </DialogContent>
       </Dialog>
