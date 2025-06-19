@@ -10,6 +10,7 @@ import { Dialog, DialogContent, DialogHeader, DialogClose } from '@/components/u
 import { DialogDescription, DialogTitle } from '@radix-ui/react-dialog';
 import UserProfile from '@/app/employer/(dashboard)/components/candiateprofile';
 import { useState } from 'react';
+import SuperAdminCandidate from '@/Types/Admin/candidates.type';
 
 export default function AdminCandidatePage() {
   const TITLE = [
@@ -31,11 +32,17 @@ export default function AdminCandidatePage() {
     OverviewStore();
 
   const DATA =
-    DashboardTableData?.items?.map((item: any) => [
+    DashboardTableData?.items?.map((item: SuperAdminCandidate) => [
       item.id,
-      item.candidate_name,
-      item.job_title,
-      new Date(item.created_at).toLocaleDateString(),
+      <div key={`candidate-name-${item.id}`} className="truncate">
+        {item.candidate_name}
+      </div>,
+      <div key={`job-title-${item.id}`} className="truncate">
+        {item.job_title}
+      </div>,
+      <div key={`created-at-${item.id}`} className="text-center">
+        {new Date(item.created_at).toLocaleDateString()}
+      </div>,
 
       item.status === 'reject' ? (
         <Badge

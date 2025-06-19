@@ -60,7 +60,7 @@ export default function CustomNotification() {
       id: item.id,
       title: getNotificationTitle(item.notification_type),
       subtitle: item.message,
-      time: TimeFormat(item.created_at),
+      // time: TimeFormat(item.created_at),
       isRead: item.read,
       type: item.notification_type,
     }),
@@ -78,7 +78,8 @@ export default function CustomNotification() {
 
       newNotifications.forEach((notification: NotificationItem) => {
         toast(getNotificationTitle(notification.notification_type), {
-          description: `${notification.message} • ${TimeFormat(notification.created_at)}`,
+          description: `${notification.message}`,
+          //  ${TimeFormat(notification.created_at)}`,
           duration: 6000,
           position: 'bottom-right',
           className:

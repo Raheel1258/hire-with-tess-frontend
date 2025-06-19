@@ -84,13 +84,25 @@ export default function AdminJobPosting() {
   const DATA =
     (filteredJobs ?? []).map((item: postedJobProps) => [
       item?.id,
-      item?.job_title,
-      item?.company_name,
+      <div key={`job-title-${item.id}`} className="truncate">
+        {item?.job_title}
+      </div>,
+      <div key={`company-name-${item.id}`} className="truncate">
+        {item?.company_name ? item?.company_name : <StatusBadge className=" text-red-500 bg-red-100 text-center" status={"Not Provided"}/>}
+      </div>,
       <StatusBadge status={item.status} key={`status-${item.id}`} />,
-      item?.shortlisted_stats?.shortlisted,
-      item?.shortlisted_stats?.shortlist_ratio,
-      item?.job_type,
-      new Date(item.created_at).toLocaleDateString(),
+      <div key={`shortlisted-${item.id}`} className="text-center">
+      {item?.shortlisted_stats?.shortlisted}
+    </div>,
+    <div key={`shortlisted-ratio-${item.id}`} className="text-center">
+      {item?.shortlisted_stats?.shortlist_ratio}
+    </div>,
+    <div key={`job-type-${item.id}`} className="truncate">
+      {item?.job_type ? item?.job_type : <StatusBadge className=" text-red-500 bg-red-100 text-center" status={"Not Provided"}/>}
+    </div>,
+    <div key={`job-posted-date-${item.id}`} className="text-center">
+      {new Date(item.created_at).toLocaleDateString()}
+    </div>,
 
       item?.interview_link ? (
         <Button
@@ -108,7 +120,7 @@ export default function AdminJobPosting() {
       <Button
       variant="ghost"
       size="sm"
-      className="w-10 flex items-center gap-2 bg-green-100 border-2 border-green-400"
+      className=" w-10 flex items-center gap-2 bg-green-100 border-2 border-green-400"
       key={item.id}
       onClick={() => {
         setSelectedCandidate(item.id);

@@ -53,9 +53,15 @@ export default function AdminDashboardHome() {
   const DATA =
     DashboardTableData?.items?.map((item: any) => [
       item.id,
-      item.candidate_name,
-      item.job_title,
-      new Date(item.created_at).toLocaleDateString(),
+      <div key={`candidate-name-${item.id}`} className="truncate">
+        {item.candidate_name}
+      </div>,
+      <div key={`job-title-${item.id}`} className="truncate">
+        {item.job_title}
+      </div>,
+      <div key={`created-at-${item.id}`} className="text-center">
+        {new Date(item.created_at).toLocaleDateString()}
+      </div>,
       <Interviewplatform platform={item.interview_metadata} key={`platform-${item.id}`} />,
       item.status === 'reject' ? (
         <Badge
