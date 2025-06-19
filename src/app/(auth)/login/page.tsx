@@ -43,7 +43,7 @@ function EmployeeSignIn() {
 
   return (
     <div className="flex items-center justify-center p-2 sm:p-10 w-full">
-      <div className="w-full ">
+      <div className="w-full items-center justify-center ">
         <Card className="items-center justify-center p-4 sm:p-8 ">
           <h1 className="text-center mb-2 text-xl sm:text-2xl font-normal">
             Hirewithtess
@@ -54,7 +54,7 @@ function EmployeeSignIn() {
           <p className="text-[#606778] text-lg font-semibold font-[roboto] text-center">
             Easily create interviews and manage candidates
           </p>
-          <GoogleLoginButton redirectTo="/" />
+          {/* <GoogleLoginButton redirectTo="/" /> */}
 
           <div className="mt-10">
             <Form {...form}>
@@ -110,9 +110,10 @@ function EmployeeSignIn() {
                     Forgot Password?
                   </Link>
                 </div>
-                <div className="flex justify-center">
+                <div className="flex justify-center gap-2 flex-col sm:items-center sm:flex-row " >
+                     <GoogleLoginButton redirectTo="/" />
                   <Button
-                    className="w-full sm:w-80 h-11 mt-4"
+                    className=" sm:w-3xs h-11 mt-4 cursor-pointer p-2 hover:bg-gray-100 hover:text-black"
                     type="submit"
                     disabled={SignInMutation.isPending}
                   >
@@ -122,6 +123,7 @@ function EmployeeSignIn() {
                       'Sign In to Continue'
                     )}
                   </Button>
+                     {/* <GoogleLoginButton redirectTo="/" /> */}
                 </div>
                 <p className="text-sm text-gray-500 text-center">
                   Don&apos;t have an account?{' '}

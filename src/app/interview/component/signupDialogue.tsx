@@ -60,16 +60,16 @@ export default function SignupDialogue() {
           Get started with a 60-day free trial - no credit required!
         </p>
 
-        <GoogleLoginButton redirectTo="/" />
+        {/* <GoogleLoginButton redirectTo="/" /> */}
       </div>
 
       <div className="w-full mt-4">
-        <div className="relative flex items-center justify-center w-full mt-2 mb-2">
+        {/* <div className="relative flex items-center justify-center w-full mt-2 mb-2">
           <hr className="w-full h-[1px] bg-[#CBCAD7] border-0 rounded-sm" />
           <div className="absolute px-4 font-openSans font-normal text-[18px] space-x-[28px] bg-white text-gray-600 left-1/2 transform -translate-x-1/2">
             Or
           </div>
-        </div>
+        </div> */}
         <div className="w-full sm:flex-col px-4 mt-4">
           {/* <SignupForm /> */}
           <Form {...form}>
@@ -78,7 +78,7 @@ export default function SignupDialogue() {
               ref={ref}
               className="space-y-8 flex flex-col items-center overflow-auto max-h-[80vh] py-8" // Added padding-y
             >
-              <div className="flex gap-4 items-start w-full mt-4 ">
+              <div className="flex flex-col sm:flex-row gap-4 items-start w-full mt-4 ">
                 <FormField
                   control={form.control}
                   name="firstname"
@@ -115,7 +115,7 @@ export default function SignupDialogue() {
                 />
               </div>
 
-              <div className="flex gap-4 items-start w-full ">
+              <div className="flex flex-col sm:flex-row gap-4 items-start w-full ">
                 <FormField
                   control={form.control}
                   name="organization"
@@ -151,7 +151,7 @@ export default function SignupDialogue() {
                 />
               </div>
 
-              <div className="flex gap-4 items-start w-full ">
+              <div className="flex flex-col sm:flex-row gap-4 items-start w-full ">
                 <FormField
                   control={form.control}
                   name="password"
@@ -199,10 +199,12 @@ export default function SignupDialogue() {
                 </label>
               </div>
 
-              <div className="flex justify-center w-full">
+              <div className="flex flex-col sm:flex-row justify-center w-full gap-2">
+
+              <GoogleLoginButton redirectTo="/" />
                 <Button
-                  type="submit"
-                  className="w-full sm:w-[528px] h-[64px] leading-[20px] font-roboto cursor-pointer rounded-2xl max-w-[90%]"
+                 className=" sm:w-3xs h-11 mt-4 cursor-pointer p-2 hover:bg-gray-100 hover:text-black"
+                    type="submit"
                   disabled={signupMutation.isPending}
                 >
                   {signupMutation.isPending ? (

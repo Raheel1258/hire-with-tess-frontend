@@ -103,13 +103,13 @@ function InterviewForm() {
       >
         
         <div className="flex flex-col ">
-          <div className="flex items-start mt-4">
+          <div className="flex items-start mt-4 ">
             <Image
               src="/images/AIAvatar.png"
               alt="bot"
               width={40}
               height={40}
-              className="shrink-0"
+              className="shrink-0 w-8 h-8 sm:w-10 sm:h-10"
             />
             <Card className="w-full rounded-2xl p-4 sm:p-6 ml-4">
               <form ref={ref}>
@@ -191,7 +191,7 @@ function InterviewForm() {
               alt="bot"
               width={40}
               height={40}
-              className="shrink-0"
+              className="shrink-0 w-8 h-8 sm:w-10 sm:h-10"
             />
              {/* Skills List */}
             <Card className="w-full rounded-2xl p-4 sm:p-6 ">

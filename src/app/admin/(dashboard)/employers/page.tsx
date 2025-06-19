@@ -8,6 +8,8 @@ import { Dialog, DialogHeader, DialogTitle ,DialogContent } from '@/components/u
 import OverviewStore from '@/store/EmployeeDashboard/dashboard/overview/overview.store';
 import useGetCandidateJobs from '@/Routes/Admin/hook/GET/candidate/GetCandidate.hook';
 import CustomEmployeDialogue from '../component/CustomEmployerDialogue';
+import { SuperAdminEmployer } from '@/Types/Admin/employer';
+import TITLE from '../constant/employerTitle';
 
 export default function EmployersList() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -17,20 +19,19 @@ export default function EmployersList() {
   const { data: candidateJobs,  } = useGetCandidateJobs(selectedCandidate);
 
 
-  const TITLE = [
-    'Employer Name',
-    'Email',
-    'Organization',
-    'Total Job Posted',
-    'Subscription Status',
-    'Date Joined',
-  ];
+
 
   const DATA =
-    employersData?.items.map((employer: any) => [
-      employer.name,
-      employer.email,
-      employer.organization_name,
+    employersData?.items.map((employer: SuperAdminEmployer) => [
+      <div key={`employer-name-${employer.id}`} className="truncate">
+        {employer.name}
+      </div>,
+      <div key={`employer-email-${employer.id}`} className="truncate">
+        {employer.email}
+      </div>,
+      <div key={`employer-organization-${employer.id}`} className="truncate">
+        {employer.organization_name}
+      </div>,
       <Button
       variant="ghost"
       size="sm"
@@ -44,7 +45,7 @@ export default function EmployersList() {
       <span>{employer.stats.total_jobs}</span>
     </Button>,
       <Badge
-        key={employer.id}
+        key={`employer-subscription-${employer.id}`}
         className={`${
           employer.stats.subscription_status === 'active'
             ? 'bg-green-100 text-green-800'
@@ -53,7 +54,9 @@ export default function EmployersList() {
       >
         {employer.stats.subscription_status}
       </Badge>,
-      new Date(employer.date_joined).toLocaleDateString(),
+      <div key={`employer-date-joined-${employer.id}`} className="text-center">
+        {new Date(employer.date_joined).toLocaleDateString()}
+      </div>,
     ]) || [];
 
   return (

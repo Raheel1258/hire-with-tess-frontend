@@ -19,3 +19,15 @@ export interface EmployersResponse {
   pages: number;
   current_page: number;
 }
+
+export interface SuperAdminEmployer {
+  id: string;
+  name: string;
+  email: string;
+  organization_name: string;
+  stats: {
+    total_jobs: number;
+    subscription_status: string;
+  };
+  date_joined: string;
+}

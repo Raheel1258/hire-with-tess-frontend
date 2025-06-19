@@ -167,13 +167,13 @@ export default function GenerateLink() {
           )}
 
           <div className="flex flex-row items-center justify-center">
-            <button
+            <Button
               onClick={handleDownloadQR}
               disabled={!interviewLink}
-              className="flex items-center justify-center gap-2 sm:gap-3 font-roboto text-[14px] sm:text-[16px] md:text-[18px] font-bold w-[90%] sm:w-[180px] md:w-[212px] h-[50px] sm:h-[60px] md:h-[65px] rounded-[14px] bg-[#1E4B8E] mt-8 sm:mt-11 text-white px-4 sm:px-6"
+              className="flex items-center justify-center gap-2 sm:gap-3 font-roboto text-[14px] sm:text-[16px] md:text-[18px] font-bold w-[90%] sm:w-[180px] md:w-[212px] h-[50px] sm:h-[60px] md:h-[65px] rounded-[14px] bg-[#1E4B8E] mt-8 sm:mt-11 text-white px-4 sm:px-6 cursor-pointer"
             >
               <Download className="w-4 h-4 sm:w-5 sm:h-5" /> Download
-            </button>
+            </Button>
             <div className="ml-2 mt-10">
               <Share2
                 onClick={QrToogleShareOptions}

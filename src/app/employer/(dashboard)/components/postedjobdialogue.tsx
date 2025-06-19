@@ -7,6 +7,7 @@ import UseUpdateJobByID from "@/Routes/Employer/hooks/PUT/job/UpdateJobByID.hook
 import { UserJobResponse } from '@/Types/userJob';
 import { PencilIcon } from 'lucide-react';
 import { useState } from 'react';
+import StatusBadge from './status.badge';
 
 
 export default function JobpProfile({ data }: { data: UserJobResponse }) {
@@ -107,13 +108,13 @@ export default function JobpProfile({ data }: { data: UserJobResponse }) {
             ) : (
               <>
                 <p>
-                  <span className="font-medium">Company:</span> {data.company_name}
+                  <span className="font-medium">Company:</span> {data.company_name ? data.company_name : <StatusBadge className="text-red-500 bg-red-100" status={"Not Generated"}/>}
                 </p>
                 <p>
-                  <span className="font-medium">Location:</span> {data.location}
+                  <span className="font-medium">Location:</span> {data.location ? data.location : <StatusBadge className="text-red-500 bg-red-100" status={"Not Generated"}/>}
                 </p>
                 <p>
-                  <span className="font-medium">Type:</span> {data.job_type}
+                  <span className="font-medium">Type:</span> {data.job_type ? data.job_type : <StatusBadge className="text-red-500 bg-red-100" status={"Not Generated"}/>}
                 </p>
               </>
             )}
@@ -147,10 +148,10 @@ export default function JobpProfile({ data }: { data: UserJobResponse }) {
             ) : (
               <>
                 <p>
-                  <span className="font-medium">Salary:</span> {data.currency} {data.salary}
+                  <span className="font-medium">Salary:</span> {data.currency} {data.salary ? data.salary : <StatusBadge className="text-red-500 bg-red-100" status={"Not Generated"}/>}
                 </p>
                 <p>
-                  <span className="font-medium">Type:</span> {data.salary_type}
+                  <span className="font-medium">Type:</span> {data.salary_type ? data.salary_type : <StatusBadge className="text-red-500 bg-red-100" status={"Not Generated"}/>}
                 </p>
               </>
             )}

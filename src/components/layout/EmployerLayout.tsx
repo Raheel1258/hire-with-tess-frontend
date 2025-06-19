@@ -9,21 +9,16 @@ import {
 } from '@/components/ui/dialog';
 
 import SignupDialogue from '@/app/interview/component/signupDialogue';
-import { clearAuthToken, getAuthCookie, getAuthRole, getAuthToken } from '@/Utils/Providers/auth';
+import { clearAuthToken, getAuthRole, getAuthToken } from '@/Utils/Providers/auth';
 import { useRouter } from 'next/navigation';
 import { useDashboardRedirect } from '@/Utils/helper/dashboardredirect';
 import { useQuestionStore } from '@/store/Employer/questionStore';
-import useHomeStore from '@/store/Employer/home.store';
 import { useToggleStore } from '@/store/Employer/Toggle.store';
+import useHomeStore from '@/store/Employer/home.store';
 
 export default function EmployerLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
 
-  const handleSignOut = () => {
-    clearAuthToken();
-    ResetAll();
-    router.push('/');
-  };
 
   const DashboardRedirect = () => {
     useDashboardRedirect(router);
@@ -42,27 +37,34 @@ export default function EmployerLayout({ children }: { children: React.ReactNode
     resetAIResponse();
     resetQuestionStore();
     resetInterviewLink();
+
   };
+  const handleSignOut = () => {
+    clearAuthToken();
+    ResetAll();
+    router.push('/');
+  };
+
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-br from-[#f7941D] via-[#ffbfbf] to-[#1e4b8e]">
-      <header className="flex justify-between items-center text-white">
-        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
+      <header className="flex items-center text-white w-full px-4 py-4">
+        <div className="flex items-center w-full">
           <Link href="/">
-            <h1 className="text-xl font-semibold text-black">Hirewithtess</h1>
+            <h1 className="text-xl pr-2 font-semibold text-black">Hirewithtess</h1>
           </Link>
-          <nav className="flex gap-4">
+          <nav className="flex gap-4 ml-auto">
             {getAuthToken() ? (
               <div className="flex gap-2">
                 <Button
                   onClick={handleSignOut}
-                  className="px-4 py-2 text-white bg-red-500 rounded-lg hover:bg-red-600"
+                  className=" py-2 text-white bg-red-500 rounded-lg hover:bg-red-600"
                 >
                   Sign Out
                 </Button>
 
                 <Button
                   onClick={DashboardRedirect}
-                  className="bg-tess-blue text-white px-4 py-2 rounded-md hover:bg-[#1E4B8E]-700 cursor-pointer"
+                  className="bg-tess-blue text-white py-2 rounded-md hover:bg-[#1E4B8E]-700 cursor-pointer"
                 >
                   Dashboard
                 </Button>
@@ -70,13 +72,13 @@ export default function EmployerLayout({ children }: { children: React.ReactNode
             ) : (
               <>
                 <Link href={'/login'}>
-                  <Button className="bg-tess-blue text-white px-4 py-2 rounded-md hover:bg-[#1E4B8E]-700 cursor-pointer">
+                  <Button className="bg-tess-blue text-white py-2 rounded-md hover:bg-[#1E4B8E]-700 cursor-pointer">
                     Login
                   </Button>
                 </Link>
                  <Dialog>
                   <DialogTrigger asChild>
-                    <Button className="bg-tess-blue text-white px-4 py-2 rounded-md hover:bg-[#1E4B8E]-700 cursor-pointer">
+                    <Button className="bg-tess-blue text-white py-2 rounded-md hover:bg-[#1E4B8E]-700 cursor-pointer">
                       Sign up
                     </Button>
                   </DialogTrigger>

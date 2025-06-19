@@ -78,9 +78,15 @@ export default function DashboardHome() {
   const DATA =
     DashboardTableData?.items?.map((item: InterviewItem) => [
       item?.id,
-      item.candidate_name,
-      item.job_title,
-      new Date(item.created_at).toLocaleDateString(),
+      <div key={`candidate-name-${item.id}`} className="truncate">  
+        {item.candidate_name}
+      </div>,
+      <div key={`job-title-${item.id}`} className="truncate">
+        {item.job_title}
+      </div>,
+      <div key={`created-at-${item.id}`} className="text-center">
+        {new Date(item.created_at).toLocaleDateString()}
+      </div>,
 
       <StatusBadge status={item.status} key={`status-${item.id}`} />,
       item?.interview_link ? (

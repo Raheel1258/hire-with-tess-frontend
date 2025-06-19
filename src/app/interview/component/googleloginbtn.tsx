@@ -25,8 +25,9 @@ export function GoogleLoginButton({ redirectTo = '/' }: GoogleLoginButtonProps) 
         sessionStorage.setItem('redirectPath', redirectTo);
         window.location.href = googleAuthUrl;
       }}
-      className="w-max-2xl sm:w-[528px] h-[64px] border-r-[14px] rounded-[14px] border-[1px] mt-4 mb-4 font-[roboto] font-normal bg-transparent text-black
-              hover:bg-transparent border-gray-400 flex items-center justify-center gap-2"
+      className='sm:w-3xs h-11 mt-4 cursor-pointer p-2 hover:bg-gray-100 hover:text-black'
+      // className="w-max-2xl sm:w-[528px] h-[64px] border-r-[14px] rounded-[14px] border-[1px] mt-4 mb-4 font-[roboto] font-normal bg-transparent text-black
+      //         hover:bg-transparent border-gray-400 flex items-center justify-center gap-2"
     >
       <Image src="/images/google.png" alt="Google Icon" width={20} height={20} />
       Continue with Google

@@ -132,14 +132,21 @@ export default function UserProfile({ data, isSuperAdmin }: UserProfileProps) {
                 {data.interview_metadata === "phone_interview" ? (
                        <div className="flex flex-col sm:flex-row sm:items-center gap-1">
                        <h1>Caller ID:</h1>
-                       <h1 className="font-normal sm:ml-2">{data.phone}</h1>
+                       <h1 className="font-normal sm:ml-2">{data.phone || <StatusBadge className="text-red-500 bg-red-100" status={"Not Submitted"}/>}</h1>
                      </div>
                    
+                ) : data.interview_metadata === "web_interview" ? (
+                  <div className="flex flex-col sm:flex-row sm:items-center gap-1">
+                    <h1>Interview Type:</h1>
+                    <h1 className="font-normal sm:ml-2">
+                      {<StatusBadge status={data.interview_metadata || "Not Submitted"}/>}
+                    </h1>
+                  </div>
                 ) : (
                   <div className="flex flex-col sm:flex-row sm:items-center gap-1">
                     <h1>Interview Type:</h1>
                     <h1 className="font-normal sm:ml-2">
-                      {data.interview_metadata === "web_interview" ? 'Web Interview' : 'Phone Interview'}
+                      {data.interview_metadata || <StatusBadge className="text-red-500 bg-red-100" status={"Not Submitted"}/>}
                     </h1>
                   </div>
                 )}

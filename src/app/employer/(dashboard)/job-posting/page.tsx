@@ -66,7 +66,9 @@ export default function JobPosting() {
   const DATA = (filteredJobs ?? []).map((item: postedJobProps) => {
     return [
       item?.id,
-      item?.job_title,
+      <div key={`job-title-${item.id}`} className="truncate">
+        {item?.job_title}
+      </div>,
       <DropDownCustomStatus
         key={item.status}
         Status={item?.status}
@@ -77,8 +79,12 @@ export default function JobPosting() {
           })
         }
       />,
-      item?.shortlisted_stats?.shortlisted,
-      item?.shortlisted_stats?.shortlist_ratio,
+      <div key={`shortlisted-${item.id}`} className="text-center">
+        {item?.shortlisted_stats?.shortlisted}
+      </div>,
+      <div key={`shortlisted-ratio-${item.id}`} className="text-center">
+        {item?.shortlisted_stats?.shortlist_ratio}
+      </div>,
       item?.job_type,
       new Date(item.created_at).toLocaleDateString(),
       <Button

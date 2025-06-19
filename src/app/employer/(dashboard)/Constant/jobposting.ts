@@ -8,7 +8,7 @@
     'Job Type',
     'Posted Date',
     'Interviews',
-    'Link',
+    'Interview Link',
   ];
 
   export default JobPostingTableTitle
