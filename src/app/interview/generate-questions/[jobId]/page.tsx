@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import GenerateQuestionResponse from '@/Routes/Client/hook/POST/GenerateQuestion.hook';
 import { useEffect, useRef } from 'react';
-import { Check, CirclePlus, Pencil, X } from 'lucide-react';
+import { Check, CirclePlus, Pencil, Trash, X } from 'lucide-react';
 import { Textarea } from '@/components/ui/textarea';
 import useUpdateJobQuestion from '@/Routes/Client/hook/PUT/UpdateJobQuestion.hook';
 import { useSkillStore } from '@/store/Employer/InputStore';
@@ -174,6 +174,7 @@ export default function Questionnaire() {
                         alt="bot"
                         width={40}
                         height={40}
+                            className="shrink-0 w-8 h-8 sm:w-10 sm:h-10"
                       />
                       <div className="relative w-full">
                         {isEditing ? (
@@ -207,7 +208,7 @@ export default function Questionnaire() {
                                 size={18}
                                 color="orange"
                                 onClick={cancelEditing}
-                                className="cursor-pointer"
+                                className="cursor-pointer "
                               />
                             )
                           ) : (
@@ -218,17 +219,27 @@ export default function Questionnaire() {
                                 onClick={() => startEditing(index)}
                                 className="cursor-pointer"
                               />
-                              <X
+                              {/* <X
                                 size={18}
                                 color="red"
                                 onClick={() => handleRemoveQuestion(index)}
-                                className="cursor-pointer"
-                              />
+                                className="cursor-pointer "
+                              /> */}
                             </>
+                            
                           )}
+                          
                         </div>
+                        
                       </div>
+                      <Trash
+                                size={18}
+                                color="red"
+                                onClick={() => handleRemoveQuestion(index)}
+                                className="cursor-pointer hover:text-red-500 hover:scale-110 transition-all duration-300 "
+                              />
                     </li>
+                    
                   );
                 })}
               </>
@@ -269,7 +280,7 @@ export default function Questionnaire() {
           </ul>
         </div>
 
-        <div className="flex flex-row items-center justify-center gap-2 mt-4">
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-2 mt-4">
           <Button
             className="cursor-pointer rounded-full"
             type="button"
@@ -284,7 +295,7 @@ export default function Questionnaire() {
             )}
           </Button>
           <Button
-            className="cursor-pointer rounded-full bg-transparent text-black border hover:text-white"
+            className="cursor-pointer rounded-full bg-transparent text-black border hover:text-white hover:bg-[#f7941D] hover:border-transparent"
             type="button"
             onClick={addnewInput}
           >

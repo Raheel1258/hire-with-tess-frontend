@@ -13,17 +13,11 @@ export default function NotFound() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center px-4">
       <div className="max-w-md w-full text-center">
-        {/* 404 Number */}
-        <div className="relative mb-8">
-          <h1 className="text-9xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600 leading-none">
-            404
-          </h1>
-          <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-purple-600/20 blur-3xl rounded-full"></div>
-        </div>
+ 
 
         {/* Icon */}
         <div className="mb-6">
-          <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full shadow-lg">
+          <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-[#f7941D] via-[#ffbfbf] to-[#1e4b8e] rounded-full shadow-lg">
             <AlertTriangle className="w-10 h-10 text-white" />
           </div>
         </div>
@@ -43,10 +37,10 @@ export default function NotFound() {
         <div className="space-y-4">
           <Button 
             asChild
-            className="w-full text-white font-semibold py-3 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+            className="w-full text-white font-semibold py-3 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 bg-gradient-to-br from-[#f7941D] via-[#ffbfbf] to-[#1e4b8e]"
           >
             <Link href="/" className="flex items-center justify-center gap-2">
-              <Home className="w-5 h-5" />
+              <Home className="w-5 h-5 " />
               Return to Home
             </Link>
           </Button>
@@ -62,17 +56,6 @@ export default function NotFound() {
             </Link>
           </Button>
         </div>
-
-        {/* Search  */}
-        <div className="mt-8 p-4 bg-white/50 backdrop-blur-sm rounded-xl border border-gray-200">
-          <div className="flex items-center gap-3 text-gray-600">
-            <Search className="w-5 h-5 text-blue-500" />
-            <p className="text-sm">
-              Try searching for what you're looking for or check the navigation menu
-            </p>
-          </div>
-        </div>
-
         {/* Decorative Elements */}
         <div className="absolute top-10 left-10 w-20 h-20 bg-blue-200 rounded-full opacity-20 animate-pulse"></div>
         <div className="absolute bottom-10 right-10 w-32 h-32 bg-purple-200 rounded-full opacity-20 animate-pulse delay-1000"></div>
