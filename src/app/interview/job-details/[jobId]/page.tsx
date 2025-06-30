@@ -175,7 +175,6 @@ export default function InterviewForm() {
                   onClick={handleReviewClick}
                   className=" cursor-pointer"
                 >
-                  <Image src="/images/Vector.png" alt="alt" width={20} height={20} />
                   {generateMutation.isPending ?  <Loader2 className='animate-spin' /> : 'Review Details'}
                 </Button>
               </div>

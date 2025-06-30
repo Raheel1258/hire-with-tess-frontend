@@ -57,6 +57,7 @@ export default function EmployerLayout({ children }: { children: React.ReactNode
               <div className="flex gap-2">
                 <Button
                   onClick={handleSignOut}
+                  variant='secondary'
                   className=" py-2 text-white bg-red-500 rounded-lg hover:bg-red-600"
                 >
                   Sign Out
@@ -64,6 +65,7 @@ export default function EmployerLayout({ children }: { children: React.ReactNode
 
                 <Button
                   onClick={DashboardRedirect}
+                  variant='secondary'
                   className="bg-tess-blue text-white py-2 rounded-md hover:bg-[#1E4B8E]-700 cursor-pointer"
                 >
                   Dashboard
@@ -72,13 +74,18 @@ export default function EmployerLayout({ children }: { children: React.ReactNode
             ) : (
               <>
                 <Link href={'/login'}>
-                  <Button className="bg-tess-blue text-white py-2 rounded-md hover:bg-[#1E4B8E]-700 cursor-pointer">
+                
+                  <Button
+                   variant="secondary"
+                   className="bg-tess-blue text-white py-2 rounded-md hover:bg-[#1E4B8E]-700 cursor-pointer">
                     Login
                   </Button>
                 </Link>
                  <Dialog>
                   <DialogTrigger asChild>
-                    <Button className="bg-tess-blue text-white py-2 rounded-md hover:bg-[#1E4B8E]-700 cursor-pointer">
+                    <Button 
+                    variant='secondary'
+                    className="bg-tess-blue text-white py-2 rounded-md hover:bg-[#1E4B8E]-700 cursor-pointer">
                       Sign up
                     </Button>
                   </DialogTrigger>

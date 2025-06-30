@@ -22,7 +22,7 @@ const AdminDashboardNavigation = () => {
   };
 
   return (
-    <div className="flex justify-end items-center gap-4 mt-6 mb-0 sm:mb-1 sm:ml-4">
+    <div className="flex justify-end items-center gap-4 mt-6 mb-0 sm:mb-1 sm:ml-4 md:mb-2">
       {accessToken && (
         <Link href={`/`}>
           <Button
@@ -31,7 +31,7 @@ const AdminDashboardNavigation = () => {
             className="sm:w-auto cursor-pointer bg-[#1E4B8E] hover:bg-[#1E4B8E]/90 transition-colors"
             type="button"
           >
-            Generate New Interview
+            New Interview
           </Button>
         </Link>
       )}
