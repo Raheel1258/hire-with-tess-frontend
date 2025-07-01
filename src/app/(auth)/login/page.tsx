@@ -23,6 +23,7 @@ import {
 import { GoogleLoginButton } from '@/app/interview/component/googleloginbtn';
 
 function EmployeeSignIn() {
+  
   const form = useForm<SignInFormValidator>({
     resolver: zodResolver(signInFormSchema),
     defaultValues: {
@@ -60,7 +61,7 @@ function EmployeeSignIn() {
               <form
                 onSubmit={form.handleSubmit(onSubmit)}
                 ref={ref}
-                className="space-y-8 w-full max-w-2xl md:w-xl"
+                className="space-y-6 w-full max-w-2xl md:w-xl"
               >
                 <FormField
                   control={form.control}
@@ -109,36 +110,49 @@ function EmployeeSignIn() {
                     Forgot Password?
                   </Link>
                 </div>
-                <div className="flex justify-center gap-2 flex-col sm:items-center sm:flex-row " >
-                <GoogleLoginButton redirectTo="/" />
-                  <Button
-                    className=" sm:w-3xs h-11 mt-4 cursor-pointer p-2 hover:bg-gray-100 hover:text-black"
-                    type="submit"
-                    disabled={SignInMutation.isPending}
-                  >
-                    {SignInMutation.isPending ? (
-                      <Loader2 className="animate-spin text-white" />
-                    ) : (
-                      'Sign In to Continue'
-                    )}
-                  </Button>
-                </div>
-                <p className="text-sm text-gray-500 text-center">
-                  Don&apos;t have an account?{' '}
-                  <Dialog>
-                    <DialogTrigger asChild>
-                      <span className="bg-transparent text-[#F7941D] rounded-md hover:bg-transparent cursor-pointer">
-                        Sign up
-                      </span>
-                    </DialogTrigger>
-                    <DialogContent className="items-center bg-white shadow-2xl rounded-lg w-5xl">
-                      <DialogTitle></DialogTitle>
-                      <SignupDialogue />
-                    </DialogContent>
-                  </Dialog>
-                </p>
+                <Button
+                  className="w-full h-11 cursor-pointer p-2 hover:bg-gray-100 hover:text-black"
+                  type="submit"
+                  disabled={SignInMutation.isPending}
+                >
+                  {SignInMutation.isPending ? (
+                    <Loader2 className="animate-spin text-white" />
+                  ) : (
+                    'Sign In to Continue'
+                  )}
+                </Button>
               </form>
             </Form>
+
+            <div className="mt-6">
+              <div className="relative">
+                <div className="absolute inset-0 flex items-center">
+                  <span className="w-full border-t border-gray-300" />
+                </div>
+                <div className="relative flex justify-center text-xs uppercase">
+                  <span className="bg-white px-2 text-gray-500">Or continue with</span>
+                </div>
+              </div>
+              
+              <div className="mt-4 flex justify-center">
+                <GoogleLoginButton redirectTo="/" />
+              </div>
+            </div>
+
+            <p className="text-sm text-gray-500 text-center mt-4">
+              Don&apos;t have an account?{' '}
+              <Dialog>
+                <DialogTrigger asChild>
+                  <span className="bg-transparent text-[#F7941D] rounded-md hover:bg-transparent cursor-pointer">
+                    Sign up
+                  </span>
+                </DialogTrigger>
+                <DialogContent className="items-center bg-white shadow-2xl rounded-lg w-5xl">
+                  <DialogTitle></DialogTitle>
+                  <SignupDialogue />
+                </DialogContent>
+              </Dialog>
+            </p>
           </div>
         </Card>
       </div>
