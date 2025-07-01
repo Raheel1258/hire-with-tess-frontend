@@ -46,7 +46,7 @@ export default function RootLayout({
         className={`${roboto.variable} ${openSans.variable} ${spaceGrotesk.variable} font-sans antialiased`}
       >
         <CustomToast/>
-        <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!}>
+        <GoogleOAuthProvider clientId={process.env.GOOGLE_CLIENT_ID!}>
         <ReactQueryProvider>{children}</ReactQueryProvider>
         </GoogleOAuthProvider>
       </body>

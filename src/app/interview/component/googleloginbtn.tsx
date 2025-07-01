@@ -6,9 +6,9 @@ interface GoogleLoginButtonProps {
 }
 
 export function GoogleLoginButton({ redirectTo = '/' }: GoogleLoginButtonProps) {
-  const GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!;
+  const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID!;
   const REDIRECT_URI =
-    process.env.NEXT_PUBLIC_GOOGLE_REDIRECT_URI || 'http://localhost:3000/auth/callback';
+    process.env.GOOGLE_REDIRECT_URI || 'http://localhost:3000/auth/callback';
 
   const googleAuthUrl =
     `https://accounts.google.com/o/oauth2/v2/auth?` +
