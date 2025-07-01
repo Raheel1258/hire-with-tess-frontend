@@ -181,7 +181,7 @@ export default function AnsweredQuestionList() {
 
         </div>
 
-        <Button onClick={onSubmitInterview} className="mt-4 bg-green-600 text-white hover:bg-green-500" disabled={isPending}>
+        <Button onClick={onSubmitInterview} className="mt-4 bg-green-600 text-white hover:bg-green-500 hover:border-green-500" disabled={isPending}>
           {isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Save and Finish'}
         </Button>
       </InterviewLayout>

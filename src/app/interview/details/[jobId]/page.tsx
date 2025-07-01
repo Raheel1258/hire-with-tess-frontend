@@ -6,7 +6,10 @@ import CustomInputForm from '@/app/interview/component/customformInput';
 import React, { useRef, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import {CandidateDetailSchema,CandidateDetailsValidator,} from '@/schema/CandidateDetail.schema';
+import {
+  CandidateDetailSchema,
+  CandidateDetailsValidator,
+} from '@/schema/CandidateDetail.schema';
 import { Button } from '@/components/ui/button';
 import { useParams } from 'next/navigation';
 import { X, Phone, Hash } from 'lucide-react';
@@ -75,29 +78,41 @@ export default function CandidatesDetails() {
       subtitle="Start Your Interview"
       description="Choose to fill the form or call with your Job ID to begin"
     >
-      <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 mb-8">
-        <h1 className="text-lg font-semibold text-[#1E4B8E] mb-1">Start Your Phone Interview</h1>
-        <p className="text-xs text-gray-600 mb-8">Call the number below and provide your Job ID to begin your interview process</p>
-        <div className="flex justify-between items-center">
-          <div className="flex items-center gap-3">
-            <div className="bg-blue-50 p-3 rounded-full">
+      <div className="bg-white rounded-xl p-4 sm:p-6 shadow-sm border border-gray-100 mb-8">
+        <h1 className="text-lg font-semibold text-[#1E4B8E] mb-1">
+          Start Your Phone Interview
+        </h1>
+        <p className="text-xs text-gray-600 mb-6 sm:mb-8">
+          Call the number below and provide your Job ID to begin your interview process
+        </p>
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 sm:gap-4">
+          <div className="flex items-center gap-3 w-full sm:w-auto">
+            <div className="bg-blue-50 p-3 rounded-full flex-shrink-0">
               <Phone className="h-5 w-5 text-[#1E4B8E]" />
             </div>
-            <div>
+            <div className="flex-1">
               <p className="text-sm text-gray-600">Call our interview line</p>
-              <p className="text-lg font-semibold text-[#1E4B8E]">{phoneNumber}</p>
-              <p className="text-xs text-gray-500 mt-1">Available 24/7 for your convenience</p>
+              <p className="text-lg font-semibold text-[#1E4B8E] break-all">
+                {phoneNumber}
+              </p>
+              <p className="text-xs text-gray-500 mt-1">
+                Available 24/7 for your convenience
+              </p>
             </div>
           </div>
-          
-          <div className="flex items-center gap-3">
-            <div className="bg-blue-50 p-3 rounded-full">
+
+          <div className="flex items-center gap-3 w-full sm:w-auto">
+            <div className="bg-blue-50 p-3 rounded-full flex-shrink-0">
               <Hash className="h-5 w-5 text-[#1E4B8E]" />
             </div>
-            <div>
+            <div className="flex-1">
               <p className="text-sm text-gray-600">Your Job ID</p>
-              <p className="text-lg font-semibold text-[#1E4B8E]">{interviewId}</p>
-              <p className="text-xs text-gray-500 mt-1">Have this remember when you call</p>
+              <p className="text-lg font-semibold text-[#1E4B8E] break-all">
+                {interviewId}
+              </p>
+              <p className="text-xs text-gray-500 mt-1">
+                Have this remember when you call
+              </p>
             </div>
           </div>
         </div>
@@ -178,10 +193,6 @@ export default function CandidatesDetails() {
                   onChange={(phone) => {
                     field.onChange(phone);
                   }}
-                  // onChange={(phone) => {
-                  //   const formattedPhone = phone.startsWith('+') ? phone : `+${phone}`;
-                  //   field.onChange(formattedPhone);
-                  // }}
                   inputProps={{
                     name: 'phone',
                     required: true,
