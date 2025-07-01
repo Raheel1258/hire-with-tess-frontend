@@ -54,7 +54,6 @@ function EmployeeSignIn() {
           <p className="text-[#606778] text-lg font-semibold font-[roboto] text-center">
             Easily create interviews and manage candidates
           </p>
-          {/* <GoogleLoginButton redirectTo="/" /> */}
 
           <div className="mt-10">
             <Form {...form}>
@@ -111,7 +110,7 @@ function EmployeeSignIn() {
                   </Link>
                 </div>
                 <div className="flex justify-center gap-2 flex-col sm:items-center sm:flex-row " >
-                     <GoogleLoginButton redirectTo="/" />
+                <GoogleLoginButton redirectTo="/" />
                   <Button
                     className=" sm:w-3xs h-11 mt-4 cursor-pointer p-2 hover:bg-gray-100 hover:text-black"
                     type="submit"
@@ -123,7 +122,6 @@ function EmployeeSignIn() {
                       'Sign In to Continue'
                     )}
                   </Button>
-                     {/* <GoogleLoginButton redirectTo="/" /> */}
                 </div>
                 <p className="text-sm text-gray-500 text-center">
                   Don&apos;t have an account?{' '}

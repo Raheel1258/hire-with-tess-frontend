@@ -7,7 +7,7 @@ import { SubscriptionsResponse, SubscriptionStats } from '@/Types/Admin/subscrip
 import { AnalysisResponse } from '@/Types/Admin/analysis';
 import { UserJobResponse } from '@/Types/userJob';
 const api = axios.create({
-  baseURL: process.env.BACKEND_URL,
+  baseURL: process.env.NEXT_PUBLIC_BACKEND_URL,
   headers: {
     'Content-Type': 'application/json',
   },
