@@ -3,7 +3,7 @@ import { AdminEndpoint } from '../Constant/admin-endpoint.route';
 import { toast } from 'sonner';
 import { clearAuthToken } from '@/Utils/Providers/auth';
 const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_BACKEND_URL,
+  baseURL: process.env.BACKEND_URL,
   headers: {
     'Content-Type': 'application/json',
   },

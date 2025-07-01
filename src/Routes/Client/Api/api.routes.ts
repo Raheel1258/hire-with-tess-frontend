@@ -11,7 +11,7 @@ import JobDetails from '@/Types/Employer/jobdetails.type';
 import QuestionType from '@/Types/Employer/question.type';
 
 const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_BACKEND_URL,
+  baseURL: process.env.BACKEND_URL,
   headers: {
     'Content-Type': 'application/json',
   },
