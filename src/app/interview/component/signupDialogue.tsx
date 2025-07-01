@@ -12,16 +12,13 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import z from 'zod';
 import { Loader2 } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import { toast } from 'sonner';
 import Link from 'next/link';
-import Image from 'next/image';
+import { GoogleLoginButton } from './googleloginbtn';
 
 export default function SignupDialogue() {
   const GoogleLoginMutation = useGoogleLoginHook();
 
   const jobId = useHomeStore((state) => state.jobId);
-  const router = useRouter();
 
   const form = useForm<z.infer<typeof signupFormSchema>>({
     resolver: zodResolver(signupFormSchema),
@@ -35,7 +32,8 @@ export default function SignupDialogue() {
     },
   });
   const ref = useRef<HTMLFormElement>(null);
-  const signupMutation = useSignupMutation();
+  
+  const signupMutation = useSignupMutation(jobId);
 
   const onSubmit = async (data: z.infer<typeof signupFormSchema>) => {
     const payload = {
@@ -49,10 +47,6 @@ export default function SignupDialogue() {
     };
 
     signupMutation.mutate(payload, {
-      onSuccess: () => {
-        form.reset();
-        router.push(`/`);
-      },
     });
   };
 
@@ -66,43 +60,16 @@ export default function SignupDialogue() {
           Get started with a 60-day free trial - no credit required!
         </p>
 
-        <Button
-          onClick={() => {
-            const GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!;
-            const REDIRECT_URI =
-              process.env.NEXT_PUBLIC_GOOGLE_REDIRECT_URI ||
-              'http://localhost:3000/auth/callback';
-
-            const googleAuthUrl =
-              `https://accounts.google.com/o/oauth2/v2/auth?` +
-              `client_id=${GOOGLE_CLIENT_ID}` +
-              `&redirect_uri=${encodeURIComponent(REDIRECT_URI)}` +
-              `&response_type=code` +
-              `&scope=openid%20email%20profile` +
-              `&access_type=offline` +
-              `&prompt=consent`;
-
-            sessionStorage.setItem(
-              'redirectPath',
-              window.location.pathname + window.location.search,
-            );
-            window.location.href = googleAuthUrl;
-          }}
-          className="w-max-2xl sm:w-[528px] h-[64px] border-r-[14px] rounded-[14px] border-[1px] mt-4 mb-4 font-[roboto] font-normal bg-transparent text-black
-                  hover:bg-transparent border-gray-400 flex items-center justify-center gap-2"
-        >
-          <Image src="/images/google.png" alt="Google Icon" width={20} height={20} />
-          Continue with Google
-        </Button>
+        {/* <GoogleLoginButton redirectTo="/" /> */}
       </div>
 
       <div className="w-full mt-4">
-        <div className="relative flex items-center justify-center w-full mt-2 mb-2">
+        {/* <div className="relative flex items-center justify-center w-full mt-2 mb-2">
           <hr className="w-full h-[1px] bg-[#CBCAD7] border-0 rounded-sm" />
           <div className="absolute px-4 font-openSans font-normal text-[18px] space-x-[28px] bg-white text-gray-600 left-1/2 transform -translate-x-1/2">
             Or
           </div>
-        </div>
+        </div> */}
         <div className="w-full sm:flex-col px-4 mt-4">
           {/* <SignupForm /> */}
           <Form {...form}>
@@ -111,7 +78,7 @@ export default function SignupDialogue() {
               ref={ref}
               className="space-y-8 flex flex-col items-center overflow-auto max-h-[80vh] py-8" // Added padding-y
             >
-              <div className="flex gap-4 items-start w-full mt-4 ">
+              <div className="flex flex-col sm:flex-row gap-4 items-start w-full mt-4 ">
                 <FormField
                   control={form.control}
                   name="firstname"
@@ -148,7 +115,7 @@ export default function SignupDialogue() {
                 />
               </div>
 
-              <div className="flex gap-4 items-start w-full ">
+              <div className="flex flex-col sm:flex-row gap-4 items-start w-full ">
                 <FormField
                   control={form.control}
                   name="organization"
@@ -184,7 +151,7 @@ export default function SignupDialogue() {
                 />
               </div>
 
-              <div className="flex gap-4 items-start w-full ">
+              <div className="flex flex-col sm:flex-row gap-4 items-start w-full ">
                 <FormField
                   control={form.control}
                   name="password"
@@ -232,10 +199,12 @@ export default function SignupDialogue() {
                 </label>
               </div>
 
-              <div className="flex justify-center w-full">
+              <div className="flex flex-col sm:flex-row justify-center w-full gap-2">
+
+              <GoogleLoginButton redirectTo="/" />
                 <Button
-                  type="submit"
-                  className="w-full sm:w-[528px] h-[64px] leading-[20px] font-roboto cursor-pointer rounded-2xl max-w-[90%]"
+                 className=" sm:w-3xs h-11 mt-4 cursor-pointer p-2 hover:bg-gray-100 hover:text-black"
+                    type="submit"
                   disabled={signupMutation.isPending}
                 >
                   {signupMutation.isPending ? (
@@ -250,9 +219,7 @@ export default function SignupDialogue() {
         </div>
         <p className="text-sm text-gray-500 text-center">
           Already have an account?{' '}
-          <Link href="/login" className="text-[#F7941D]">
-            Login
-          </Link>
+          <Link className="text-[#F7941D]" href={`/login?returnTo=/interview/review/${jobId}`}>Login</Link>
         </p>
       </div>
     </div>

@@ -1,11 +1,18 @@
 'use client';
-import { BriefcaseBusiness, Eye, Users } from 'lucide-react';
+import { BriefcaseBusiness, Copy, Users } from 'lucide-react';
 import CardComponent from '../components/card';
 import TableComponent from '../components/table';
 import Searchbar from '../components/searchbar';
 import UseDashboardJobCardStats from '@/Routes/Employer/hooks/GET/jobposting/GetJobCardstats.hook';
 import UseGetAllJob from '@/Routes/Employer/hooks/GET/jobposting/GetAllJobs.hook';
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import JobPostingTableTitle from '@/app/employer/(dashboard)/Constant/jobposting';
 import UseDeleteJobByID from '@/Routes/Employer/hooks/DELETE/DeleteJobById.hook';
 import JobpProfile from '../components/postedjobdialogue';
@@ -13,69 +20,138 @@ import { DropDownCustomStatus } from '../components/statusfeature';
 import UseUpdateJobStatus from '@/Routes/Employer/hooks/PUT/job/UpdateJobStatus.hook';
 import postedJobProps from '@/Types/EmployerDashboard/Dashboard/Job/podtedjob.type';
 import JobStore from '@/store/EmployeeDashboard/dashboard/job-posting/job.store';
-import UseGetFilteredJob from '@/Routes/Employer/hooks/GET/jobposting/GetFilterJob.hook';
+import { Button } from '@/components/ui/button';
+import { useState } from 'react';
+import handleCopyLink from '@/Utils/helper/copylink';
+import CustomJobDetailDialogue from '@/app/employer/(dashboard)/components/jobdetaildialogue';
+import UseGETJobBYID from '@/Routes/Employer/hooks/GET/candidates/GetJobByID.hook';
 
 export default function JobPosting() {
+  const {
+    isDialogOpen,
+    setIsDialogOpen,
+    postedjobdata,
+    setpostedjobdata,
+    searchTerm,
+    setSearchTerm,
+    selectedCandidate,
+    setSelectedCandidate,
+  } = JobStore();
+
+  const [currentPage, setCurrentPage] = useState(1);
   const { data: jobdata } = UseDashboardJobCardStats();
-  const { data: JobPostedTableData } = UseGetAllJob();
+  const { data: JobPostedTableData } = UseGetAllJob({ page: currentPage });
   const deleteJobMutation = UseDeleteJobByID();
   const updatejobstatus = UseUpdateJobStatus();
-  // const { data: FilteredJobData } = UseGetFilteredJob({});
+  const { data: jobDetails } = UseGETJobBYID(postedjobdata.id);
 
-  const {isDialogOpen, setIsDialogOpen, postedjobdata, setpostedjobdata, searchTerm, setSearchTerm} = JobStore();
+ 
+  
+  const [isInterviewDialogOpen, setIsInterviewDialogOpen] = useState(false);
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
   };
 
-  const filteredJobs = JobPostedTableData?.items?.filter((item: {job_title: string}) =>
-    item.job_title.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredJobs = JobPostedTableData?.items?.filter((item: { job_title: string }) =>
+    item.job_title.toLowerCase().includes(searchTerm.toLowerCase()),
   );
+
   const deleteJob = (rowIndex: number) => {
     const jobIds = filteredJobs?.map((item: { id: string }) => item.id) ?? [];
     const jobId = jobIds[rowIndex];
     deleteJobMutation.mutate(jobId);
-  }
-
-  const DATA = (filteredJobs ?? []).map((item: postedJobProps) => [
-    <Eye
-      onClick={() => {
-        setpostedjobdata(item);
-        setIsDialogOpen(true);
-      }}
-      key={item.id}
-      className="w-5 h-5 text-gray-600 cursor-pointer"
-    />,
-    item?.job_title,
+  };
+ 
+  const DATA = (filteredJobs ?? []).map((item: postedJobProps) => {
+    return [
+      item?.id,
+      <div key={`job-title-${item.id}`} className="truncate">
+        {item?.job_title}
+      </div>,
       <DropDownCustomStatus
-      key={item.status}
-      Status={item?.status } 
-      updateStatus={(newStatus) =>
-        updatejobstatus.mutate({
-          job_id: item.id,
-          status: newStatus,
-        })
-      }
-    />,
-    item?.shortlisted_stats?.shortlisted,
-    item?.shortlisted_stats?.shortlist_ratio,
-    item?.job_type,
-    new Date(item.created_at).toLocaleDateString(),
-    item?.expiry_date
-  ]);
+        key={item.status}
+        Status={item?.status}
+        updateStatus={(newStatus) =>
+          updatejobstatus.mutate({
+            job_id: item.id,
+            status: newStatus,
+          })
+        }
+      />,
+      <div key={`shortlisted-${item.id}`} className="text-center">
+        {item?.shortlisted_stats?.shortlisted}
+      </div>,
+      <div key={`shortlisted-ratio-${item.id}`} className="text-center">
+        {item?.shortlisted_stats?.shortlist_ratio}
+      </div>,
+      item?.job_type,
+      new Date(item.created_at).toLocaleDateString(),
+      <Button
+        variant="ghost"
+        size="sm"
+        className="w-10 flex items-center gap-2 bg-green-100 border-2 border-green-400"
+        key={item.id}
+        onClick={() => {
+          setSelectedCandidate(item.id);
+          setIsInterviewDialogOpen(true); 
+        }}
+      >
+        <span>{item.total_interviews}</span>
+      </Button>,
+      item?.interview_link ? (
+        <Button
+          variant="ghost"
+          size="sm"
+          className="flex items-center gap-2"
+          onClick={() => {
+            handleCopyLink(item.interview_link);
+          }}
+        >
+          <Copy className="w-4 h-4" />
+          <span>Copy Link</span>
+        </Button>
+      ) : (
+        'No link available'
+      ),
+    ];
+  });
+
+  const handleViewJob = (rowIndex: number) => {
+    const selectedJob = filteredJobs?.[rowIndex];
+    if (selectedJob) {
+      setpostedjobdata(selectedJob);
+      setIsDialogOpen(true);
+    }
+  };
 
   return (
     <>
-      <Dialog
-        open={isDialogOpen}
-        onOpenChange={setIsDialogOpen}>
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Posted Job Details</DialogTitle>
             <DialogDescription />
           </DialogHeader>
-          <JobpProfile data={postedjobdata} />
+          <JobpProfile data={jobDetails} />
           <DialogClose asChild />
+        </DialogContent>
+      </Dialog>
+      <Dialog open={isInterviewDialogOpen} onOpenChange={setIsInterviewDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+          </DialogHeader>
+          <DialogTitle>Interview Details</DialogTitle>
+          {selectedCandidate && (
+            <CustomJobDetailDialogue 
+              jobId={selectedCandidate}
+              isOpen={isInterviewDialogOpen}
+              onClose={() => {
+                setIsInterviewDialogOpen(false);
+                setSelectedCandidate(''); 
+              }}
+            />
+          )}
         </DialogContent>
       </Dialog>
 
@@ -106,17 +182,17 @@ export default function JobPosting() {
 
         <div className="mt-10">
           <h1 className="font-roboto text-2xl font-bold leading-[30px] mb-4">Jobs</h1>
-          <Searchbar
-            value={searchTerm}
-            onChange={handleSearchChange}
-          />
+          <Searchbar value={searchTerm} onChange={handleSearchChange} />
           <TableComponent
             header={JobPostingTableTitle}
             subheader={DATA}
             paginationstart={JobPostedTableData?.current_page}
-            paginationend={JobPostedTableData?.total}
+            paginationend={JobPostedTableData?.pages}
+            onPageChange={(page: number) => setCurrentPage(page)}
             showTrashIcon
             onDelete={deleteJob}
+            showEyeIcon={true}
+            onView={handleViewJob}
           />
         </div>
       </div>

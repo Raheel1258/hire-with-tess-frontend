@@ -9,34 +9,40 @@ import OverviewStore from '@/store/EmployeeDashboard/dashboard/overview/overview
 import { Dialog, DialogContent, DialogHeader, DialogClose } from '@/components/ui/dialog';
 import { DialogDescription, DialogTitle } from '@radix-ui/react-dialog';
 import UserProfile from '@/app/employer/(dashboard)/components/candiateprofile';
+import { useState } from 'react';
+import SuperAdminCandidate from '@/Types/Admin/candidates.type';
 
 export default function AdminCandidatePage() {
-  const TITLE = ['Action', 'Name', 'Job Applied For', 'Created At', 'Status', 'Score'];
+  const TITLE = [
+    'ID',
+    'Name',
+    'Job Applied For',
+    'Applied On',
+    'Interview Status',
+    'Score',
+    'Action',
+  ];
 
-  const { data: DashboardTableData } = UseGetAllInterview();
+  const [currentPage, setCurrentPage] = useState(1);
+  const { data: DashboardTableData, isLoading: tableLoading } = UseGetAllInterview({ page: currentPage });
+ 
   const { data: candidatestats } = UseDashboardCandidateCardStats();
 
-  const {
-    selectedCandidate,
-    isDialogOpen,
-    setSelectedCandidate,
-    setIsDialogOpen,
-  } = OverviewStore();
+  const { selectedCandidate, isDialogOpen, setSelectedCandidate, setIsDialogOpen } =
+    OverviewStore();
 
   const DATA =
-    DashboardTableData?.items?.map((item: any) => [
-      <div key={`actions-${item.id}`} className="flex gap-2 items-center">
-        <Eye
-          onClick={() => {
-            setSelectedCandidate(item);
-            setIsDialogOpen(true);
-          }}
-          className="w-5 h-5 text-gray-600 cursor-pointer"
-        />
+    DashboardTableData?.items?.map((item: SuperAdminCandidate) => [
+      item.id,
+      <div key={`candidate-name-${item.id}`} className="truncate">
+        {item.candidate_name}
       </div>,
-      item.candidate_name,
-      item.job_title,
-      new Date(item.created_at).toLocaleDateString(),
+      <div key={`job-title-${item.id}`} className="truncate">
+        {item.job_title}
+      </div>,
+      <div key={`created-at-${item.id}`} className="text-center">
+        {new Date(item.created_at).toLocaleDateString()}
+      </div>,
 
       item.status === 'reject' ? (
         <Badge
@@ -61,7 +67,19 @@ export default function AdminCandidatePage() {
         </Badge>
       ),
 
-      item.ai_score === null ? 0 : item.ai_score,
+      <Badge key={`status-${item.status}`} className='w-10 flex items-center gap-2 bg-orange-100 border-1 border-orange-400 text-orange-800'>
+      {item.ai_score === null ? 0 : item.ai_score}
+    </Badge>,
+      <div key={`actions-${item.id}`} className="flex justify-center">
+      <Eye
+        onClick={() => {
+          setSelectedCandidate(item);
+          setIsDialogOpen(true);
+        }}
+        className="w-5 h-5 text-gray-600 cursor-pointer hover:text-[#f7941D] transition"
+      />
+    </div>,
+      
     ]) || [];
 
   return (
@@ -86,7 +104,7 @@ export default function AdminCandidatePage() {
           ></CardComponent>
           <CardComponent
             heading="New Candidates"
-            subheading={candidatestats?.pending}
+            subheading={candidatestats?.new_candidates}
             icon={<BriefcaseBusiness size={20} strokeWidth={1.5} color="#f7941D" />}
           ></CardComponent>
 
@@ -110,7 +128,9 @@ export default function AdminCandidatePage() {
             header={TITLE}
             subheader={DATA}
             paginationstart={DashboardTableData?.current_page}
-            paginationend={DashboardTableData?.total}
+            paginationend={DashboardTableData?.pages}
+            onPageChange={(page: number) => setCurrentPage(page)}
+            isLoading={tableLoading}
           />
         </div>
       </div>

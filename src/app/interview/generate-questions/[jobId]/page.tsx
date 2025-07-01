@@ -2,10 +2,10 @@
 import InterviewLayout from '@/components/layout/InterviewLayout';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import GenerateQuestionResponse from '@/Routes/Client/hook/POST/GenerateQuestion.hook';
 import { useEffect, useRef } from 'react';
-import { Check, CirclePlus, Pencil, X } from 'lucide-react';
+import { Check, CirclePlus, Pencil, Trash, X } from 'lucide-react';
 import { Textarea } from '@/components/ui/textarea';
 import useUpdateJobQuestion from '@/Routes/Client/hook/PUT/UpdateJobQuestion.hook';
 import { useSkillStore } from '@/store/Employer/InputStore';
@@ -16,13 +16,12 @@ import QuestionType from '@/Types/Employer/question.type';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Loader2 } from 'lucide-react';
 
+
 export default function Questionnaire() {
   const { jobId } = useParams<{ jobId: string }>();
-  const router = useRouter();
 
   const { editableQuestionIndex, setEditableQuestionIndex, setIsEditable } =
     useSkillStore();
-
   const {
     editedQuestions,
     manualQuestion,
@@ -31,6 +30,7 @@ export default function Questionnaire() {
     setManualQuestion,
     setEditedQuestions,
     setNewQuestionText,
+    setAiQuestions,
   } = useQuestionStore();
 
   const updateJobQuestionMutation = useUpdateJobQuestion();
@@ -48,10 +48,16 @@ export default function Questionnaire() {
   const hasFetched = useRef(false);
 
   useEffect(() => {
-    if (!jobId || hasFetched.current || generateQuestionMutation.isSuccess) return;
+    if (
+      !jobId ||
+      hasFetched.current ||
+      generateQuestionMutation.isSuccess ||
+      Aiquestions.length > 0
+    )
+      return;
     generateQuestionMutation.mutate({ job_id: jobId });
     hasFetched.current = true;
-  }, [jobId, generateQuestionMutation]);
+  }, [jobId, generateQuestionMutation, Aiquestions]);
 
   useEffect(() => {
     setEditedQuestions(Aiquestions);
@@ -111,6 +117,22 @@ export default function Questionnaire() {
     }
   };
 
+  const handleRemoveQuestion = (indexToRemove: number) => {
+    const updatedEditedQuestions = editedQuestions.filter(
+      (_, index) => index !== indexToRemove,
+    );
+    const updatedAiQuestions = Aiquestions.filter((_, index) => index !== indexToRemove);
+
+    setEditedQuestions(updatedEditedQuestions);
+    setAiQuestions(updatedAiQuestions);
+    updateJobQuestionMutation.mutate({ questions: updatedEditedQuestions });
+
+    if (editableQuestionIndex === indexToRemove) {
+      setEditableQuestionIndex(null);
+      setIsEditable(false);
+    }
+  };
+
   return (
     <div>
       <InterviewLayout
@@ -120,7 +142,7 @@ export default function Questionnaire() {
         useCard={false}
         description="Review, Edit, or regenerate questions before finalizing your interview"
       >
-        <div className="text-left space-y-2 w-full">
+        <div className="text-left space-y-2 w-full p-4 sm:p-0">
           <h2 className="text-lg font-semibold mt-4 mb-6">AI Powered Questions:</h2>
           <ul className="space-y-4 w-full">
             {Aiquestions.length === 0 ? (
@@ -152,6 +174,7 @@ export default function Questionnaire() {
                         alt="bot"
                         width={40}
                         height={40}
+                            className="shrink-0 w-8 h-8 sm:w-10 sm:h-10"
                       />
                       <div className="relative w-full">
                         {isEditing ? (
@@ -163,7 +186,7 @@ export default function Questionnaire() {
                           />
                         ) : (
                           <div className="relative">
-                            <p className="w-full h-[68px] rounded-[14px] border-1 text-black bg-white p-2 flex items-center">
+                            <p className="w-full h-lg rounded-[14px] border-1 text-black bg-white p-2 flex items-center">
                               <span className="text-base font-semibold">
                                 {index + 1}.
                               </span>
@@ -171,33 +194,52 @@ export default function Questionnaire() {
                             </p>
                           </div>
                         )}
-
-                        {isEditing ? (
-                          hasChanged ? (
-                            <Check
-                              size={18}
-                              color="green"
-                              onClick={saveChanges}
-                              className="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer"
-                            />
+                        <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-2">
+                          {isEditing ? (
+                            hasChanged ? (
+                              <Check
+                                size={18}
+                                color="green"
+                                onClick={saveChanges}
+                                className="cursor-pointer"
+                              />
+                            ) : (
+                              <X
+                                size={18}
+                                color="orange"
+                                onClick={cancelEditing}
+                                className="cursor-pointer "
+                              />
+                            )
                           ) : (
-                            <X
-                              size={18}
-                              color="orange"
-                              onClick={cancelEditing}
-                              className="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer"
-                            />
-                          )
-                        ) : (
-                          <Pencil
-                            size={18}
-                            color="#718096"
-                            onClick={() => startEditing(index)}
-                            className="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer"
-                          />
-                        )}
+                            <>
+                              <Pencil
+                                size={18}
+                                color="#718096"
+                                onClick={() => startEditing(index)}
+                                className="cursor-pointer"
+                              />
+                              {/* <X
+                                size={18}
+                                color="red"
+                                onClick={() => handleRemoveQuestion(index)}
+                                className="cursor-pointer "
+                              /> */}
+                            </>
+                            
+                          )}
+                          
+                        </div>
+                        
                       </div>
+                      <Trash
+                                size={18}
+                                color="red"
+                                onClick={() => handleRemoveQuestion(index)}
+                                className="cursor-pointer hover:text-red-500 hover:scale-110 transition-all duration-300 "
+                              />
                     </li>
+                    
                   );
                 })}
               </>
@@ -238,7 +280,7 @@ export default function Questionnaire() {
           </ul>
         </div>
 
-        <div className="flex flex-row items-center justify-center gap-2 mt-4">
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-2 mt-4">
           <Button
             className="cursor-pointer rounded-full"
             type="button"
@@ -253,7 +295,7 @@ export default function Questionnaire() {
             )}
           </Button>
           <Button
-            className="cursor-pointer rounded-full bg-transparent text-black border hover:text-white"
+            className="cursor-pointer rounded-full bg-transparent text-black border hover:text-white hover:bg-[#f7941D] hover:border-transparent"
             type="button"
             onClick={addnewInput}
           >
@@ -263,7 +305,7 @@ export default function Questionnaire() {
         </div>
 
         {editedQuestions?.length > 0 && (
-          <div className="flex justify-end items-center mt-6 gap-4">
+          <div className="flex justify-end items-center mt-6 gap-4 p-4 ">
             <Link href={`/interview?job_id=${jobId}`}>
               <Button
                 type="button"

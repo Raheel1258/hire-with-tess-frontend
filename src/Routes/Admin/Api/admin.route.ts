@@ -2,59 +2,47 @@ import axios from 'axios';
 import { AdminEndpoint } from '../Constant/admin-endpoint.route';
 import { toast } from 'sonner';
 import { clearAuthToken } from '@/Utils/Providers/auth';
-import { EMPLOYERAPI } from '@/Routes/Employer/Constant/employer-endpoint.route';
-
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BACKEND_URL,
   headers: {
     'Content-Type': 'application/json',
   },
 });
-api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('accessToken');
-      if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
-      } 
-      return config;
-    },
-    (error) => Promise.reject(error)
-  );
-
-  api.interceptors.response.use(
-    (response) => response,
-    (error) => {
-      // const originalRequest = error.config;
-  
-      // const isLoginRequest =
-      //   originalRequest?.url?.includes(EMPLOYERAPI.EMPLOYER_LOGIN) &&
-      //   originalRequest?.method === 'post';
-  
-      if (error.response && error.response.status === 401 ) {
-        clearAuthToken();
-  
-        if (error.response?.status === 403) {
-          toast.error('Unauthorized access');
-        } else if (error.response?.status === 500) {
-          toast.error('Server error');
-        } else {
-          toast.error('Session expired. Please login again.');
-          window.location.href = '/login';
-        }
-      }
-  
-      return Promise.reject(error);
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('accessToken');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
     }
-  );
-  
+    return config;
+  },
+  (error) => Promise.reject(error),
+);
+
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+
+    if (error.response && error.response.status === 401) {
+      clearAuthToken();
+
+      if (error.response?.status === 403) {
+        toast.error('Unauthorized access');
+      } else if (error.response?.status === 500) {
+        toast.error('Server error');
+      } else {
+        toast.error('Session expired. Please login again.');
+        window.location.href = '/login';
+      }
+    }
+
+    return Promise.reject(error);
+  },
+);
+
 //Super Admin Auth
 export const SuperAdminLogin = async (data: { email: string; password: string }) => {
   const response = await api.post(AdminEndpoint.SUPERADMIN_LOGIN, data);
-  return response.data;
-};
-
-//Super Admin User
-export const GetEmployees = async () => {
-  const response = await api.get(AdminEndpoint.SUPERADMIN_GET_EMPLOYEES);
   return response.data;
 };
 
@@ -101,7 +89,7 @@ export const GetDashboardStats = async () => {
 };
 
 //Super Admin Notification
-export const GetNotification = async () => {
+export const GetSuperAdminNotification = async () => {
   const response = await api.get(AdminEndpoint.SUPERADMIN_GET_NOTIFICATION);
   return response.data;
 };
@@ -111,11 +99,15 @@ export const GetNotificationSetting = async () => {
   return response.data;
 };
 
-//Super Admin Profile
 export const UpdateNotification = async (notification_type: string) => {
   const response = await api.put(
     AdminEndpoint.SUPERADMIN_UPDATE_NOTIFICATION(notification_type),
   );
+  return response.data;
+};
+
+export const GetUnreadCount = async () => {
+  const response = await api.get(AdminEndpoint.SUPERADMIN_GET_UNREAD_COUNT);
   return response.data;
 };
 
@@ -131,5 +123,35 @@ export const UpdateProfile = async (data: {
   password: string;
 }) => {
   const response = await api.put(AdminEndpoint.SUPERADMIN_UPDATE_PROFILE, data);
+  return response.data;
+};
+
+export const GetEmployers = async (page: number = 1, limit: number = 10) => {
+  const response = await api.get(AdminEndpoint.SUPERADMIN_GET_EMPLOYERS(page, limit));
+  return response.data;
+};
+
+//Super Admin Candidates
+export const GetCandidateJobs = async (user_id: string) => {
+  const response = await api.get(AdminEndpoint.SUPERADMIN_CANDIDATE_JOBS(user_id));
+  return response.data;
+};
+
+export const GetSuperAdminProfile = async () => {
+  const response = await api.get(AdminEndpoint.SUPERADMIN_GET_PROFILE);
+  return response.data;
+};
+
+export const SuperAdminMonthlyJobStats = async () => {
+  const response = await api.get(AdminEndpoint.SUPERADMIN_MONTHLY_JOB_STATS);
+  return response.data;
+};
+
+export const UpdateSuperAdminProfile = async (data: any) => {
+  const response = await api.put(AdminEndpoint.SUPERADMIN_UPDATE_PROFILE, data, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
   return response.data;
 };

@@ -16,7 +16,7 @@ export const EMPLOYERAPI = {
     `/api/v1/admin/interview/${interview_id}`,
   UPDATE_INTERVIEW_STATUS_BYID: (interview_id: string) =>
     `/api/v1/admin/interview/${interview_id}/status`,
-
+  
   // Employer Dashboard
   DASHBOARD_CARD_STATS: `/api/v1/admin/dashboard-stats`,
   CANDIDATE_CARD_STATS: `/api/v1/admin/candidates-stats`,
@@ -26,6 +26,7 @@ export const EMPLOYERAPI = {
   FILTER_JOBS: `/api/v1/admin/jobs/filter/`,
   FILTER_INTERVIEW: `/api/v1/admin/interviews/filter/`,
 
+
   //Profile
   ADMIN_PROFILE: `/api/v1/admin/profile`,
   UPDATE_PROFILE: `/api/v1/admin/profile`,
@@ -33,6 +34,7 @@ export const EMPLOYERAPI = {
 
   //Notification
   NOTIFICATION: `/api/v1/admin/notifications`,
+  UNREAD_NOTIFICATIONS_CHECK: `/api/v1/admin/unread-notifications-check`,
   PROFILE_PERMISSION_NOTIFICATION_SETTING: `/api/v1/admin/notification-settings`,
   UPDATE_PROFILE_NOTIFICATION: (notification_type: string) =>
     `/api/v1/admin/notification-settings/${notification_type}`,

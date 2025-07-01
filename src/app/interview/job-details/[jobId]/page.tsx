@@ -10,29 +10,29 @@ import useHomeStore from '@/store/Employer/home.store';
 import Link from 'next/link';
 import InterviewLayout from '@/components/layout/InterviewLayout';
 import CustomInputForm from '@/app/interview/component/customformInput';
-import { Check, Pencil } from 'lucide-react';
-import { useSkillStore } from '@/store/Employer/InputStore';
 import { useParams } from 'next/navigation';
 import { useUpdateJob } from '@/Routes/Client/hook/PUT/UpdateJobDetails.hook';
-import { useRouter } from 'next/navigation';
+import { DollarSign, Loader2 } from 'lucide-react';
+
 
 export default function InterviewForm() {
-  const { jobDescription } = useHomeStore();
-  const { isEditDescription, setIsEditableDescription } = useSkillStore();
-  const router = useRouter();
-
+ 
+  const { jobTitle,jobDescription, jobType, companyName, location,salary } = useHomeStore();
   const { jobId } = useParams<{ jobId: string }>();
   const generateMutation = useUpdateJob();
+  const { companyName: companyNameStore } = useHomeStore();
 
   const form = useForm<FormValidator>({
     resolver: zodResolver(customformSchema),
     defaultValues: {
       jobDescription: jobDescription,
-      jobTitle: '',
-      jobType: '',
-      companyName: '',
-      location: '',
-      salary: '',
+      jobTitle: jobTitle || '',
+      jobType: jobType,
+      companyName: companyName || companyNameStore,
+      location: location,
+      salary: salary || '0',
+      currency: 'USD',
+      salaryType: 'per_hour',
     },
   });
   const ref = useRef<HTMLFormElement>(null);
@@ -40,12 +40,13 @@ export default function InterviewForm() {
   const onSubmit = async (data: FormValidator) => {
     generateMutation.mutate({
       job_description: data.jobDescription,
-      job_title: data.jobTitle,
-      job_type: data.jobType,
-      company_name: data.companyName,
-      location: data.location,
-      salary: data.salary,
-      currency: data.currency,
+      job_title: data.jobTitle || '',
+      job_type: data.jobType || '',
+      company_name: data.companyName || '',
+      location: data.location || '',
+      salary: data.salary || '0',
+      currency: data.currency || '',
+      salary_type: data.salaryType || '',
     });
   };
 
@@ -54,24 +55,16 @@ export default function InterviewForm() {
     if (!isValid) return;
 
     const formData = form.getValues();
-
     generateMutation.mutate({
       job_description: formData.jobDescription,
       job_title: formData.jobTitle,
       job_type: formData.jobType,
       company_name: formData.companyName,
       location: formData.location,
-      salary: formData.salary,
+      salary: formData.salary || '0',
       currency: formData.currency,
+      salary_type: formData.salaryType,
     });
-  };
-
-  const handleEditDescription = () => {
-    setIsEditableDescription(true);
-  };
-
-  const UpdateJobDescription = () => {
-    setIsEditableDescription(false);
   };
 
   return (
@@ -91,40 +84,6 @@ export default function InterviewForm() {
             >
               <FormField
                 control={form.control}
-                name="jobDescription"
-                render={({ field }) => (
-                  <FormItem>
-                    <CustomInputForm
-                      {...field}
-                      name="jobDescription"
-                      label="Position Overview"
-                      type="textarea"
-                      placeholder={jobDescription || 'Position Overview here'}
-                      readOnly={!isEditDescription}
-                      icon={
-                        isEditDescription ? (
-                          <Check
-                            size={16}
-                            color="green"
-                            strokeWidth={0.75}
-                            style={{ cursor: 'pointer' }}
-                            onClick={UpdateJobDescription}
-                          />
-                        ) : (
-                          <Pencil
-                            size={18}
-                            color="#718096"
-                            style={{ cursor: 'pointer' }}
-                            onClick={handleEditDescription}
-                          />
-                        )
-                      }
-                    />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
                 name="jobTitle"
                 render={({ field }) => (
                   <FormItem>
@@ -132,7 +91,7 @@ export default function InterviewForm() {
                       {...field}
                       name="jobTitle"
                       label="Job Title"
-                      placeholder="Job Title here"
+                      placeholder={jobTitle || 'Job Title here'}
                     />
                   </FormItem>
                 )}
@@ -140,13 +99,14 @@ export default function InterviewForm() {
               <FormField
                 control={form.control}
                 name="jobType"
-                render={({ field }) => (
+                render={() => (
+                  <FormItem>
                   <CustomInputForm
-                    {...field}
                     name="jobType"
                     label="Job Type"
                     jobTypeName="jobType"
                   />
+                </FormItem>
                 )}
               />
               <FormField
@@ -157,8 +117,8 @@ export default function InterviewForm() {
                     <CustomInputForm
                       {...field}
                       name="companyName"
-                      label="Company Name"
-                      placeholder="Company Name here"
+                      label="Organization Name"
+                      placeholder="Organization Name here"
                     />
                   </FormItem>
                 )}
@@ -171,8 +131,8 @@ export default function InterviewForm() {
                     <CustomInputForm
                       {...field}
                       name="location"
-                      label="Location "
-                      placeholder="Location here"
+                      label="Organization Location "
+                      placeholder="Organization Location here"
                     />
                   </FormItem>
                 )}
@@ -180,14 +140,21 @@ export default function InterviewForm() {
               <FormField
                 control={form.control}
                 name="salary"
-                render={() => (
+                render={({ field }) => (
                   <FormItem>
                     <CustomInputForm
+                      {...field}
                       name="salary"
-                      currencyName="currency"
                       label="Salary"
-                      placeholder="Enter salary here"
-                      type="number"
+                      placeholder="Enter salary amount"
+                      currencyName="currency"
+                      salaryTypeName="salaryType"
+                      icon={<DollarSign />}
+                      onChange={(value) => {
+                        const numericValue = value.replace(/,/g, '');
+                        field.onChange(numericValue);
+                      }}
+                      value={field.value ? field.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') : ''}
                     />
                   </FormItem>
                 )}
@@ -199,7 +166,7 @@ export default function InterviewForm() {
                     className=" sm:w-auto cursor-pointer"
                     type="button"
                   >
-                    Cancel
+                    Back
                   </Button>
                 </Link>
                 <Button
@@ -208,8 +175,7 @@ export default function InterviewForm() {
                   onClick={handleReviewClick}
                   className=" cursor-pointer"
                 >
-                  <Image src="/images/Vector.png" alt="alt" width={20} height={20} />
-                  Review Details
+                  {generateMutation.isPending ?  <Loader2 className='animate-spin' /> : 'Review Details'}
                 </Button>
               </div>
             </form>

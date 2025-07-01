@@ -1,53 +1,96 @@
-"use client";
-import { BriefcaseBusiness, Eye, Search, Users } from "lucide-react";
-import CardComponent from "@/app/employer/(dashboard)/components/card";
-import { Badge } from "@/components/ui/badge";
-import TableComponent from "@/app/employer/(dashboard)/components/table";
-import Searchbar from "@/app/employer/(dashboard)/components/searchbar";
-import UseDashboardJobCardStats from "@/Routes/Employer/hooks/GET/jobposting/GetJobCardstats.hook";
-import UseGetAllJob from "@/Routes/Employer/hooks/GET/jobposting/GetAllJobs.hook";
+'use client';
+import { Badge } from '@/components/ui/badge';
+import TableComponent from '@/app/employer/(dashboard)/components/table';
+import { useState } from 'react';
+import { useGetEmployers } from '@/Routes/Admin/hook/GET/employer/Getemployer';
+import { Button } from '@/components/ui/button';
+import { Dialog, DialogHeader, DialogTitle ,DialogContent } from '@/components/ui/dialog';
+import OverviewStore from '@/store/EmployeeDashboard/dashboard/overview/overview.store';
+import useGetCandidateJobs from '@/Routes/Admin/hook/GET/candidate/GetCandidate.hook';
+import CustomEmployeDialogue from '../component/CustomEmployerDialogue';
+import { SuperAdminEmployer } from '@/Types/Admin/employer';
+import TITLE from '../constant/employerTitle';
 
 export default function EmployersList() {
-  const TITLE = [
-    "Action",
-    "Employer Name",
-    "Email",
-    "Total Job Posting",
-    "Status",
-    "Date Joined",
-  ];
+  const [currentPage, setCurrentPage] = useState(1);
+  const { data: employersData, isLoading } = useGetEmployers({ page: currentPage });
+  const { selectedCandidate, setSelectedCandidate } = OverviewStore();
+  const [isInterviewDialogOpen, setIsInterviewDialogOpen] = useState(false);
+  const { data: candidateJobs,  } = useGetCandidateJobs(selectedCandidate);
 
-  const { data: jobdata } = UseDashboardJobCardStats();
-  const { data: JobTableData } = UseGetAllJob();
 
-  const DATA = [
-    [
-      <Eye key={JobTableData?.id} className="w-5 h-5 text-gray-600" />,
-      JobTableData?.job_title,
-      <Badge key={"status"} className="bg-green-100 text-green-800">
-        {JobTableData?.status}
+
+
+  const DATA =
+    employersData?.items.map((employer: SuperAdminEmployer) => [
+      <div key={`employer-name-${employer.id}`} className="truncate">
+        {employer.name}
+      </div>,
+      <div key={`employer-email-${employer.id}`} className="truncate">
+        {employer.email}
+      </div>,
+      <div key={`employer-organization-${employer.id}`} className="truncate">
+        {employer.organization_name}
+      </div>,
+      <Button
+      variant="ghost"
+      size="sm"
+      className="w-10 flex items-center gap-2 bg-green-100 border-2 border-green-400"
+      key={employer.id}
+      onClick={() => {
+        setSelectedCandidate(employer.id);
+        setIsInterviewDialogOpen(true); 
+      }}
+    >
+      <span>{employer.stats.total_jobs}</span>
+    </Button>,
+      <Badge
+        key={`employer-subscription-${employer.id}`}
+        className={`${
+          employer.stats.subscription_status === 'active'
+            ? 'bg-green-100 text-green-800'
+            : 'bg-red-100 text-red-800'
+        }`}
+      >
+        {employer.stats.subscription_status}
       </Badge>,
-      JobTableData?.shortlisted,
-      JobTableData?.shortlisted_rate,
-      JobTableData?.job_type,
-      JobTableData?.created_at,
-      JobTableData?.expiry_date,
-    ],
-  ];
+      <div key={`employer-date-joined-${employer.id}`} className="text-center">
+        {new Date(employer.date_joined).toLocaleDateString()}
+      </div>,
+    ]) || [];
 
   return (
+    <>
+       <Dialog open={isInterviewDialogOpen} onOpenChange={setIsInterviewDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+          </DialogHeader>
+          <DialogTitle>Interview Details</DialogTitle>
+          {selectedCandidate && candidateJobs && (
+            <CustomEmployeDialogue 
+              jobId={selectedCandidate}
+              isOpen={isInterviewDialogOpen}
+              onClose={() => {
+                setIsInterviewDialogOpen(false);
+                setSelectedCandidate(''); 
+              }}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
     <div>
       <h1 className="font-[roboto] text-[24px] font-semibold leading-[30px] mb-4">
-        {" "}
-        Job Posting
+        Employers 
       </h1>
-      <Searchbar />
       <TableComponent
         header={TITLE}
         subheader={DATA}
-        paginationstart={JobTableData?.current_page}
-        paginationend={JobTableData?.total}
+        paginationstart={employersData?.current_page ?? 1}
+        paginationend={employersData?.pages ?? 0}
+        onPageChange={(page: number) => setCurrentPage(page)}
+        isLoading={isLoading}
       />
     </div>
+    </>
   );
 }

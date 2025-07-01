@@ -2,45 +2,41 @@ import { useMutation } from '@tanstack/react-query';
 import { SignUp } from '@/Routes/Client/Api/api.routes';
 import { toast } from 'sonner';
 import { AxiosError } from 'axios';
-import EmployeeAuthStore from '@/store/Auth/auth.store';
-import useSignUpRedirect from '@/Utils/helper/redirect';
 import { useRouter } from 'next/navigation';
 import { setAuthToken } from '@/Utils/Providers/auth';
+import useHomeStore from '@/store/Employer/home.store';
 
 export default function useSignupMutation(jobId?: string) {
   const router = useRouter();
-  const redirectTo = useSignUpRedirect(jobId);
-  const { setAccessToken, setUserRole } = EmployeeAuthStore();
+  const { setCompanyName } = useHomeStore();
+
+  const redirectTo =
+    typeof window !== 'undefined' && window.location.search.includes('returnTo=')
+      ? new URLSearchParams(window.location.search).get('returnTo')!
+      : jobId
+        ? `/interview/review/${jobId}`
+        : '/';
 
   return useMutation({
     mutationFn: SignUp,
 
     onSuccess: async (response) => {
-      try {
-        if (response?.access_token) {
-          setAccessToken(response.access_token);
-          setUserRole(response.role);
-          setAuthToken(response.access_token, response.role);
-          console.log('Signup success response:', response);
-          console.log('Access token:', response.access_token);
-          console.log('Role:', response.role);
-          console.log('Redirecting to:', redirectTo);
-
-          document.cookie = `accessToken=${response.access_token}; path=/`;
-          toast.success('Signup successful!');
-          router.push(redirectTo);
-        } else {
-          toast.error('Signup failed. No token received.');
-        }
-      } catch (err) {
-        toast.error('An error occurred after signup.');
-        console.error('Signup success handling error:', err);
+      if (response?.access_token) {
+        setAuthToken(response.access_token, 'admin');
+        setCompanyName(response.user.organization_name);
+        toast.success('Welcome! Your account has been created successfully.',{
+          duration: 3000,
+          position: 'bottom-right',
+        });
+        router.push(redirectTo);
       }
     },
 
     onError: async (error) => {
       const axiosError = error as AxiosError<{ detail: string }>;
-      toast.error('Signup Failed', {
+       toast.error('Failed to create account. Please try again', {
+        duration: 3000,
+        position: 'bottom-right',
         description:
           axiosError.response?.data?.detail || 'An error occurred during signup.',
       });

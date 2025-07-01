@@ -12,12 +12,10 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import z from 'zod';
 import { Loader2 } from 'lucide-react';
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
 export default function Signup() {
   const jobId = useHomeStore((state) => state.jobId);
-  const router = useRouter();
 
   const form = useForm<z.infer<typeof signupFormSchema>>({
     resolver: zodResolver(signupFormSchema),
@@ -45,10 +43,6 @@ export default function Signup() {
     };
 
     signupMutation.mutate(payload, {
-      onSuccess: () => {
-        form.reset();
-        // router.push(`/interview/generate-link/${jobId}`);
-      },
     });
   };
 
@@ -246,7 +240,10 @@ export default function Signup() {
         </div>
         <p className="text-sm text-gray-500 text-center">
           Already have an account?{' '}
-          <Link href="/login" className="text-[#F7941D]">
+          <Link
+            href={`/login?returnTo=/interview/review/${jobId}`}
+            className="text-[#F7941D]"
+          >
             Login
           </Link>
         </p>

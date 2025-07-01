@@ -2,10 +2,10 @@ import axios from 'axios';
 import { EMPLOYERAPI } from '../Constant/employer-endpoint.route';
 import { toast } from 'sonner';
 import { clearAuthToken } from '@/Utils/Providers/auth';
-import { ProfileInfoType } from '@/Types/EmployerDashboard/profileinfo';
 import { JobFilterType } from '@/Types/EmployerDashboard/jobfilter';
 import { SubscriptionsResponse, SubscriptionStats } from '@/Types/Admin/subscription';
 import { AnalysisResponse } from '@/Types/Admin/analysis';
+import { UserJobResponse } from '@/Types/userJob';
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BACKEND_URL,
   headers: {
@@ -51,8 +51,13 @@ api.interceptors.response.use(
 );
 
 //Get All Jobs
-export const GetAllJob = async () => {
-  const response = await api.get(EMPLOYERAPI.JOB_DETAILS);
+export const GetAllJob = async (page: number = 1, limit: number = 10) => {
+  const response = await api.get(EMPLOYERAPI.JOB_DETAILS, {
+    params: {
+      page,
+      limit
+    }
+  });
   return response.data;
 };
 
@@ -71,15 +76,7 @@ export const DeleteJobByID = async (job_id: string) => {
 //Update Job Details BYID
 export const UpdateJobByID = async (
   job_id: string,
-  data: {
-    job_description: string;
-    job_title: string;
-    job_type: string;
-    company_name: string;
-    location: string;
-    salary: string;
-    currency: string;
-  },
+  data: UserJobResponse,
 ) => {
   const response = await api.put(EMPLOYERAPI.UPDATE_JOB_BYID(job_id), data);
   return response.data;
@@ -94,8 +91,13 @@ export const UpdateJobStatusByID = async (job_id: string, status: string) => {
 };
 
 //Get All Interviews
-export const GetAllInterview = async () => {
-  const response = await api.get(EMPLOYERAPI.INTERVIEW_DETAILS);
+export const GetAllInterview = async (page: number = 1, limit: number = 10) => {
+  const response = await api.get(EMPLOYERAPI.INTERVIEW_DETAILS, {
+    params: {
+      page,
+      limit
+    }
+  });
   return response.data;
 };
 
@@ -156,8 +158,12 @@ export const ProfileInfo = async () => {
 };
 
 //update profile
-export const UpdateProfile = async (data: ProfileInfoType) => {
-  const response = await api.put(EMPLOYERAPI.UPDATE_PROFILE, data);
+export const UpdateProfile = async (formData: FormData) => {
+  const response = await api.put(EMPLOYERAPI.UPDATE_PROFILE, formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
   return response.data;
 };
 
@@ -170,6 +176,12 @@ export const AdminNotification = async () => {
   return response.data;
 };
 
+//Admin Unread Notification
+export const AdminUnreadNotification = async () => {
+  const response = await api.get(EMPLOYERAPI.UNREAD_NOTIFICATIONS_CHECK);
+  return response.data;
+};
+
 //Admin Notificaation Setting
 export const ProfileNotificationPermission = async () => {
   const response = await api.get(EMPLOYERAPI.PROFILE_PERMISSION_NOTIFICATION_SETTING);
@@ -177,9 +189,10 @@ export const ProfileNotificationPermission = async () => {
 };
 
 //Update Notification Setting
-export const UpdateNotificationType = async (notification_type: string) => {
+export const UpdateNotificationType = async (notification_type: string,data: {enabled: boolean}) => {
   const response = await api.put(
     EMPLOYERAPI.UPDATE_PROFILE_NOTIFICATION(notification_type),
+    data
   );
   return response.data;
 };

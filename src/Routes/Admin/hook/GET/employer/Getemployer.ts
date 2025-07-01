@@ -1,10 +1,15 @@
-import { GetEmployees } from '@/Routes/Admin/Api/admin.route';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery } from "@tanstack/react-query";
+import { GetEmployers } from "@/Routes/Admin/Api/admin.route";
+import { EmployersResponse } from "@/Types/Admin/employer";
 
-export default function UseDashboardEmployee() {
-  return useQuery({
-    queryKey: ['employeestats'],
-    queryFn: GetEmployees,
-    refetchOnWindowFocus: true,
-  });
+interface UseGetEmployersProps {
+  page?: number;
+  limit?: number;
 }
+
+export const useGetEmployers = ({ page = 1, limit = 10 }: UseGetEmployersProps) => {
+  return useQuery<EmployersResponse>({
+    queryKey: ["employers", page, limit],
+    queryFn: () => GetEmployers(page, limit),
+  });
+}; 

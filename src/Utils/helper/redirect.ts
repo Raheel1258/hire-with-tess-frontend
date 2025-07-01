@@ -1,16 +1,23 @@
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useEffect } from 'react';
 
-export default function useSignUpRedirect(jobId?: string) {
+export default function UseSignUpRedirect(jobId?: string) {
   const pathname = usePathname();
-  let redirectTo = '/';
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const returnTo = searchParams.get('returnTo');
 
-  if (pathname === '/') {
-    redirectTo = '/';
-  } else if (pathname === '/signup') {
-    redirectTo = '/login';
-  } else if (pathname === `/interview/review/${jobId}`) {
-    redirectTo = `/interview/review/${jobId}`;
-  }
-
-  return redirectTo;
+  useEffect(() => {
+    if (pathname === '/') {
+      router.push('/');
+    }
+    // else if (pathname === '/signup') {
+    //   router.push('/login');
+    // }
+    else if (pathname === `/interview/review/${jobId}`) {
+      router.push(`/interview/review/${jobId}`);
+    } else if (returnTo) {
+      router.push(returnTo);
+    }
+  }, [jobId, pathname, returnTo, router]);
 }

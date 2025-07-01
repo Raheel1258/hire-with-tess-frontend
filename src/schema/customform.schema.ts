@@ -10,8 +10,10 @@ export const customformSchema = z.object({
     .string()
     .min(2, { message: 'Company name must be at least 2 characters long.' }),
   location: z.string().min(2, { message: 'Please enter a valid location .' }),
-  salary: z.string().min(2, { message: 'Please enter a valid salary amount.' }),
-  currency: z.string().min(1, { message: 'Please select a currency .' }),
+  salary: z.string().min(1, { message: 'Please enter a valid salary amount.' }),
+  salaryType: z.enum(['per_hour', 'per_month', 'per_year']),
+  currency: z.enum(['USD', 'PKR', 'EUR']),
+
   questions: z.array(z.string()).optional(),
 });
 

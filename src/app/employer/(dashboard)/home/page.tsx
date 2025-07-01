@@ -1,5 +1,5 @@
 'use client';
-import { BriefcaseBusiness, Eye, Users } from 'lucide-react';
+import { BriefcaseBusiness, Copy, Eye, Users } from 'lucide-react';
 import CardComponent from '@/app/employer/(dashboard)/components/card';
 import TableComponent from '@/app/employer/(dashboard)/components/table';
 import { Badge } from '@/components/ui/badge';
@@ -20,12 +20,25 @@ import AnalyzeInterviewHook from '@/Routes/Employer/hooks/POST/AnalyzeInterview.
 import { Loader } from 'lucide-react';
 import { toast } from 'sonner';
 import OverviewStore from '@/store/EmployeeDashboard/dashboard/overview/overview.store';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import handleCopyLink from '@/Utils/helper/copylink';
+import StatusBadge from '../components/status.badge';
+import Interviewplatform from '../components/interviewplatform';
+import InterviewItem from '@/Types/EmployerDashboard/Dashboard/Job/interviewitem.type';
+
+
 
 export default function DashboardHome() {
+  const [currentPage, setCurrentPage] = useState(1);
   const { data: interviewCardData } = UseDashboardCardStats();
-  const { data: DashboardTableData } = UseGetAllInterview();
+  const { data: DashboardTableData, refetch: refetchInterviews } = UseGetAllInterview({
+    page: currentPage,
+  });
+
   const Interviewmutation = AnalyzeInterviewHook();
 
+  const router = useRouter();
   const {
     selectedCandidate,
     analyzingInterviewId,
@@ -38,84 +51,99 @@ export default function DashboardHome() {
   } = OverviewStore();
 
   const handleButtonClick = () => {
-    window.open(
-      'https://hire-with-tess-frontend-git-main-raheel1258s-projects.vercel.app/',
-      '_blank',
-      'noopener,noreferrer',
+    router.push('/');
+  };
+
+  const handleAnalyzeInterview = (interviewId: string) => {
+    setAnalyzingInterviewId(interviewId);
+    Interviewmutation.mutate(
+      { interview_id: interviewId },
+      {
+        onSuccess: (response) => {
+          setAIResult(response?.final_report);
+          setAIReportDialogOpen(true);
+          setAnalyzingInterviewId('');
+          refetchInterviews();
+        },
+        onError: (error) => {
+          toast.error('AI analysis already exists', {
+            description: error.message,
+          });
+          setAnalyzingInterviewId('');
+        },
+      },
     );
   };
 
   const DATA =
-    DashboardTableData?.items?.map((item: any) => [
-      <div key={`actions-${item.id}`} className="flex gap-2 items-center">
+    DashboardTableData?.items?.map((item: InterviewItem) => [
+      item?.id,
+      <div key={`candidate-name-${item.id}`} className="truncate">  
+        {item.candidate_name}
+      </div>,
+      <div key={`job-title-${item.id}`} className="truncate">
+        {item.job_title}
+      </div>,
+      <div key={`created-at-${item.id}`} className="text-center">
+        {new Date(item.created_at).toLocaleDateString()}
+      </div>,
+
+      <StatusBadge status={item.status} key={`status-${item.id}`} />,
+      item?.interview_link ? (
+        <Button
+          variant="ghost"
+          size="sm"
+          className="flex items-center gap-2"
+          onClick={() => handleCopyLink(item.interview_link)}
+        >
+          <Copy className="w-4 h-4" />
+          <span>Copy Link</span>
+        </Button>
+      ) : (
+        'No link available'
+      ),
+      <Interviewplatform
+        platform={item.interview_metadata}
+        key={`platform-${item.id}`}
+      />,
+      item.ai_score !== null ? (
+        <Button
+         variant="ghost"
+        size="sm"
+         className="bg-orange-100 text-orange-400 w-10 flex items-center gap-2 border-2 border-orange-300">{item.ai_score}</Button>
+      ) : analyzingInterviewId === item.id ? (
+        <Button size="sm" className="text-xs flex items-center gap-2" disabled>
+          <Loader
+            className="w-4 h-4 animate-spin rounded-full"
+            style={{
+              background: 'conic-gradient(#f7941D, white, #1E4B8E)',
+              maskImage: 'radial-gradient(closest-side, transparent 60%, black 61%)',
+              WebkitMaskImage:
+                'radial-gradient(closest-side, transparent 60%, black 61%)',
+            }}
+          />
+        </Button>
+      ) : item.status === 'pending' ? (
+        <Badge className="capitalize bg-yellow-100 text-[#f7941D]">Pending</Badge>
+      ) : (
+        <Button
+          size="sm"
+          className="text-xs"
+          onClick={() => handleAnalyzeInterview(item.id)}
+        >
+          Analyze
+        </Button>
+      ),
+
+      <div key={`actions-${item.id}`} className="flex justify-center">
         <Eye
           onClick={() => {
             setSelectedCandidate(item);
             setIsDialogOpen(true);
           }}
-          className="w-5 h-5 text-gray-600 cursor-pointer"
+          className="w-5 h-5 text-gray-600 cursor-pointer hover:text-[#f7941D] transition"
         />
       </div>,
-      item.candidate_name,
-      item.job_title,
-      new Date(item.created_at).toLocaleDateString(),
-
-      item.status === 'reject' ? (
-        <Badge
-          key={`status-${item.status}`}
-          className="capitalize bg-red-100 text-red-800"
-        >
-          {item.status}
-        </Badge>
-      ) : item.status === 'pending' ? (
-        <Badge
-          key={`status-${item.status}`}
-          className="capitalize bg-yellow-100 text-[#f7941D]"
-        >
-          {item.status}
-        </Badge>
-      ) : (
-        <Badge
-          key={`status-${item.status}`}
-          className="capitalize bg-green-100 text-green-800"
-        >
-          {item.status}
-        </Badge>
-      ),
-
-      item.ai_score === null ? (
-        analyzingInterviewId === item.id ? (
-          <Loader className="w-4 h-4 animate-spin text-[#f7941D] mx-auto" />
-        ) : (
-          <Button
-            size="sm"
-            className="text-xs"
-            onClick={() => {
-              setAnalyzingInterviewId(item.id);
-              Interviewmutation.mutate(
-                { interview_id: item.id },
-                {
-                  onSuccess: (response) => {
-                    setAIResult(response?.final_report);
-                    setAIReportDialogOpen(true);
-                    setAnalyzingInterviewId('');
-                  },
-                  onError: (error) => {
-                    toast.error('AI analysis failed', {
-                      description: error.message,
-                    });
-                    setAnalyzingInterviewId('');
-                  },
-                },
-              );
-            }}
-          >
-            Analyze
-          </Button>
-        )
-      ) : (
-        <Badge className="bg-[#f7941D] text-white">{item.ai_score}</Badge>
-      ),
     ]) || [];
 
   return (
@@ -146,13 +174,13 @@ export default function DashboardHome() {
           ></CardComponent>
           <CardComponent
             heading="Total Applicant"
-            subheading={interviewCardData?.total_applicants}
+            subheading={interviewCardData?.total_candidates}
             icon={<BriefcaseBusiness size={20} strokeWidth={1.5} color="#f7941D" />}
           ></CardComponent>
 
           <CardComponent
             heading="Interviews Completed"
-            subheading={interviewCardData?.total_interviews}
+            subheading={interviewCardData?.completed_interviews}
             icon={<BriefcaseBusiness size={20} strokeWidth={1.5} color="#f7941D" />}
           ></CardComponent>
           <CardComponent
@@ -170,7 +198,8 @@ export default function DashboardHome() {
             header={HomeTableTile}
             subheader={DATA}
             paginationstart={DashboardTableData?.current_page}
-            paginationend={DashboardTableData?.total}
+            paginationend={DashboardTableData?.pages}
+            onPageChange={(page: number) => setCurrentPage(page)}
           />
         </div>
       </div>

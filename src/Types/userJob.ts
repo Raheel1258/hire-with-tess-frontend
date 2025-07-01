@@ -1,3 +1,7 @@
+export interface InterviewQuestion {
+  text: string;
+  type: string;
+}
 export interface UserJobResponse {
   job_description: string;
   job_title: string;
@@ -6,5 +10,10 @@ export interface UserJobResponse {
   location: string;
   salary: string;
   currency: string;
-  job_id: string;
+  salary_type: string;
+  responsibilities: string[];
+  requirements:string[];
+  interview_questions: InterviewQuestion[];
+  skills:[];
+  id: string;
 }

@@ -12,8 +12,17 @@ import { Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { useRef } from 'react';
 import { useForm } from 'react-hook-form';
+import { Suspense } from 'react';
+import SignupDialogue from '@/app/interview/component/signupDialogue';
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
+import { GoogleLoginButton } from '@/app/interview/component/googleloginbtn';
 
-export default function EmployeeSignIn() {
+function EmployeeSignIn() {
   const form = useForm<SignInFormValidator>({
     resolver: zodResolver(signInFormSchema),
     defaultValues: {
@@ -34,7 +43,7 @@ export default function EmployeeSignIn() {
 
   return (
     <div className="flex items-center justify-center p-2 sm:p-10 w-full">
-      <div className="w-full ">
+      <div className="w-full items-center justify-center ">
         <Card className="items-center justify-center p-4 sm:p-8 ">
           <h1 className="text-center mb-2 text-xl sm:text-2xl font-normal">
             Hirewithtess
@@ -45,6 +54,7 @@ export default function EmployeeSignIn() {
           <p className="text-[#606778] text-lg font-semibold font-[roboto] text-center">
             Easily create interviews and manage candidates
           </p>
+          {/* <GoogleLoginButton redirectTo="/" /> */}
 
           <div className="mt-10">
             <Form {...form}>
@@ -85,7 +95,7 @@ export default function EmployeeSignIn() {
 
                 <div className="flex flex-col sm:flex-row justify-between items-center gap-2">
                   <div className="flex items-center space-x-2">
-                    <Checkbox id="terms" required />
+                    <Checkbox id="terms" />
                     <label
                       htmlFor="terms"
                       className="text-sm font-openSans text-[12px] font-sm text-[#1B2559] leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
@@ -100,9 +110,10 @@ export default function EmployeeSignIn() {
                     Forgot Password?
                   </Link>
                 </div>
-                <div className="flex justify-center">
+                <div className="flex justify-center gap-2 flex-col sm:items-center sm:flex-row " >
+                     <GoogleLoginButton redirectTo="/" />
                   <Button
-                    className="w-full sm:w-80 h-11 mt-4"
+                    className=" sm:w-3xs h-11 mt-4 cursor-pointer p-2 hover:bg-gray-100 hover:text-black"
                     type="submit"
                     disabled={SignInMutation.isPending}
                   >
@@ -112,21 +123,21 @@ export default function EmployeeSignIn() {
                       'Sign In to Continue'
                     )}
                   </Button>
+                     {/* <GoogleLoginButton redirectTo="/" /> */}
                 </div>
                 <p className="text-sm text-gray-500 text-center">
                   Don&apos;t have an account?{' '}
-                  <Link
-                    href="/signup"
-                    className="text-[#F7941D]"
-                    onClick={() => {
-                      sessionStorage.setItem(
-                        'redirectPath',
-                        window.location.pathname + window.location.search,
-                      );
-                    }}
-                  >
-                    Sign up
-                  </Link>
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <span className="bg-transparent text-[#F7941D] rounded-md hover:bg-transparent cursor-pointer">
+                        Sign up
+                      </span>
+                    </DialogTrigger>
+                    <DialogContent className="items-center bg-white shadow-2xl rounded-lg w-5xl">
+                      <DialogTitle></DialogTitle>
+                      <SignupDialogue />
+                    </DialogContent>
+                  </Dialog>
                 </p>
               </form>
             </Form>
@@ -134,5 +145,13 @@ export default function EmployeeSignIn() {
         </Card>
       </div>
     </div>
+  );
+}
+
+export default function EmployeeSignInPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <EmployeeSignIn />
+    </Suspense>
   );
 }

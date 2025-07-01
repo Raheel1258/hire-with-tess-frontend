@@ -1,13 +1,14 @@
 
  const JobPostingTableTitle = [
-    'Action',
-    'Jobs',
+    'ID',
+    'Job Title',
     'Status',
     'Shortlisted',
-    'Shortlisted Rate (%)',
+    'Shortlisted (%)',
     'Job Type',
     'Posted Date',
-    'Expiry Date',
+    'Interviews',
+    'Interview Link',
   ];
 
   export default JobPostingTableTitle

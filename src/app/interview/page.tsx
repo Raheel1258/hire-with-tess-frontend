@@ -101,23 +101,23 @@ function InterviewForm() {
         showGoogleLogin={false}
         useCard={false}
       >
+        
         <div className="flex flex-col ">
-          <div className="flex items-start mt-4">
+          <div className="flex items-start mt-4 ">
             <Image
               src="/images/AIAvatar.png"
               alt="bot"
               width={40}
               height={40}
-              className="shrink-0"
+              className="shrink-0 w-8 h-8 sm:w-10 sm:h-10"
             />
-
             <Card className="w-full rounded-2xl p-4 sm:p-6 ml-4">
               <form ref={ref}>
                 <div className="text-left space-y-6">
                   {responsibilities.length > 0 && (
                     <div>
                       <div className="flex justify-between items-center mb-2">
-                        <h3 className="text-[14px] font-openSans text-black">
+                        <h3 className="text-[14px] font-openSans text-black font-semibold">
                           Responsibilities
                         </h3>
                         {!isEditable ? (
@@ -161,7 +161,7 @@ function InterviewForm() {
                     </div>
                   )}
                   <div>
-                    <h3 className="text-[14px] font-openSans text-black mb-2">
+                    <h3 className="text-[14px] font-openSans text-black mb-2 font-semibold">
                       Requirements
                     </h3>
                     {!isEditable ? (
@@ -191,67 +191,70 @@ function InterviewForm() {
               alt="bot"
               width={40}
               height={40}
-              className="shrink-0"
+              className="shrink-0 w-8 h-8 sm:w-10 sm:h-10"
             />
-            <div className="flex items-center justify-between flex-wrap gap-2 w-full">
-              {/* Skills List */}
-              <div className="flex flex-wrap gap-2 flex-grow">
-                {skills.map((item, index) => (
-                  <div key={index} className="relative w-full sm:w-auto">
-                    <Input
-                      value={item}
-                      readOnly={!isEditable}
-                      onChange={(e) => handleSkillChange(e.target.value, index)}
-                      className="pr-10 border-[#E2E8F0] rounded-3xl text-black font-openSans"
-                    />
-                    {isEditable && (
-                      <button
-                        onClick={() => handleDeleteSkill(index)}
-                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
-                      >
-                        <X size={18} />
-                      </button>
-                    )}
-                  </div>
-                ))}
-              </div>
-              {isEditable && (
-                <div className="flex items-center gap-2">
-                  {!showNewSkillInput ? (
-                    <Button
-                      variant="ghost"
-                      onClick={() => setShowNewSkillInput(true)}
-                      className="text-gray-500 hover:text-white hover:bg-amber-500 p-2 cursor-pointer"
-                    >
-                      <CirclePlus size={20} />
-                    </Button>
-                  ) : (
-                    <>
+             {/* Skills List */}
+            <Card className="w-full rounded-2xl p-4 sm:p-6 ">
+            <h1 className="text-[14px] font-openSans text-black text-left font-semibold">AI Powered Skills:</h1>
+              <div className="flex items-center justify-between flex-wrap gap-2 w-full">
+                <div className="flex flex-wrap gap-2 flex-grow">
+                  {skills.map((item, index) => (
+                    <div key={index} className="relative w-full sm:w-auto">
                       <Input
-                        value={newSkill}
-                        onChange={(e) => setNewSkill(e.target.value)}
-                        placeholder="Enter skill"
-                        className="w-full sm:w-48 h-10 p-2 border rounded-xl font-openSans text-[14px]"
+                        value={item}
+                        readOnly={!isEditable}
+                        onChange={(e) => handleSkillChange(e.target.value, index)}
+                        className="pr-10 border-[#E2E8F0] rounded-3xl text-black font-openSans"
                       />
+                      {isEditable && (
+                        <button
+                          onClick={() => handleDeleteSkill(index)}
+                          className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                        >
+                          <X size={18} />
+                        </button>
+                      )}
+                    </div>
+                  ))}
+                </div>
+                {isEditable && (
+                  <div className="flex items-center gap-2">
+                    {!showNewSkillInput ? (
                       <Button
                         variant="ghost"
-                        onClick={() => {
-                          handleAddSkill();
-                          setShowNewSkillInput(false);
-                        }}
-                        className="text-green-600 hover:text-white hover:bg-green-500 p-2 cursor-pointer"
+                        onClick={() => setShowNewSkillInput(true)}
+                        className="text-gray-500 hover:text-white hover:bg-amber-500 p-2 cursor-pointer"
                       >
-                        <Check size={20} />
+                        <CirclePlus size={20} />
                       </Button>
-                    </>
-                  )}
-                </div>
-              )}
-            </div>
+                    ) : (
+                      <>
+                        <Input
+                          value={newSkill}
+                          onChange={(e) => setNewSkill(e.target.value)}
+                          placeholder="Enter skill"
+                          className="w-full sm:w-48 h-10 p-2 border rounded-xl font-openSans text-[14px]"
+                        />
+                        <Button
+                          variant="ghost"
+                          onClick={() => {
+                            handleAddSkill();
+                            setShowNewSkillInput(false);
+                          }}
+                          className="text-green-600 hover:text-white hover:bg-green-500 p-2 cursor-pointer"
+                        >
+                          <Check size={20} />
+                        </Button>
+                      </>
+                    )}
+                  </div>
+                )}
+              </div>
+            </Card>
           </div>
         )}
 
-        <div className="flex justify-end items-center mt-6 gap-4 mb-0">
+        <div className="flex justify-end items-center mt-6 gap-4 mb-0 p-4 sm:p-0">
           <Link href="/">
             <Button variant="secondary" type="button" className="cursor-pointer">
               Cancel

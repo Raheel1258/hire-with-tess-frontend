@@ -1,10 +1,13 @@
 const CandidateTableTitle = [
-    'Action',
+    'ID',
     'Name',
     'Job Applied For',
     'Interview Date',
     'Interview Status',
-    'Ai Score',
+    'Interview Link',
+    'Interview Platform',
+    'AI Score',
+    'Action',
   ];
 
   export default CandidateTableTitle;

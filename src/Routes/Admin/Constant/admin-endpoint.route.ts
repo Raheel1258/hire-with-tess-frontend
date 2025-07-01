@@ -3,15 +3,19 @@ export const AdminEndpoint = {
   SUPERADMIN_LOGIN: `/api/v1/superadmin/login`,
 
   //Super Admin User
-  SUPERADMIN_GET_EMPLOYEES: `/api/v1/superadmin/Users`,
   SUPERADMIN_GET_EMPLOYEES_BY_ID: (user_id: string) =>
     `/api/v1/superadmin/users/${user_id}`,
   SUPERADMIN_DELETE_USER: (user_id: string) => `/api/v1/superadmin/users/${user_id}`,
+  SUPERADMIN_GET_EMPLOYERS: (page: number, limit: number) => 
+    `/api/v1/superadmin/Users?page=${page}&limit=${limit}`,
 
   //Super Admin Job
   SUPERADMIN_GET_ALLJOB: `/api/v1/superadmin/jobs`,
   SUPERADMIN_GET_ALLANALYSIS: `/api/v1/superadmin/analyses`,
   SUPERADMIN_GET_SUBSCRIPTION_STATS: `/api/v1/superadmin/subscription-stats`,
+
+  //Super Admin Candidates
+   SUPERADMIN_CANDIDATE_JOBS: (user_id: string) => `/api/v1/superadmin/users/${user_id}/jobs`,
 
   //Super Admin Subscription
   SUPERADMIN_GET_EMPLOYERSUBSCRIPTION: `/api/v1/superadmin/subscriptions`,
@@ -22,9 +26,15 @@ export const AdminEndpoint = {
   SUPERADMIN_GET_NOTIFICATION: `/api/v1/superadmin/notifications`,
   SUPERADMIN_GET_NOTIFICATION_SETTING: `/api/v1/superadmin/notification-settings`,
 
-  //Super Admin Profile
+  //Super Admin Notification Setting
   SUPERADMIN_UPDATE_NOTIFICATION: (notification_type: string) =>
     `/api/v1/superadmin/notification-settings/${notification_type}`,
+  SUPERADMIN_GET_UNREAD_COUNT: `/api/v1/superadmin/unread-notifications-check`,
+
+    //Graph Data
+  SUPERADMIN_MONTHLY_JOB_STATS: `/api/v1/admin/monthly-job-stats`,
+
+  //Super Admin Profile
   SUPERADMIN_GET_PROFILE: `/api/v1/superadmin/profile`,
   SUPERADMIN_UPDATE_PROFILE: `/api/v1/superadmin/profile`,
 };

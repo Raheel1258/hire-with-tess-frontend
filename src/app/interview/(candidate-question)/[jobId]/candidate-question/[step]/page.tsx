@@ -2,14 +2,13 @@
 
 import { useParams, useRouter } from 'next/navigation';
 import { toast } from 'sonner';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
 import FetchQuestions from '@/Routes/Client/hook/GET/FetchQuestions.hook';
 import Stepper from '@/app/interview/component/stepper';
 import SpeechRecordingInput from '@/app/interview/component/SpeechToTextInput';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useRecordingStore } from '@/store/candidate/Recording.store';
-import useUploadFileMutation from '@/Routes/Client/hook/POST/UploadFilehook';
 
 export default function InterviewQuestionPage() {
   const params = useParams();
@@ -22,7 +21,6 @@ export default function InterviewQuestionPage() {
   const { data } = FetchQuestions(jobId);
   const totalSteps = data?.questions?.length ?? 0;
   const currentQuestion = data?.questions?.[currentStep - 1];
-   
   const handleSaveAndContinue = () => {
     const nextStep = currentStep + 1;
 
@@ -65,7 +63,7 @@ export default function InterviewQuestionPage() {
           <Skeleton className="w-full h-6" />
         ) : (
           <>
-            <p className="text-sm font-medium mb-2">{`Question ${currentStep} (${currentQuestion?.type})`}</p>
+            <p className="text-sm font-medium mb-2">{`Question # ${currentStep}`}</p>
             <h2 className="text-lg font-bold mb-8">{currentQuestion?.text}</h2>
           </>
         )}

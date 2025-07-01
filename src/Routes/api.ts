@@ -1,4 +1,3 @@
-// routes/api-endpoints.ts
 import { getRolePrefix } from '@/Utils/helper/roleprefix';
 
 export const API = {
@@ -45,4 +44,7 @@ export const API = {
   SUPERADMIN_GET_EMPLOYEES: () => `/api/v1/superadmin/users`,
   SUPERADMIN_GET_EMPLOYEES_BY_ID: (id: string) => `/api/v1/superadmin/users/${id}`,
   SUPERADMIN_DELETE_USER: (id: string) => `/api/v1/superadmin/users/${id}`,
+
+  SUPERADMIN_GET_PROFILE: () => '/api/v1/superadmin/profile',
+  SUPERADMIN_UPDATE_PROFILE: () => '/api/v1/superadmin/profile'
 };

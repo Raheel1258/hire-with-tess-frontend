@@ -1,6 +1,6 @@
-import { create } from "zustand";
-import { devtools, persist } from "zustand/middleware";
-import { createJSONStorage } from "zustand/middleware";
+import { create } from 'zustand';
+import { devtools, persist } from 'zustand/middleware';
+import { createJSONStorage } from 'zustand/middleware';
 
 interface HomeState {
   jobId: string;
@@ -10,6 +10,7 @@ interface HomeState {
   companyName: string;
   location: string;
   salary: string;
+  salaryType: string;
   currency: string;
   skills: string[];
   responsibilities: string[];
@@ -22,6 +23,7 @@ interface HomeState {
   setCompanyName: (value: string) => void;
   setLocation: (value: string) => void;
   setSalary: (value: string) => void;
+  setSalaryType: (value: string) => void;
   setCurrency: (value: string) => void;
   setSkills: (value: string[]) => void;
   setResponsibilities: (value: string[]) => void;
@@ -32,14 +34,15 @@ const useHomeStore = create<HomeState>()(
   devtools(
     persist(
       (set) => ({
-        jobId: "",
-        jobDescription: "",
-        jobTitle: "",
-        jobType: "",
-        companyName: "",
-        location: "",
-        salary: "",
-        currency: "",
+        jobId: '',
+        jobDescription: '',
+        jobTitle: '',
+        jobType: '',
+        companyName: '',
+        location: '',
+        salary: '',
+        salaryType: '',
+        currency: '',
         skills: [],
         responsibilities: [],
         requirements: [],
@@ -51,26 +54,43 @@ const useHomeStore = create<HomeState>()(
         setCompanyName: (value) => set({ companyName: value }),
         setLocation: (value) => set({ location: value }),
         setSalary: (value) => set({ salary: value }),
+        setSalaryType: (value) => set({ salaryType: value }),
         setCurrency: (value) => set({ currency: value }),
 
         setSkills: (value) => set({ skills: value }),
         setResponsibilities: (value) => set({ responsibilities: value }),
         setRequirements: (value) => set({ requirements: value }),
+
+        resetAIResponse: () =>
+          set({
+            jobId: '',
+            jobDescription: '',
+            jobTitle: '',
+            jobType: '',
+            companyName: '',
+            location: '',
+            salary: '',
+            currency: '',
+            skills: [],
+            responsibilities: [],
+            requirements: [],
+          }),
+          resetmanualresponse: () =>
+          set({
+            jobType: '',
+            companyName: '',
+            location: '',
+            salaryType: '',
+            currency: '',
+            salary: '',
+          }),
       }),
       {
-        name: "Ai-Response",
+        name: 'Ai-Response',
         storage: createJSONStorage(() => localStorage),
-        partialize: (state) => ({
-          jobId: state.jobId,
-          jobDescription: state.jobDescription,
-          requirements: state.requirements,
-          responsibilities: state.responsibilities,
-          skills: state.skills,
-          questions: state.Aiquestions,
-        }),
-      }
-    )
-  )
+      },
+    ),
+  ),
 );
 
 export default useHomeStore;

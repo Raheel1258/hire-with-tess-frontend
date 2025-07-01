@@ -1,12 +1,22 @@
 import { useQuery } from '@tanstack/react-query';
 import { GetAllInterview } from '../../../Api/employer.route';
 
-export default function UseGetAllInterview() {
+interface UseGetAllInterviewProps {
+  page?: number;
+  limit?: number;
+}
+
+export default function UseGetAllInterview({
+  page = 1,
+  limit = 10,
+}: UseGetAllInterviewProps = {}) {
   return useQuery({
-    queryKey: ['interviews'],
-    queryFn: GetAllInterview,
-    refetchOnWindowFocus: true,           // Refresh when tab becomes active
-    refetchInterval: 90000,               // Poll every 10s (suitable for dashboard)
-    refetchIntervalInBackground: false, 
+    queryKey: ['interviews', page, limit],
+    queryFn: () => GetAllInterview(page, limit),
+    refetchOnWindowFocus: true,
+    refetchInterval: 90000,
+    refetchIntervalInBackground: false,
+    staleTime: 90000,
+    refetchOnMount: true,
   });
 }

@@ -8,11 +8,15 @@ import SocialShare from '@/app/interview/component/share';
 import { useToggleStore } from '@/store/Employer/Toggle.store';
 import QRCode from 'react-qr-code';
 import { cn } from '@/lib/utils';
+import Link from 'next/link';
+import { useQuestionStore } from '@/store/Employer/questionStore';
+import useHomeStore from '@/store/Employer/home.store';
+import { useParams } from 'next/navigation';
+import { getAuthCookie, getAuthToken } from '@/Utils/Providers/auth';
+import AdminDashboardNavigation from '../../component/dashboardnavigation';
 
 export default function GenerateLink() {
   const { interviewLink, qrCode } = useToggleStore();
-
-  console.log(interviewLink, qrCode);
 
   const {
     copied,
@@ -49,6 +53,13 @@ export default function GenerateLink() {
   const QrToogleShareOptions = () => {
     setShowQrSharedOptions();
   };
+
+
+  const { jobId } = useParams<{ jobId: string }>();
+  const accessToken = getAuthToken() || getAuthCookie();
+  const interviewId = jobId;
+  const phoneNumber = '+1-989-510-7499';
+
   return (
     <InterviewLayout
       subtitle="Your AI Interview is Ready!"
@@ -58,8 +69,20 @@ export default function GenerateLink() {
       useCard={false}
       showStepper={false}
     >
-      <div className="mt-8 flex flex-col sm:w-[384px] mx-auto px-4 mb-8">
-        <h1 className="font-[roboto] leading-[46px] font-bold text-[24px] text-center">
+      <div className=" flex flex-col sm:w-[384px] mx-auto px-4 mb-8">
+      <p className="text-gray-600 mb-4">
+          Call the number below to begin phone interview.
+        </p>
+
+        <div className="mb-4">
+          <p className="text-lg font-medium text-black">{phoneNumber}</p>
+        </div>
+
+        <div className="mb-4">
+          <span className="text-sm text-gray-500">Your Job ID:</span>
+          <p className="text-lg font-semibold text-[#1E4B8E]">{interviewId}</p>
+        </div>
+        <h1 className="font-[roboto] leading-[46px] font-semibold text-xl text-center">
           Interview Link
         </h1>
         <p className="font-openSans font-normal text-[16px] leading-[16px] text-center text-[#6F6C90] mt-2">
@@ -120,7 +143,7 @@ export default function GenerateLink() {
         </div>
 
         <div className="items-center text-center flex flex-col">
-          <h1 className="w-full sm:w-[680px] h-[46px] font-roboto text-[24px] leading-[46px] font-bold">
+          <h1 className="w-full sm:w-[680px] h-[46px] font-roboto text-xl leading-[46px] font-bold">
             QR Code
           </h1>
           <p className="w-full sm:w-[427px] h-[30px] font-openSans text-[16px] leading-[30px] font-normal text-gray-600 mb-4">
@@ -144,13 +167,13 @@ export default function GenerateLink() {
           )}
 
           <div className="flex flex-row items-center justify-center">
-            <button
+            <Button
               onClick={handleDownloadQR}
               disabled={!interviewLink}
-              className="flex items-center justify-center gap-2 sm:gap-3 font-roboto text-[14px] sm:text-[16px] md:text-[18px] font-bold w-[90%] sm:w-[180px] md:w-[212px] h-[50px] sm:h-[60px] md:h-[65px] rounded-[14px] bg-[#1E4B8E] mt-8 sm:mt-11 text-white px-4 sm:px-6"
+              className="flex items-center justify-center gap-2 sm:gap-3 font-roboto text-[14px] sm:text-[16px] md:text-[18px] font-bold w-[90%] sm:w-[180px] md:w-[212px] h-[50px] sm:h-[60px] md:h-[65px] rounded-[14px] bg-[#1E4B8E] mt-8 sm:mt-11 text-white px-4 sm:px-6 cursor-pointer"
             >
               <Download className="w-4 h-4 sm:w-5 sm:h-5" /> Download
-            </button>
+            </Button>
             <div className="ml-2 mt-10">
               <Share2
                 onClick={QrToogleShareOptions}
@@ -168,6 +191,11 @@ export default function GenerateLink() {
           )}
         </div>
       </div>
+      {accessToken && (
+      <div className="flex justify-end items-center mt-6 mb-0 sm:mb-1 sm:ml-4">
+        <AdminDashboardNavigation/>
+      </div>
+      )}
     </InterviewLayout>
   );
 }

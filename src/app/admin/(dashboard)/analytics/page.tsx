@@ -1,20 +1,10 @@
 "use client";
-import { BriefcaseBusiness, Eye, Search, Users } from "lucide-react";
+import { BriefcaseBusiness, Users } from "lucide-react";
 import CardComponent from "@/app/employer/(dashboard)/components/card";
 import { ChartComponent } from "../component/chart";
-import { PieChartComponent } from "../component/piechart";
 import useAnalyses from "@/Routes/Employer/hooks/GET/analysis/GetAnalyses.hook";
 
 export default function Analytics() {
-  const TITLE = [
-    "Action",
-    "Employer Name",
-    "Subscription Type",
-    "Package ",
-    "Status",
-    "Start Date",
-    "Expiry Date",
-  ];
 
 
   const {data: analysisdata} = useAnalyses();
@@ -22,7 +12,7 @@ export default function Analytics() {
   return (
     <div>
       <h1 className="text-[24px] font-[open sans] font-semibold ml-2 mb-4">
-        Subscriptions
+        Analytics
       </h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 w-full">
         <CardComponent
@@ -86,7 +76,7 @@ export default function Analytics() {
       </h1>
       <div className="mt-6 flex flex-row gap-4">
         <ChartComponent />
-        <PieChartComponent />
+        {/* <PieChartComponent /> */}
       </div>
     </div>
   );

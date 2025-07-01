@@ -10,9 +10,12 @@ import UserProfile from '@/app/employer/(dashboard)/components/candiateprofile';
 import OverviewStore from '@/store/EmployeeDashboard/dashboard/overview/overview.store';
 import { Loader } from 'lucide-react';
 import { DialogDescription, DialogTitle } from '@radix-ui/react-dialog';
+import { useState } from 'react';
+import Interviewplatform from '@/app/employer/(dashboard)/components/interviewplatform';
 
 export default function AdminDashboardHome() {
-  const TITLE = ['Action', 'Name', 'Job Applied For', 'Created At', 'Status', 'Score'];
+  const TITLE = ['ID', 'Name', 'Job Applied For', 'Applied On', 'Interview Platform','Interview Status', 'AI Score', 'Action'];
+  const [currentPage, setCurrentPage] = useState(1);
 
   const {
     data: interviewCardData,
@@ -23,20 +26,11 @@ export default function AdminDashboardHome() {
     data: DashboardTableData,
     isLoading: tableLoading,
     error: tableError,
-  } = UseGetAllInterview();
+  } = UseGetAllInterview({ page: currentPage });
 
   const { selectedCandidate, isDialogOpen, setSelectedCandidate, setIsDialogOpen } =
     OverviewStore();
 
-  // Add error logging
-  if (cardError) {
-    console.error('Card stats error:', cardError);
-  }
-  if (tableError) {
-    console.error('Table data error:', tableError);
-  }
-
-  // Add loading states
   if (cardLoading || tableLoading) {
     return (
       <div className="flex items-center justify-center h-screen">
@@ -58,19 +52,17 @@ export default function AdminDashboardHome() {
   }
   const DATA =
     DashboardTableData?.items?.map((item: any) => [
-      <div key={`actions-${item.id}`} className="flex gap-2 items-center">
-        <Eye
-          onClick={() => {
-            setSelectedCandidate(item);
-            setIsDialogOpen(true);
-          }}
-          className="w-5 h-5 text-gray-600 cursor-pointer"
-        />
+      item.id,
+      <div key={`candidate-name-${item.id}`} className="truncate">
+        {item.candidate_name}
       </div>,
-      item.candidate_name,
-      item.job_title,
-      new Date(item.created_at).toLocaleDateString(),
-
+      <div key={`job-title-${item.id}`} className="truncate">
+        {item.job_title}
+      </div>,
+      <div key={`created-at-${item.id}`} className="text-center">
+        {new Date(item.created_at).toLocaleDateString()}
+      </div>,
+      <Interviewplatform platform={item.interview_metadata} key={`platform-${item.id}`} />,
       item.status === 'reject' ? (
         <Badge
           key={`status-${item.status}`}
@@ -93,8 +85,19 @@ export default function AdminDashboardHome() {
           {item.status}
         </Badge>
       ),
-
-      item.ai_score === null ? 0 : item.ai_score,
+ 
+      <Badge key={`status-${item.status}`} className='w-10 flex items-center gap-2 bg-orange-100 border-1 border-orange-400 text-orange-800'>
+        {item.ai_score === null ? "N/A" : item.ai_score}
+      </Badge>,
+      <div key={`actions-${item.id}`} className="flex gap-2 items-center">
+      <Eye
+        onClick={() => {
+          setSelectedCandidate(item);
+          setIsDialogOpen(true);
+        }}
+        className="w-5 h-5 text-gray-600 cursor-pointer"
+      />
+    </div>,
     ]) || [];
 
   return (
@@ -119,13 +122,13 @@ export default function AdminDashboardHome() {
           ></CardComponent>
           <CardComponent
             heading="Total Applicant"
-            subheading={interviewCardData?.total_applicants}
+            subheading={interviewCardData?.total_candidates}
             icon={<BriefcaseBusiness size={20} strokeWidth={1.5} color="#f7941D" />}
           ></CardComponent>
 
           <CardComponent
             heading="Interviews Completed"
-            subheading={interviewCardData?.total_interviews}
+            subheading={interviewCardData?.completed_interviews}
             icon={<BriefcaseBusiness size={20} strokeWidth={1.5} color="#f7941D" />}
           ></CardComponent>
           <CardComponent
@@ -143,7 +146,9 @@ export default function AdminDashboardHome() {
             header={TITLE}
             subheader={DATA}
             paginationstart={DashboardTableData?.current_page}
-            paginationend={DashboardTableData?.total}
+            paginationend={DashboardTableData?.pages}
+            onPageChange={(page: number) => setCurrentPage(page)}
+            isLoading={tableLoading}
           />
         </div>
       </div>

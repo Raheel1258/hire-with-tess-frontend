@@ -4,6 +4,8 @@ import useHomeStore from '@/store/Employer/home.store';
 import Placeholder from './interview/component/placeholder';
 import React from 'react';
 import useGenerateResponse from '@/Routes/Client/hook/POST/GenerateResponse.hook';
+import { useToggleStore } from '@/store/Employer/Toggle.store';
+import { useQuestionStore } from '@/store/Employer/questionStore';
 
 export default function Home() {
   const { jobDescription, setJobDescription } = useHomeStore();
@@ -12,10 +14,19 @@ export default function Home() {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setJobDescription(e.target.value);
   };
+  const { resetInterviewLink } = useToggleStore();
+  const { resetmanualresponse } = useHomeStore();
+  const { resetQuestionStore } = useQuestionStore();
 
+  const ResetAll = () => {
+    resetmanualresponse();
+    resetQuestionStore(); 
+    resetInterviewLink();
+  };
   const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!jobDescription.trim()) return;
+    ResetAll();
     generateMutation.mutate({
       job_description: jobDescription,
     });

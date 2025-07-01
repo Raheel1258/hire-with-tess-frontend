@@ -1,22 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 export function middleware(request: NextRequest) {
-
-  const role = request.cookies.get('userRole')?.value;  
-  const accessToken = request.cookies.get('accessToken')?.value; 
+  const role = request.cookies.get('userRole')?.value;
+  const accessToken = request.cookies.get('accessToken')?.value;
   const path = request.nextUrl.pathname;
 
-  if (accessToken) {
-  if (path.startsWith('/login')) {
+  if (path.startsWith('/auth/callback')) {
+    return NextResponse.next();
+  }
 
-    if (role === 'superadmin') {
-      return NextResponse.redirect(new URL('/admin/home', request.url));
-    }
-    if (role === 'admin') {
+  if (accessToken) {
+    if (path.startsWith('/signup') && role === 'admin') {
       return NextResponse.redirect(new URL('/employer/home', request.url));
     }
-  }
-  
+
     if (path.startsWith('/admin') && role !== 'superadmin') {
       return NextResponse.redirect(new URL('/unauthorized', request.url));
     }
@@ -34,5 +31,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/login', '/employer/:path*','/admin/:path*'],
+  matcher: ['/employer/:path*', '/admin/:path*'],
 };

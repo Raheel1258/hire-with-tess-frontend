@@ -15,27 +15,41 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import Signup from '@/app/signup/page';
+import SignupDialogue from '@/app/interview/component/signupDialogue';
 import CustomInputForm from '@/app/interview/component/customformInput';
 import { useRouter } from 'next/navigation';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { getAuthCookie, getAuthToken } from '@/Utils/Providers/auth';
 import useFetchInterviewLink from '@/Routes/Client/hook/POST/GenerateInterviewLink.hook';
+import useHomeStore from '@/store/Employer/home.store';
+import { DollarSign, Loader2 } from 'lucide-react';
+
 
 export default function InterviewReview() {
   const { jobId } = useParams<{ jobId: string }>();
   const ref = useRef<HTMLFormElement>(null);
   const router = useRouter();
   const accessToken = getAuthToken() || getAuthCookie();
-  const { mutate: fetchInterviewLink } = useFetchInterviewLink(jobId);
+  const { mutate: fetchInterviewLink, isPending: isGeneratingLink } = useFetchInterviewLink(jobId);
 
   const jobDetailsQuery = FetchJobDetails(jobId);
   const jobData = jobDetailsQuery?.data || {};
   const { data } = FetchQuestions(jobId);
 
-  const form = useForm<z.infer<typeof customformSchema>>({});
+  const form = useForm<z.infer<typeof customformSchema>>({
+    defaultValues: {
+      salary: jobData?.salary || '',
+      currency: jobData?.currency || 'USD',
+      salaryType: jobData?.salary_type || 'per_hour',
+      jobTitle: jobData?.job_title || '',
+      jobType: jobData?.job_type || '',
+      companyName: jobData?.company_name || '',
+      location: jobData?.location || '',
+    }
+  });
   const { setValue } = form;
+  const setJobId = useHomeStore((state) => state.setJobId);  
 
   useEffect(() => {
     if (jobData) {
@@ -43,9 +57,12 @@ export default function InterviewReview() {
       setValue('jobType', jobData.job_type || '');
       setValue('companyName', jobData.company_name || '');
       setValue('location', jobData.location || '');
+      setValue('currency', jobData.currency || 'USD');
+      setValue('salaryType', jobData.salary_type || 'per_hour');
       setValue('salary', jobData.salary || '');
     }
   }, [jobData, setValue]);
+
 
   useEffect(() => {
     if (data?.questions) {
@@ -54,6 +71,11 @@ export default function InterviewReview() {
       });
     }
   }, [data?.questions, setValue]);
+  useEffect(() => {
+    if (jobId) {
+      setJobId(jobId);
+    }
+  }, [jobId, setJobId]);
 
   return (
     <InterviewLayout
@@ -64,12 +86,13 @@ export default function InterviewReview() {
       showGoogleLogin={false}
       useCard={false}
     >
-      <div className="w-full p-6 mt-8">
+      <div className="w-full p-6 mt-6">
+        {/* <h1 className="text-lg font-openSans text-c text-black text-left font-semibold mb-6">AI Created Job Details: </h1> */}
         <Form {...form}>
           <form ref={ref} className="space-y-8">
             <FormField
               control={form.control}
-              name="jobTitle"
+              name="jobTitle"  
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
@@ -108,7 +131,7 @@ export default function InterviewReview() {
                     <CustomInputForm
                       {...field}
                       name="companyName"
-                      label="Company Name"
+                      label="Organization Name"
                       readOnly
                     />
                   </FormControl>
@@ -124,7 +147,7 @@ export default function InterviewReview() {
                     <CustomInputForm
                       {...field}
                       name="location"
-                      label="Location"
+                      label="Organization Location"
                       readOnly
                     />
                   </FormControl>
@@ -134,15 +157,27 @@ export default function InterviewReview() {
             <FormField
               control={form.control}
               name="salary"
-              render={() => (
+              render={({ field }) => (
                 <FormItem>
-                  <CustomInputForm
-                    name="salary"
-                    currencyName={jobData.currency || 'currency'}
-                    label="Salary"
-                    type="number"
-                    readOnly
-                  />
+                  <FormControl>
+                    <CustomInputForm
+                      {...field}
+                      name="salary"
+                      label="Salary"
+                      type="number"
+                      readOnly
+                      currencyName="currency"
+                      salaryTypeName="salaryType"
+                      placeholder={jobData.salary}
+                      currencyValue={jobData.currency}
+                      salaryTypeValue={jobData.salary_type}
+                      onChange={(value) => {
+                        const numericValue = value.replace(/,/g, '');
+                        field.onChange(numericValue);
+                      }}
+                      value={field.value ? field.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') : ''}
+                    />
+                  </FormControl>
                 </FormItem>
               )}
             />
@@ -186,17 +221,32 @@ export default function InterviewReview() {
             </form>
           </Form>
         </div>
-        <div className="flex float-right gap-2 mt-8">
+        <div className="flex float-right gap-2 mt-8 pb-2">
           <div>
-            <Button onClick={() => router.back()} variant="secondary">
+            <Button
+              onClick={() => {
+                if (jobData.job_description) {
+                  router.back();
+                } else {
+                  router.push(`/`);
+                }
+              }}
+              variant="secondary"
+            >
               Back
             </Button>
           </div>
 
           {accessToken ? (
             <Link href={`/interview/generate-link/${jobId}`}>
-              <Button onClick={() => fetchInterviewLink()} className="w-40">
-                Generate Link
+              <Button
+                onClick={() => {
+                  fetchInterviewLink();
+                  router.push(`/interview/generate-link/${jobId}`);
+                }}
+                className="w-40"
+              >
+                {isGeneratingLink ? <Loader2 className='animate-spin' /> : 'Generate Link'}
               </Button>
             </Link>
           ) : (
@@ -206,7 +256,7 @@ export default function InterviewReview() {
               </DialogTrigger>
               <DialogContent className="items-center bg-white shadow-2xl rounded-lg w-5xl">
                 <DialogTitle></DialogTitle>
-                <Signup />
+                <SignupDialogue jobId={jobId} />
               </DialogContent>
             </Dialog>
           )}

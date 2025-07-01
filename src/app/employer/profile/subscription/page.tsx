@@ -17,8 +17,7 @@ export default function UserProfileSubscription() {
       </div>
 
       <div>
-        <h2 className="text-xl font-semibold text-slate-700 mt-8 mb-4">Upgrade Your Plan</h2>
-        <div className="flex flex-wrap gap-4">
+        <div className="flex flex-wrap gap-4 justify-center items-center">
           <SubscriptionCard
             title="Basic Package"
             amount="$99/Month"

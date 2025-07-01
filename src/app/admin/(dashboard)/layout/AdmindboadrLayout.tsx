@@ -10,11 +10,12 @@ export default function AdminDashboardBussinessLayout({
   children: React.ReactNode;
 }) {
   const { setAccessToken } = EmployeeAuthStore();
-  const handleLogout = () => {
+  const handleLogout = () => { 
     setAccessToken('');
     localStorage.removeItem('accessToken');
     document.cookie = 'accessToken=; path=/; max-age=0;';
   };
+  
   return (
     <div className="bg-slate-100">
       <Header />

@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
-import { UpdateNotificationType } from '../../Api/employer.route';
+import { UpdateNotificationType } from '@/Routes/Employer/Api/employer.route';
+import { AxiosError } from 'axios';
 
 export default function UseUpdateNotificationType() {
   const queryClient = useQueryClient();
@@ -10,8 +11,12 @@ export default function UseUpdateNotificationType() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['notification'] });
     },
-    onError: () => {
-      toast.error('Unable to update notification type');
+    onError: async (error) => {
+        const axiosError = error as AxiosError<{ detail: string }>;
+        toast.error('Unable to update notification type', {
+          description:
+            axiosError.response?.data?.detail || 'An error occurred during notification type update.',
+        });
     },
   });
 }

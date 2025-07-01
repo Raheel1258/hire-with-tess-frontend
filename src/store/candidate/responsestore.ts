@@ -35,7 +35,7 @@ export const useResponseStore = create<RecordingState>()(
 
         addResponse: (response) => {
           const existing = get().savedResponses.filter(
-            (r) => r.question_text !== response.question_text
+            (r) => r.question_text !== response.question_text,
           );
           set({ savedResponses: [...existing, response] });
         },
@@ -43,11 +43,18 @@ export const useResponseStore = create<RecordingState>()(
         getResponseByQuestion: (question) => {
           return get().savedResponses.find((r) => r.question_text === question);
         },
+
+        clearUserResponses: () => {
+          set({ savedResponses: [] });
+          set({ question_text: '' });
+          set({ temp_url: '' });
+          set({ content_type: '' });
+        },
       }),
       {
         name: 'S3-Storage',
         storage: createJSONStorage(() => localStorage),
-      }
-    )
-  )
+      },
+    ),
+  ),
 );
