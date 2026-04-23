@@ -24,8 +24,10 @@ export default function AdminCandidatePage() {
   ];
 
   const [currentPage, setCurrentPage] = useState(1);
-  const { data: DashboardTableData, isLoading: tableLoading } = UseGetAllInterview({ page: currentPage });
- 
+  const { data: DashboardTableData, isLoading: tableLoading } = UseGetAllInterview({
+    page: currentPage,
+  });
+
   const { data: candidatestats } = UseDashboardCandidateCardStats();
 
   const { selectedCandidate, isDialogOpen, setSelectedCandidate, setIsDialogOpen } =
@@ -67,19 +69,21 @@ export default function AdminCandidatePage() {
         </Badge>
       ),
 
-      <Badge key={`status-${item.status}`} className='w-10 flex items-center gap-2 bg-orange-100 border-1 border-orange-400 text-orange-800'>
-      {item.ai_score === null ? 0 : item.ai_score}
-    </Badge>,
+      <Badge
+        key={`status-${item.status}`}
+        className="w-10 flex items-center gap-2 bg-orange-100 border-1 border-orange-400 text-orange-800"
+      >
+        {item.ai_score === null ? 0 : item.ai_score}
+      </Badge>,
       <div key={`actions-${item.id}`} className="flex justify-center">
-      <Eye
-        onClick={() => {
-          setSelectedCandidate(item);
-          setIsDialogOpen(true);
-        }}
-        className="w-5 h-5 text-gray-600 cursor-pointer hover:text-[#f7941D] transition"
-      />
-    </div>,
-      
+        <Eye
+          onClick={() => {
+            setSelectedCandidate(item);
+            setIsDialogOpen(true);
+          }}
+          className="w-5 h-5 text-gray-600 cursor-pointer hover:text-[#f7941D] transition"
+        />
+      </div>,
     ]) || [];
 
   return (

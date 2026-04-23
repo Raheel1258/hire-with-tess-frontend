@@ -23,7 +23,7 @@ import {
 import { GoogleLoginButton } from '@/app/interview/component/googleloginbtn';
 
 function EmployeeSignIn() {
-  
+
   const form = useForm<SignInFormValidator>({
     resolver: zodResolver(signInFormSchema),
     defaultValues: {
@@ -123,7 +123,7 @@ function EmployeeSignIn() {
                 </Button>
               </form>
             </Form>
-
+            {/* 
             <div className="mt-6">
               <div className="relative">
                 <div className="absolute inset-0 flex items-center">
@@ -133,11 +133,11 @@ function EmployeeSignIn() {
                   <span className="bg-white px-2 text-gray-500">Or continue with</span>
                 </div>
               </div>
-              
+
               <div className="mt-4 flex justify-center">
                 <GoogleLoginButton redirectTo="/" />
               </div>
-            </div>
+            </div> */}
 
             <p className="text-sm text-gray-500 text-center mt-4">
               Don&apos;t have an account?{' '}

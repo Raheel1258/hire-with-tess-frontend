@@ -23,7 +23,7 @@ export default function UserAccountDetail() {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
   const { isEditable, setIsEditable } = useSkillStore();
- 
+
 
   const form = useForm<AccountFormValidator>({
     resolver: zodResolver(AccountDetailformSchema),
@@ -38,14 +38,14 @@ export default function UserAccountDetail() {
 
   const ref = useRef<HTMLFormElement>(null);
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      form.setValue('image', file);
-      form.clearErrors('image');
-      setPreviewUrl(URL.createObjectURL(file));
-    }
-  };
+  // const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const file = e.target.files?.[0];
+  //   if (file) {
+  //     form.setValue('image', file);
+  //     form.clearErrors('image');
+  //     setPreviewUrl(URL.createObjectURL(file));
+  //   }
+  // };
 
   const onSubmit = async (data: AccountFormValidator) => {
     const formData = new FormData();
@@ -113,7 +113,7 @@ export default function UserAccountDetail() {
                       type="text"
                       label="First Name"
                       placeholder="John"
-                
+
                     />
                   </FormControl>
                 </FormItem>
@@ -131,7 +131,7 @@ export default function UserAccountDetail() {
                       type="text"
                       label="Last Name"
                       placeholder="Doe"
-                  
+
                     />
                   </FormControl>
                 </FormItem>
@@ -151,7 +151,7 @@ export default function UserAccountDetail() {
                       name="organization"
                       label="Organization Name"
                       placeholder="King Palm"
-                  
+
                     />
                   </FormControl>
                 </FormItem>
@@ -169,7 +169,7 @@ export default function UserAccountDetail() {
                       type="email"
                       label="Email"
                       placeholder="john.doe@gmail.com"
-                      
+
                     />
                   </FormControl>
                 </FormItem>
