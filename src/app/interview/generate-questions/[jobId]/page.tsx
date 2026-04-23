@@ -16,7 +16,6 @@ import QuestionType from '@/Types/Employer/question.type';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Loader2 } from 'lucide-react';
 
-
 export default function Questionnaire() {
   const { jobId } = useParams<{ jobId: string }>();
 
@@ -174,7 +173,7 @@ export default function Questionnaire() {
                         alt="bot"
                         width={40}
                         height={40}
-                            className="shrink-0 w-8 h-8 sm:w-10 sm:h-10"
+                        className="shrink-0 w-8 h-8 sm:w-10 sm:h-10"
                       />
                       <div className="relative w-full">
                         {isEditing ? (
@@ -226,20 +225,16 @@ export default function Questionnaire() {
                                 className="cursor-pointer "
                               /> */}
                             </>
-                            
                           )}
-                          
                         </div>
-                        
                       </div>
                       <Trash
-                                size={18}
-                                color="red"
-                                onClick={() => handleRemoveQuestion(index)}
-                                className="cursor-pointer hover:text-red-500 hover:scale-110 transition-all duration-300 "
-                              />
+                        size={18}
+                        color="red"
+                        onClick={() => handleRemoveQuestion(index)}
+                        className="cursor-pointer hover:text-red-500 hover:scale-110 transition-all duration-300 "
+                      />
                     </li>
-                    
                   );
                 })}
               </>

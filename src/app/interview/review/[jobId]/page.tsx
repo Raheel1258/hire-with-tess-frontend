@@ -87,7 +87,6 @@ export default function InterviewReview() {
       useCard={false}
     >
       <div className="w-full p-6 mt-6">
-        {/* <h1 className="text-lg font-openSans text-c text-black text-left font-semibold mb-6">AI Created Job Details: </h1> */}
         <Form {...form}>
           <form ref={ref} className="space-y-8">
             <FormField

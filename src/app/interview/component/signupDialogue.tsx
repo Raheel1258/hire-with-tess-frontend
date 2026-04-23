@@ -32,7 +32,7 @@ export default function SignupDialogue() {
     },
   });
   const ref = useRef<HTMLFormElement>(null);
-  
+
   const signupMutation = useSignupMutation(jobId);
 
   const onSubmit = async (data: z.infer<typeof signupFormSchema>) => {
@@ -201,10 +201,10 @@ export default function SignupDialogue() {
 
               <div className="flex flex-col sm:flex-row justify-center w-full gap-2">
 
-              <GoogleLoginButton redirectTo="/" />
+                {/* <GoogleLoginButton redirectTo="/" /> */}
                 <Button
-                 className=" sm:w-3xs h-11 mt-4 cursor-pointer p-2 hover:bg-gray-100 hover:text-black"
-                    type="submit"
+                  className=" sm:w-3xs h-11 mt-4 cursor-pointer p-2 hover:bg-gray-100 hover:text-black"
+                  type="submit"
                   disabled={signupMutation.isPending}
                 >
                   {signupMutation.isPending ? (

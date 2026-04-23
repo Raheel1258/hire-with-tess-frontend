@@ -1,18 +1,14 @@
 "use client";
 import * as React from "react";
-
-import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuLabel,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
-import { ChevronDown } from "lucide-react";
 
 interface StatusProps {
   Status: string;
@@ -47,7 +43,7 @@ export function DropDownCustomStatus({ Status, updateStatus }: StatusProps) {
           variant="outline"
           className={`capitalize ${getButtonStyle()} w-full`}
         >
-          {selectedStatus}<ChevronDown />
+          {selectedStatus}
         </Badge>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">

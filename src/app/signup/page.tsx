@@ -42,8 +42,7 @@ export default function Signup() {
       role: 'admin',
     };
 
-    signupMutation.mutate(payload, {
-    });
+    signupMutation.mutate(payload, {});
   };
 
   return (
