@@ -37,8 +37,8 @@ export default function EmployerLayout({ children }: { children: React.ReactNode
     resetAIResponse();
     resetQuestionStore();
     resetInterviewLink();
-
   };
+
   const handleSignOut = () => {
     clearAuthToken();
     ResetAll();
@@ -74,18 +74,18 @@ export default function EmployerLayout({ children }: { children: React.ReactNode
             ) : (
               <>
                 <Link href={'/login'}>
-                
+
                   <Button
-                   variant="secondary"
-                   className="bg-tess-blue text-white py-2 rounded-md hover:bg-[#1E4B8E]-700 cursor-pointer">
+                    variant="secondary"
+                    className="bg-tess-blue text-white py-2 rounded-md hover:bg-[#1E4B8E]-700 cursor-pointer">
                     Login
                   </Button>
                 </Link>
-                 <Dialog>
+                {/* <Dialog>
                   <DialogTrigger asChild>
-                    <Button 
-                    variant='secondary'
-                    className="bg-tess-blue text-white py-2 rounded-md hover:bg-[#1E4B8E]-700 cursor-pointer">
+                    <Button
+                      variant='secondary'
+                      className="bg-tess-blue text-white py-2 rounded-md hover:bg-[#1E4B8E]-700 cursor-pointer">
                       Sign up
                     </Button>
                   </DialogTrigger>
@@ -93,7 +93,7 @@ export default function EmployerLayout({ children }: { children: React.ReactNode
                     <DialogTitle></DialogTitle>
                     <SignupDialogue />
                   </DialogContent>
-                </Dialog> 
+                </Dialog> */}
               </>
             )}
           </nav>

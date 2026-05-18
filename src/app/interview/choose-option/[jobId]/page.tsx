@@ -18,17 +18,17 @@ const ChooseInterviewOption = () => {
     router.push(`/interview/${jobId}/candidate-question/1`);
   };
 
-  const handlePhoneInterview = () => {
-    router.push(`/interview/phone/${jobId}`);
-  };
+  // const handlePhoneInterview = () => {
+  //   router.push(`/interview/phone/${jobId}`);
+  // };
 
-  const handleCallInterview = () => {
-    twillioHook.mutate({
-      job_id: jobId,
-      interview_id: interviewId,
-      phone_number: phoneNumber,
-    });
-  };
+  // const handleCallInterview = () => {
+  //   twillioHook.mutate({
+  //     job_id: jobId,
+  //     interview_id: interviewId,
+  //     phone_number: phoneNumber,
+  //   });
+  // };
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-6 py-12 bg-gray-50">
       <h1 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-4 text-center">
@@ -86,13 +86,14 @@ const ChooseInterviewOption = () => {
             <li>Convenient & mobile-friendly</li>
           </ul>
           <Button
-            onClick={handlePhoneInterview}
+            // onClick={handlePhoneInterview}
+            disabled={true}
             className="mt-4 px-5 py-3 text-white font-semibold rounded-lg transition w-full"
           >
             Start Phone Interview
           </Button>
         </div>
-{/* 
+        {/* 
         <div className="w-[400px] p-6 border rounded-xl shadow-md bg-white hover:shadow-lg transition flex flex-col justify-between">
           <div>
             <div className="flex items-center gap-3 mb-4">
