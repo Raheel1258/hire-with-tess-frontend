@@ -3,16 +3,14 @@
 import CustomInputForm from '@/app/interview/component/customformInput';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { Checkbox } from '@/components/ui/checkbox';
 import { Form, FormField, FormItem } from '@/components/ui/form';
 import LoginInMutation from '@/Routes/Employer/hooks/Auth/SignIn.hook';
 import { signInFormSchema, SignInFormValidator } from '@/schema/signIn.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
-import Link from 'next/link';
-import { useRef } from 'react';
+import { Suspense, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 
-export default function EmployeeSignIn() {
+function AdminSignIn() {
     const form = useForm<SignInFormValidator>({
         resolver: zodResolver(signInFormSchema),
         defaultValues: {
@@ -117,4 +115,11 @@ export default function EmployeeSignIn() {
     );
 }
 
+export default function AdminSignInPage() {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <AdminSignIn />
+        </Suspense>
+    );
+}
 
