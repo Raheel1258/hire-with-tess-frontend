@@ -20,7 +20,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { GoogleLoginButton } from '@/app/interview/component/googleloginbtn';
+// import { GoogleLoginButton } from '@/app/interview/component/googleloginbtn';
 
 function EmployeeSignIn() {
 
@@ -139,7 +139,7 @@ function EmployeeSignIn() {
               </div>
             </div> */}
 
-            <p className="text-sm text-gray-500 text-center mt-4">
+            {/* <p className="text-sm text-gray-500 text-center mt-4">
               Don&apos;t have an account?{' '}
               <Dialog>
                 <DialogTrigger asChild>
@@ -152,7 +152,7 @@ function EmployeeSignIn() {
                   <SignupDialogue />
                 </DialogContent>
               </Dialog>
-            </p>
+            </p> */}
           </div>
         </Card>
       </div>
