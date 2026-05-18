@@ -3,6 +3,7 @@ import { APIEndpoint } from '@/Routes/Client/Constant/endpoint.routes';
 import { SubmitInterviewPayload } from '@/Types/EmployerDashboard/useresponse';
 import TypeInterviewLink from '@/Types/EmployerDashboard/interviewlink.type';
 import EmployeeAuthStore from '@/store/Auth/auth.store';
+import { getAuthToken } from '@/Utils/Providers/auth';
 import { useRecordingStore } from '@/store/candidate/Recording.store';
 import TypeUploadFile from '@/Types/Candidate/uploadfile';
 import AiResponse from '@/Types/EmployerDashboard/airesponse';
@@ -18,7 +19,12 @@ const api = axios.create({
 });
 
 export const GenerateJobDetails = async (data: AiResponse) => {
-  const response = await api.post(APIEndpoint.GENERATE_JOB_DETAILS, data);
+  const token = getAuthToken();
+  const response = await api.post(APIEndpoint.GENERATE_JOB_DETAILS, data, {
+    headers: {
+      Authorization: token ? `Bearer ${token}` : undefined,
+    },
+  });
   return response.data;
 };
 
