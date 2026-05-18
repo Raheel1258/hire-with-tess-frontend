@@ -18,17 +18,17 @@ const ChooseInterviewOption = () => {
     router.push(`/interview/${jobId}/candidate-question/1`);
   };
 
-  // const handlePhoneInterview = () => {
-  //   router.push(`/interview/phone/${jobId}`);
-  // };
+  const handlePhoneInterview = () => {
+    router.push(`/interview/phone/${jobId}`);
+  };
 
-  // const handleCallInterview = () => {
-  //   twillioHook.mutate({
-  //     job_id: jobId,
-  //     interview_id: interviewId,
-  //     phone_number: phoneNumber,
-  //   });
-  // };
+  const handleCallInterview = () => {
+    twillioHook.mutate({
+      job_id: jobId,
+      interview_id: interviewId,
+      phone_number: phoneNumber,
+    });
+  };
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-6 py-12 bg-gray-50">
       <h1 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-4 text-center">
