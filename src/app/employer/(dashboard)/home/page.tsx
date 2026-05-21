@@ -20,7 +20,6 @@ import AnalyzeInterviewHook from '@/Routes/Employer/hooks/POST/AnalyzeInterview.
 import { Loader } from 'lucide-react';
 import { toast } from 'sonner';
 import OverviewStore from '@/store/EmployeeDashboard/dashboard/overview/overview.store';
-import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import handleCopyLink from '@/Utils/helper/copylink';
 import StatusBadge from '../components/status.badge';
@@ -38,7 +37,6 @@ export default function DashboardHome() {
 
   const Interviewmutation = AnalyzeInterviewHook();
 
-  const router = useRouter();
   const {
     selectedCandidate,
     analyzingInterviewId,
@@ -49,10 +47,6 @@ export default function DashboardHome() {
     setAIReportDialogOpen,
     setIsDialogOpen,
   } = OverviewStore();
-
-  const handleButtonClick = () => {
-    router.push('/');
-  };
 
   const handleAnalyzeInterview = (interviewId: string) => {
     setAnalyzingInterviewId(interviewId);
@@ -161,9 +155,6 @@ export default function DashboardHome() {
       <div>
         <div className="flex flex-row justify-between">
           <h1 className="text-[24px] font-[roboto] font-semibold ml-2 mb-4">Overview</h1>
-          <Button onClick={handleButtonClick} className="font-semibold">
-            Posted a New Job
-          </Button>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 w-full">
