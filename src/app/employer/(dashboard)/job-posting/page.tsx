@@ -14,7 +14,6 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import JobPostingTableTitle from '@/app/employer/(dashboard)/Constant/jobposting';
-import UseDeleteJobByID from '@/Routes/Employer/hooks/DELETE/DeleteJobById.hook';
 import JobpProfile from '../components/postedjobdialogue';
 import { DropDownCustomStatus } from '../components/statusfeature';
 import UseUpdateJobStatus from '@/Routes/Employer/hooks/PUT/job/UpdateJobStatus.hook';
@@ -41,7 +40,6 @@ export default function JobPosting() {
   const [currentPage, setCurrentPage] = useState(1);
   const { data: jobdata } = UseDashboardJobCardStats();
   const { data: JobPostedTableData } = UseGetAllJob({ page: currentPage });
-  const deleteJobMutation = UseDeleteJobByID();
   const updatejobstatus = UseUpdateJobStatus();
   const { data: jobDetails } = UseGETJobBYID(postedjobdata.id);
 
@@ -57,12 +55,6 @@ export default function JobPosting() {
     item.job_title.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
-  const deleteJob = (rowIndex: number) => {
-    const jobIds = filteredJobs?.map((item: { id: string }) => item.id) ?? [];
-    const jobId = jobIds[rowIndex];
-    deleteJobMutation.mutate(jobId);
-  };
- 
   const DATA = (filteredJobs ?? []).map((item: postedJobProps) => {
     return [
       item?.id,
@@ -189,8 +181,7 @@ export default function JobPosting() {
             paginationstart={JobPostedTableData?.current_page}
             paginationend={JobPostedTableData?.pages}
             onPageChange={(page: number) => setCurrentPage(page)}
-            showTrashIcon
-            onDelete={deleteJob}
+            showTrashIcon={false}
             showEyeIcon={true}
             onView={handleViewJob}
           />

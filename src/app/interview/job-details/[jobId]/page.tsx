@@ -12,7 +12,7 @@ import InterviewLayout from '@/components/layout/InterviewLayout';
 import CustomInputForm from '@/app/interview/component/customformInput';
 import { useParams } from 'next/navigation';
 import { useUpdateJob } from '@/Routes/Client/hook/PUT/UpdateJobDetails.hook';
-import { DollarSign, Loader2 } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 
 
 export default function InterviewForm() {
@@ -146,15 +146,8 @@ export default function InterviewForm() {
                       {...field}
                       name="salary"
                       label="Salary"
-                      placeholder="Enter salary amount"
                       currencyName="currency"
                       salaryTypeName="salaryType"
-                      icon={<DollarSign />}
-                      onChange={(value) => {
-                        const numericValue = value.replace(/,/g, '');
-                        field.onChange(numericValue);
-                      }}
-                      value={field.value ? field.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') : ''}
                     />
                   </FormItem>
                 )}
