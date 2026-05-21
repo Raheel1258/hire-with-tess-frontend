@@ -163,18 +163,11 @@ export default function InterviewReview() {
                       {...field}
                       name="salary"
                       label="Salary"
-                      type="number"
                       readOnly
                       currencyName="currency"
                       salaryTypeName="salaryType"
-                      placeholder={jobData.salary}
                       currencyValue={jobData.currency}
                       salaryTypeValue={jobData.salary_type}
-                      onChange={(value) => {
-                        const numericValue = value.replace(/,/g, '');
-                        field.onChange(numericValue);
-                      }}
-                      value={field.value ? field.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') : ''}
                     />
                   </FormControl>
                 </FormItem>

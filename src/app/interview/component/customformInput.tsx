@@ -14,6 +14,62 @@ import { useSkillStore } from '@/store/Employer/InputStore';
 import React, { useRef, useState } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
 
+const formatNumber = (s: string) => {
+  const clean = s.replace(/[^\d]/g, '');
+  return clean.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+};
+
+const cleanNumber = (s: string) => s.replace(/[^\d]/g, '');
+
+const SalaryRangeInput = React.forwardRef<HTMLInputElement, any>(
+  function SalaryRangeInput(props, ref) {
+    const { value, onChange, readOnly, disabled } = props;
+    const stringValue = String(value ?? '');
+    const [minRaw = '', maxRaw = ''] = stringValue.split('-');
+
+    const fire = (newMin: string, newMax: string) => {
+      const min = cleanNumber(newMin);
+      const max = cleanNumber(newMax);
+      const combined = min || max ? `${min}-${max}` : '';
+      onChange({ target: { value: combined } });
+    };
+
+    const baseInputStyle: React.CSSProperties = {
+      width: 110,
+      minWidth: 0,
+      border: 'none',
+      outline: 'none',
+      background: 'transparent',
+      color: 'black',
+      fontSize: 16,
+      fontWeight: 400,
+    };
+
+    return (
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8, width: '100%', justifyContent: 'flex-start' }}>
+        <input
+          ref={ref}
+          value={formatNumber(minRaw)}
+          placeholder="From"
+          readOnly={readOnly}
+          disabled={disabled}
+          onChange={(e) => fire(e.target.value, maxRaw)}
+          style={{ ...baseInputStyle, textAlign: 'right' }}
+        />
+        <span style={{ color: 'gray' }}>-</span>
+        <input
+          value={formatNumber(maxRaw)}
+          placeholder="To"
+          readOnly={readOnly}
+          disabled={disabled}
+          onChange={(e) => fire(minRaw, e.target.value)}
+          style={{ ...baseInputStyle, textAlign: 'left' }}
+        />
+      </div>
+    );
+  },
+);
+
 interface CustomInputProps {
   name: string;
   label: string;
@@ -54,23 +110,6 @@ const CustomInputForm: React.FC<CustomInputProps> = ({
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const actualType = type === 'password' ? (isPasswordVisible ? 'text' : 'password') : type;
 
-  const handleSalaryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!onChange) return;
-    
-    // Allow only digits and commas
-    let value = e.target.value.replace(/[^\d,]/g, '');
-    
-    // Format the number with commas
-    if (value) {
-      // Remove existing commas first
-      value = value.replace(/,/g, '');
-      // Add commas in the correct positions
-      value = value.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-    }
-    
-    onChange(value);
-  };
-
   return (
     <Controller
       name={name}
@@ -84,18 +123,18 @@ const CustomInputForm: React.FC<CustomInputProps> = ({
             inputRef={inputRef}
             fullWidth
             label={label}
-            placeholder={placeholder}
+            placeholder={name === 'salary' ? undefined : placeholder}
             autoComplete="off"
             variant="outlined"
             type={name === 'salary' ? 'text' : actualType}
             error={!!fieldState.error}
             helperText={fieldState.error?.message || ''}
             slotProps={{ inputLabel: { shrink: true } }}
-            value={jobTypeName ? '' : (name === 'salary' ? (value || field.value || '') : (value || field.value || ''))}
-            onChange={name === 'salary' ? handleSalaryChange : field.onChange}
+            value={jobTypeName ? '' : (value || field.value || '')}
+            onChange={field.onChange}
             InputProps={{
               readOnly,
-              inputProps: name === 'salary' ? { min: 0 } : undefined,
+              inputComponent: name === 'salary' ? (SalaryRangeInput as any) : undefined,
               startAdornment: jobTypeName ? (
                 <InputAdornment position="start">
                   <Controller
@@ -152,11 +191,18 @@ const CustomInputForm: React.FC<CustomInputProps> = ({
                             </SelectTrigger>
                             <SelectContent>
                               <SelectItem value="USD" className="text-black">USD</SelectItem>
+                              <SelectItem value="PKR" className="text-black">PKR</SelectItem>
                             </SelectContent>
                           </Select>
                         </FormControl>
                       )}
                     />
+                    <div
+                      className="flex h-9 w-[100px] items-center justify-center rounded-md border border-input bg-background px-3 py-2 text-[16px] font-normal text-black"
+                      aria-label="Salary mode"
+                    >
+                      Range
+                    </div>
                   </div>
                 </InputAdornment>
               ) : null,

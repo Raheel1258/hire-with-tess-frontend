@@ -14,7 +14,6 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import JobPostingTableTitle from '@/app/employer/(dashboard)/Constant/jobposting';
-import UseDeleteJobByID from '@/Routes/Employer/hooks/DELETE/DeleteJobById.hook';
 import JobpProfile from '../components/postedjobdialogue';
 import { DropDownCustomStatus } from '../components/statusfeature';
 import UseUpdateJobStatus from '@/Routes/Employer/hooks/PUT/job/UpdateJobStatus.hook';
@@ -25,6 +24,7 @@ import { useState } from 'react';
 import handleCopyLink from '@/Utils/helper/copylink';
 import CustomJobDetailDialogue from '@/app/employer/(dashboard)/components/jobdetaildialogue';
 import UseGETJobBYID from '@/Routes/Employer/hooks/GET/candidates/GetJobByID.hook';
+import { useRouter } from 'next/navigation';
 
 export default function JobPosting() {
   const {
@@ -38,10 +38,14 @@ export default function JobPosting() {
     setSelectedCandidate,
   } = JobStore();
 
+  const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
   const { data: jobdata } = UseDashboardJobCardStats();
+
+  const handlePostNewJob = () => {
+    router.push('/');
+  };
   const { data: JobPostedTableData } = UseGetAllJob({ page: currentPage });
-  const deleteJobMutation = UseDeleteJobByID();
   const updatejobstatus = UseUpdateJobStatus();
   const { data: jobDetails } = UseGETJobBYID(postedjobdata.id);
 
@@ -57,12 +61,6 @@ export default function JobPosting() {
     item.job_title.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
-  const deleteJob = (rowIndex: number) => {
-    const jobIds = filteredJobs?.map((item: { id: string }) => item.id) ?? [];
-    const jobId = jobIds[rowIndex];
-    deleteJobMutation.mutate(jobId);
-  };
- 
   const DATA = (filteredJobs ?? []).map((item: postedJobProps) => {
     return [
       item?.id,
@@ -156,7 +154,12 @@ export default function JobPosting() {
       </Dialog>
 
       <div>
-        <h1 className="text-2xl font-open-sans font-semibold ml-2 mb-4">Overview</h1>
+        <div className="flex flex-row justify-between items-center mb-4">
+          <h1 className="text-2xl font-open-sans font-semibold ml-2">Overview</h1>
+          <Button onClick={handlePostNewJob} className="font-semibold">
+            Posted a New Job
+          </Button>
+        </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 w-full">
           <CardComponent
             heading="Total Job"
@@ -180,17 +183,18 @@ export default function JobPosting() {
           />
         </div>
 
-        <div className="mt-10">
-          <h1 className="font-roboto text-2xl font-bold leading-[30px] mb-4">Jobs</h1>
-          <Searchbar value={searchTerm} onChange={handleSearchChange} />
+        <div className="mt-6">
+          <div className="flex flex-row justify-between items-center mb-4">
+            <h1 className="font-roboto text-2xl font-bold leading-[30px]">Jobs</h1>
+            <Searchbar value={searchTerm} onChange={handleSearchChange} />
+          </div>
           <TableComponent
             header={JobPostingTableTitle}
             subheader={DATA}
             paginationstart={JobPostedTableData?.current_page}
             paginationend={JobPostedTableData?.pages}
             onPageChange={(page: number) => setCurrentPage(page)}
-            showTrashIcon
-            onDelete={deleteJob}
+            showTrashIcon={false}
             showEyeIcon={true}
             onView={handleViewJob}
           />
