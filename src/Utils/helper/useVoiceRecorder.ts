@@ -68,13 +68,14 @@ export const useVoiceRecorder = (): UseVoiceRecorderResult => {
     setError(null);
     try {
       setSeconds(0);
-      const stream = await navigator.mediaDevices.getUserMedia({ 
+      const stream = await navigator.mediaDevices.getUserMedia({
         audio: {
           echoCancellation: true,
           noiseSuppression: true,
+          autoGainControl: true,
           sampleRate: 44100,
           channelCount: 1
-        } 
+        }
       });
       
       mediaStreamRef.current = stream;
