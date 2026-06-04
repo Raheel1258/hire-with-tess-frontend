@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useSpeechRecognition } from 'react-speech-recognition';
 import { Mic, MicOff, MonitorUp } from 'lucide-react';
 import { useRecordingStore } from '@/store/candidate/Recording.store';
@@ -37,6 +37,16 @@ const SpeechRecordingInput: React.FC<SpeechRecordingInputProps> = ({
   const [seconds, setSeconds] = useState(0);
   const [activeTool, setActiveTool] = useState<'mic' | 'screen' | null>(null);
   const [inputTranscript, setInputTranscript] = useState('');
+  const [recordedPeaks, setRecordedPeaks] = useState<number[][] | undefined>(undefined);
+
+  // Capture the waveform peaks + accurate duration once the recorded clip is
+  // decoded, so they can be persisted and replayed on the review page.
+  const handleDecoded = useCallback((peaks: number[][], dur: number) => {
+    setRecordedPeaks(peaks);
+    if (Number.isFinite(dur) && dur > 0) {
+      setSeconds(Math.round(dur));
+    }
+  }, []);
 
   // Refs
   const audioStream = useRef<MediaRecorder | null>(null);
@@ -45,11 +55,19 @@ const SpeechRecordingInput: React.FC<SpeechRecordingInputProps> = ({
 
   // Hooks
   const { hasRecorded, setIsPlaying, setActiveType,  } = useRecordingStore();
-  const { mutate: uploadFile } = useUploadFileMutation();
+  const { mutate: uploadFile, isPending: isUploading } = useUploadFileMutation();
   const { resetTranscript } = useSpeechRecognition();
   const { transcript, startSpeechRecognition, stopSpeechRecognition, listening, resetRecording } = useVoiceRecorder();
 
 
+
+// Clear any leftover transcript from the previous question when this question
+// mounts, so the prior answer never leaks into the next input field.
+useEffect(() => {
+  resetTranscript();
+  setInputTranscript('');
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+}, []);
 
 // Update transcript
 useEffect(() => {
@@ -62,9 +80,32 @@ useEffect(() => {
     setIsVoiceRecording(true);
     try {
       setSeconds(0);
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      // Enable the browser's built-in audio processing to suppress background
+      // noise (fans, hum, ambient sound), cancel echo, and normalise volume.
+      // Mono at 48kHz is ideal for speech and keeps the file small.
+      const stream = await navigator.mediaDevices.getUserMedia({
+        audio: {
+          echoCancellation: true,
+          noiseSuppression: true,
+          autoGainControl: true,
+          channelCount: 1,
+          sampleRate: 48000,
+        },
+      });
       mediaStreamRef.current = stream;
-      audioStream.current = new MediaRecorder(stream);
+
+      // Prefer Opus in WebM — efficient and high quality for voice. Fall back to
+      // the browser default if it isn't supported.
+      const preferredMimeType = 'audio/webm;codecs=opus';
+      const recorderOptions: MediaRecorderOptions = { audioBitsPerSecond: 128000 };
+      if (
+        typeof MediaRecorder !== 'undefined' &&
+        MediaRecorder.isTypeSupported?.(preferredMimeType)
+      ) {
+        recorderOptions.mimeType = preferredMimeType;
+      }
+
+      audioStream.current = new MediaRecorder(stream, recorderOptions);
       audioStream.current.ondataavailable = (e) => {
         if (e.data.size > 0) {
           recordedChunksRef.current.push(e.data);
@@ -75,7 +116,9 @@ useEffect(() => {
       }, 1000);
 
       audioStream.current.onstop = () => {
-        const recordedBlob = new Blob(recordedChunksRef.current, { type: 'audio/mp3' });
+        // Use the recorder's real mime type so the blob is labelled correctly.
+        const blobType = audioStream.current?.mimeType || 'audio/webm';
+        const recordedBlob = new Blob(recordedChunksRef.current, { type: blobType });
         const url = URL.createObjectURL(recordedBlob);
         setAudioUrl(url);
         useRecordingStore.getState().setAudioURL(url);
@@ -177,6 +220,13 @@ useEffect(() => {
             question_text: currentquestion,
             temp_url: response?.temp_url || fileUrl,
             content_type: fileType,
+            // Persist the duration we measured during recording. MediaRecorder
+            // blobs have no duration metadata, so wavesurfer often can't derive
+            // it from the uploaded file — this is the reliable fallback.
+            seconds,
+            // Persist the waveform peaks so the bars render on the review page
+            // without re-decoding the remote audio.
+            peaks: recordedPeaks,
           };
 
           setInputTranscript('');
@@ -196,7 +246,8 @@ useEffect(() => {
 
     setAudioUrl('');
     setScreenShareUrl(null);
- 
+    setRecordedPeaks(undefined);
+
     setSeconds(0);
     setIsPlaying(false);
     setIsVoiceRecording(false);
@@ -222,6 +273,7 @@ useEffect(() => {
     setInputTranscript('');
     setAudioUrl('');
     setScreenShareUrl(null);
+    setRecordedPeaks(undefined);
     setSeconds(0);
     setIsPlaying(false);
     setIsVoiceRecording(false);
@@ -295,7 +347,11 @@ useEffect(() => {
           {AudioUrl && (
             <div className="rounded-full p-3 border shadow-xl">
               <div className="flex items-center gap-2 w-full">
-                <Waveform recordedVoiceURL={AudioUrl} seconds={seconds} />
+                <Waveform
+                  recordedVoiceURL={AudioUrl}
+                  seconds={seconds}
+                  onDecoded={handleDecoded}
+                />
               </div>
             </div>
           )}
@@ -316,6 +372,7 @@ useEffect(() => {
             onRecordAgain={handleRestartRecording}
             onSaveAndContinue={handleSaveAndContinue}
             recordAgainLabel={getRecordAgainLabel()}
+            isSubmitting={isUploading}
           />
         </div>
       )}

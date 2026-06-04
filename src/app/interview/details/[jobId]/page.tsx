@@ -3,7 +3,7 @@ import InterviewLayout from '@/components/layout/InterviewLayout';
 import { Card } from '@/components/ui/card';
 import { FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import CustomInputForm from '@/app/interview/component/customformInput';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
@@ -12,7 +12,7 @@ import {
 } from '@/schema/CandidateDetail.schema';
 import { Button } from '@/components/ui/button';
 import { useParams } from 'next/navigation';
-import { X, Phone, Hash } from 'lucide-react';
+import { X } from 'lucide-react';
 import RegeisterCandidatehook from '@/Routes/Client/hook/POST/RegeisterCandidatehook';
 import { toast } from 'sonner';
 import { Input } from '@/components/ui/input';
@@ -21,8 +21,6 @@ import 'react-phone-input-2/lib/style.css';
 
 export default function CandidatesDetails() {
   const { jobId } = useParams<{ jobId: string }>();
-  const interviewId = jobId;
-  const phoneNumber = '+1-989-510-7499';
 
   const form = useForm<CandidateDetailsValidator>({
     resolver: zodResolver(CandidateDetailSchema),
@@ -55,6 +53,45 @@ export default function CandidatesDetails() {
   const ref = useRef<HTMLFormElement>(null);
   const [fileName, setFileName] = useState<string | null>(null);
 
+  const [defaultCountry, setDefaultCountry] = useState<string | null>(null);
+
+  useEffect(() => {
+    let isMounted = true;
+    const providers: { url: string; pick: (d: any) => unknown }[] = [
+      { url: 'https://ipwho.is/', pick: (d) => d?.country_code },
+      { url: 'https://ipapi.co/json/', pick: (d) => d?.country_code },
+      { url: 'https://get.geojs.io/v1/ip/country.json', pick: (d) => d?.country },
+    ];
+
+    const isValidCode = (code: unknown): code is string =>
+      typeof code === 'string' && /^[A-Za-z]{2}$/.test(code);
+
+    const detectCountry = async () => {
+      for (const provider of providers) {
+        try {
+          const res = await fetch(provider.url);
+          if (!res.ok) continue;
+          const data = await res.json();
+          const code = provider.pick(data);
+          if (isValidCode(code)) {
+            console.log('[region] detected country from', provider.url, '->', code);
+            if (isMounted) setDefaultCountry(code.toLowerCase());
+            return;
+          }
+        } catch {
+          // try the next provider
+        }
+      }
+      if (isMounted) setDefaultCountry('us');
+    };
+
+    detectCountry();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -76,48 +113,8 @@ export default function CandidatesDetails() {
       showStepper={false}
       useCard={false}
       subtitle="Start Your Interview"
-      description="Choose to fill the form or call with your Job ID to begin"
+      description="Fill in your details to begin your interview"
     >
-      <div className="bg-white rounded-xl p-4 sm:p-6 shadow-sm border border-gray-100 mb-8">
-        <h1 className="text-lg font-semibold text-[#1E4B8E] mb-1">
-          Start Your Phone Interview
-        </h1>
-        <p className="text-xs text-gray-600 mb-6 sm:mb-8">
-          Call the number below and provide your Job ID to begin your interview process
-        </p>
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 sm:gap-4">
-          <div className="flex items-center gap-3 w-full sm:w-auto">
-            <div className="bg-blue-50 p-3 rounded-full flex-shrink-0">
-              <Phone className="h-5 w-5 text-[#1E4B8E]" />
-            </div>
-            <div className="flex-1">
-              <p className="text-sm text-gray-600">Call our interview line</p>
-              <p className="text-lg font-semibold text-[#1E4B8E] break-all">
-                {phoneNumber}
-              </p>
-              <p className="text-xs text-gray-500 mt-1">
-                Available 24/7 for your convenience
-              </p>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-3 w-full sm:w-auto">
-            <div className="bg-blue-50 p-3 rounded-full flex-shrink-0">
-              <Hash className="h-5 w-5 text-[#1E4B8E]" />
-            </div>
-            <div className="flex-1">
-              <p className="text-sm text-gray-600">Your Job ID</p>
-              <p className="text-lg font-semibold text-[#1E4B8E] break-all">
-                {interviewId}
-              </p>
-              <p className="text-xs text-gray-500 mt-1">
-                Have this remember when you call
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-
       <FormProvider {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} ref={ref} className="space-y-8 px-4">
           <FormField
@@ -187,43 +184,50 @@ export default function CandidatesDetails() {
             name="callback_number"
             render={({ field }) => (
               <FormItem>
-                <PhoneInput
-                  country={'us'}
-                  value={field.value}
-                  onChange={(phone) => {
-                    field.onChange(phone);
-                  }}
-                  inputProps={{
-                    name: 'phone',
-                    required: true,
+                {defaultCountry ? (
+                  <PhoneInput
+                    country={defaultCountry}
+                    value={field.value}
+                    onChange={(phone) => {
+                      field.onChange(phone);
+                    }}
+                    inputProps={{
+                      name: 'phone',
+                      required: true,
 
-                    placeholder: 'Enter phone number',
-                  }}
-                  inputStyle={{
-                    width: '100%',
-                    height: '60px',
-                    fontWeight: 400,
-                    color: 'black',
-                    borderRadius: '14px',
-                    border: '1px solid #d1d5db',
-                    paddingLeft: '48px',
-                    outline: 'none',
-                    boxSizing: 'border-box',
-                    fontFamily: "'Roboto', 'Helvetica', 'Arial', sans-serif",
-                  }}
-                  containerStyle={{
-                    width: '100%',
-                    position: 'relative',
-                  }}
-                  buttonStyle={{
-                    borderRadius: '14px 0 0 14px',
-                    borderRight: 'none',
-                    border: '1px solid #d1d5db',
-                    height: '60px',
-                    display: 'flex',
-                    alignItems: 'center',
-                  }}
-                />
+                      placeholder: 'Enter phone number',
+                    }}
+                    inputStyle={{
+                      width: '100%',
+                      height: '60px',
+                      fontWeight: 400,
+                      color: 'black',
+                      borderRadius: '14px',
+                      border: '1px solid #d1d5db',
+                      paddingLeft: '48px',
+                      outline: 'none',
+                      boxSizing: 'border-box',
+                      fontFamily: "'Roboto', 'Helvetica', 'Arial', sans-serif",
+                    }}
+                    containerStyle={{
+                      width: '100%',
+                      position: 'relative',
+                    }}
+                    buttonStyle={{
+                      borderRadius: '14px 0 0 14px',
+                      borderRight: 'none',
+                      border: '1px solid #d1d5db',
+                      height: '60px',
+                      display: 'flex',
+                      alignItems: 'center',
+                    }}
+                  />
+                ) : (
+                  <div
+                    className="w-full animate-pulse rounded-[14px] border border-gray-300 bg-gray-50"
+                    style={{ height: '60px' }}
+                  />
+                )}
                 <FormMessage />
               </FormItem>
             )}

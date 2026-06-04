@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { Phone, MonitorSpeaker } from 'lucide-react';
+import { MonitorSpeaker } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import UseTwilloHook from '@/Routes/Client/hook/POST/TwiilioCall.hook';
 import useCandidateInfoStore from '@/store/candidate/userinfo';
@@ -18,10 +18,6 @@ const ChooseInterviewOption = () => {
     router.push(`/interview/${jobId}/candidate-question/1`);
   };
 
-  const handlePhoneInterview = () => {
-    router.push(`/interview/phone/${jobId}`);
-  };
-
   const handleCallInterview = () => {
     twillioHook.mutate({
       job_id: jobId,
@@ -35,9 +31,8 @@ const ChooseInterviewOption = () => {
         Choose Your Interview Method
       </h1>
       <p className="text-gray-600 text-center text-lg sm:text-xl max-w-2xl mb-10">
-        Select how you'd like to take your AI-powered interview. You can either answer
-        questions directly on the web with audio and screen recording, or respond via a
-        phone call.
+        Take your AI-powered interview directly on the web by answering questions with
+        audio and optional screen recording.
       </p>
 
       <div className="flex flex-wrap justify-center gap-8 w-full max-w-7xl">
@@ -67,7 +62,7 @@ const ChooseInterviewOption = () => {
           </Button>
         </div>
 
-        {/* Phone Call Interview Option */}
+        {/* Phone Call Interview Option — hidden
         <div className="w-[400px] p-6 border rounded-xl shadow-md bg-white hover:shadow-lg transition">
           <div className="flex items-center gap-3 mb-4">
             <Phone className="text-[#FF8C00]" size={28} />
@@ -93,7 +88,8 @@ const ChooseInterviewOption = () => {
             Start Phone Interview
           </Button>
         </div>
-        {/* 
+        */}
+        {/*
         <div className="w-[400px] p-6 border rounded-xl shadow-md bg-white hover:shadow-lg transition flex flex-col justify-between">
           <div>
             <div className="flex items-center gap-3 mb-4">
