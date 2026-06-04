@@ -80,9 +80,32 @@ useEffect(() => {
     setIsVoiceRecording(true);
     try {
       setSeconds(0);
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      // Enable the browser's built-in audio processing to suppress background
+      // noise (fans, hum, ambient sound), cancel echo, and normalise volume.
+      // Mono at 48kHz is ideal for speech and keeps the file small.
+      const stream = await navigator.mediaDevices.getUserMedia({
+        audio: {
+          echoCancellation: true,
+          noiseSuppression: true,
+          autoGainControl: true,
+          channelCount: 1,
+          sampleRate: 48000,
+        },
+      });
       mediaStreamRef.current = stream;
-      audioStream.current = new MediaRecorder(stream);
+
+      // Prefer Opus in WebM — efficient and high quality for voice. Fall back to
+      // the browser default if it isn't supported.
+      const preferredMimeType = 'audio/webm;codecs=opus';
+      const recorderOptions: MediaRecorderOptions = { audioBitsPerSecond: 128000 };
+      if (
+        typeof MediaRecorder !== 'undefined' &&
+        MediaRecorder.isTypeSupported?.(preferredMimeType)
+      ) {
+        recorderOptions.mimeType = preferredMimeType;
+      }
+
+      audioStream.current = new MediaRecorder(stream, recorderOptions);
       audioStream.current.ondataavailable = (e) => {
         if (e.data.size > 0) {
           recordedChunksRef.current.push(e.data);
@@ -93,7 +116,9 @@ useEffect(() => {
       }, 1000);
 
       audioStream.current.onstop = () => {
-        const recordedBlob = new Blob(recordedChunksRef.current, { type: 'audio/mp3' });
+        // Use the recorder's real mime type so the blob is labelled correctly.
+        const blobType = audioStream.current?.mimeType || 'audio/webm';
+        const recordedBlob = new Blob(recordedChunksRef.current, { type: blobType });
         const url = URL.createObjectURL(recordedBlob);
         setAudioUrl(url);
         useRecordingStore.getState().setAudioURL(url);
