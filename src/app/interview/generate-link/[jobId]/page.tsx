@@ -1,4 +1,5 @@
 'use client';
+import { useEffect, useState } from 'react';
 import InterviewLayout from '@/components/layout/InterviewLayout';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -56,7 +57,12 @@ export default function GenerateLink() {
 
 
   const { jobId } = useParams<{ jobId: string }>();
-  const accessToken = getAuthToken() || getAuthCookie();
+  const [accessToken, setAccessToken] = useState<string>('');
+
+  useEffect(() => {
+    setAccessToken(getAuthToken() || getAuthCookie() || '');
+  }, []);
+
   const interviewId = jobId;
   const phoneNumber = '+1-989-510-7499';
 

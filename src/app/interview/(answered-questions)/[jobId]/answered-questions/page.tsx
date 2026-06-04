@@ -132,9 +132,11 @@ export default function AnsweredQuestionList() {
                         <div className="rounded-full p-3 border">
                           <Waveform
                             recordedVoiceURL={matchedResponse.temp_url}
+                            seconds={matchedResponse.seconds}
+                            peaks={matchedResponse.peaks}
                           />
                         </div>
-                  
+
                       )}
                       {/* {matchedResponse.content_type.startsWith('video') && (
                         <div className="flex items-center justify-between p-4 border rounded-full">

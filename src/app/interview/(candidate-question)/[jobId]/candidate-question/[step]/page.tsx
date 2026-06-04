@@ -69,6 +69,7 @@ export default function InterviewQuestionPage() {
         )}
 
         <SpeechRecordingInput
+          key={currentStep}
           jobId={jobId}
           index={currentStep}
           onSaveAndContinue={handleSaveAndContinue}

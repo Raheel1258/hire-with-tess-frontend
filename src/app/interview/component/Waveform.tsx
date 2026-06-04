@@ -7,6 +7,8 @@ import DialogueStore from '@/store/EmployeeDashboard/dashboard/overview/dialogue
 interface WaveformProps {
   recordedVoiceURL: string;
   seconds?: number;
+  peaks?: number[][];
+  onDecoded?: (peaks: number[][], duration: number) => void;
   onReady?: () => void;
 }
 
@@ -19,10 +21,18 @@ const formatTime = (totalSeconds: number): string => {
 // Keep track of all active wavesurfer instances
 const activeWavesurfers = new Map<string, WaveSurfer>();
 
-const Waveform: React.FC<WaveformProps> = ({ recordedVoiceURL = '', onReady }) => {
+const Waveform: React.FC<WaveformProps> = ({
+  recordedVoiceURL = '',
+  seconds,
+  peaks,
+  onDecoded,
+  onReady,
+}) => {
   const waveformRef = useRef<HTMLDivElement | null>(null);
   const wavesurferRef = useRef<WaveSurfer | null>(null);
-  const [duration, setDuration] = useState(0);
+  // Seed the display with the duration measured during recording, so the time
+  // shows correctly even when wavesurfer can't read it from the audio file.
+  const [duration, setDuration] = useState(seconds ?? 0);
 
   const {
     isPlaying,
@@ -34,6 +44,8 @@ const Waveform: React.FC<WaveformProps> = ({ recordedVoiceURL = '', onReady }) =
   useEffect(() => {
     if (!recordedVoiceURL || !waveformRef.current) return;
 
+    const hasPeaks = Array.isArray(peaks) && peaks.length > 0;
+
     const wavesurfer = WaveSurfer.create({
       container: waveformRef.current,
       barWidth: 3,
@@ -41,20 +53,42 @@ const Waveform: React.FC<WaveformProps> = ({ recordedVoiceURL = '', onReady }) =
       barGap: 2,
       cursorWidth: 1,
       cursorColor: 'transparent',
-      backend: 'WebAudio',
+      // When we already have peaks, use the MediaElement backend so playback
+      // streams the URL directly (no decode/CORS needed). Without peaks (record
+      // page, local blob) use WebAudio so we can decode and export the peaks.
+      backend: hasPeaks ? 'MediaElement' : 'WebAudio',
       height: 40,
       waveColor: '#C4C4C4',
       progressColor: '#1e4b8e',
       url: recordedVoiceURL,
       normalize: true,
+      // Render from precomputed peaks instead of decoding the remote file.
+      ...(hasPeaks ? { peaks, duration: seconds } : {}),
     });
 
     wavesurferRef.current = wavesurfer;
     activeWavesurfers.set(recordedVoiceURL, wavesurfer);
 
-    // Show clip duration
+    // Show clip duration. MediaRecorder blobs often lack duration metadata, so
+    // getDuration() can return 0 or Infinity — in that case keep the measured
+    // `seconds` fallback instead of overwriting it with a bad value.
     wavesurfer.on('ready', () => {
-      setDuration(wavesurfer.getDuration());
+      const wsDuration = wavesurfer.getDuration();
+      if (Number.isFinite(wsDuration) && wsDuration > 0) {
+        setDuration(wsDuration);
+      }
+      // On the record page (no incoming peaks) export the freshly decoded peaks
+      // so the caller can persist them for the review page.
+      if (!hasPeaks && onDecoded) {
+        try {
+          const exported = wavesurfer.exportPeaks({ channels: 1, maxLength: 200 });
+          const dur =
+            Number.isFinite(wsDuration) && wsDuration > 0 ? wsDuration : seconds ?? 0;
+          onDecoded(exported, dur);
+        } catch {
+          // exportPeaks unsupported / decode failed — keep the seconds fallback
+        }
+      }
       onReady?.();
     });
     wavesurfer.on('audioprocess', () => {
@@ -85,7 +119,7 @@ const Waveform: React.FC<WaveformProps> = ({ recordedVoiceURL = '', onReady }) =
       wavesurferRef.current = null;
       activeWavesurfers.delete(recordedVoiceURL);
     };
-  }, [recordedVoiceURL, setIsPlaying, setDuration, setCurrentlyPlayingId, onReady]);
+  }, [recordedVoiceURL, peaks, seconds, onDecoded, setIsPlaying, setDuration, setCurrentlyPlayingId, onReady]);
 
   const togglePlayback = () => {
     const ws = wavesurferRef.current;

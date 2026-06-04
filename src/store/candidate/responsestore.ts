@@ -5,6 +5,8 @@ interface SavedResponse {
   question_text: string;
   temp_url: string;
   content_type: string;
+  seconds?: number;
+  peaks?: number[][];
 }
 
 interface RecordingState {
