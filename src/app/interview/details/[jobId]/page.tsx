@@ -114,6 +114,8 @@ export default function CandidatesDetails() {
       useCard={false}
       subtitle="Start Your Interview"
       description="Fill in your details to begin your interview"
+      subtitleClassName="font-roboto font-bold text-2xl sm:text-[34px] leading-tight sm:leading-[46px] mt-4 sm:mt-6"
+      descriptionClassName="mt-2 sm:mt-4 text-sm sm:text-base text-[#6F6C90] leading-relaxed sm:leading-[30px] font-roboto font-normal"
     >
       <FormProvider {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} ref={ref} className="space-y-8 px-4">
@@ -233,13 +235,15 @@ export default function CandidatesDetails() {
             )}
           />
 
-          <Button
-            type="submit"
-            className="w-full sm:w-[381px] h-[64px] leading-[20px] font-roboto cursor-pointer rounded-2xl max-w-[90%]"
-            disabled={mutation.isPending}
-          >
-            {mutation.isPending ? 'Submitting...' : 'Start Interview'}
-          </Button>
+          <div className="flex justify-center w-full">
+            <Button
+              type="submit"
+              className="w-full sm:w-[381px] h-12 sm:h-[64px] leading-[20px] font-roboto cursor-pointer rounded-2xl"
+              disabled={mutation.isPending}
+            >
+              {mutation.isPending ? 'Submitting...' : 'Start Interview'}
+            </Button>
+          </div>
         </form>
       </FormProvider>
     </InterviewLayout>

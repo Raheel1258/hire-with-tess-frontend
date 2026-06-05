@@ -85,7 +85,7 @@ export default function CandidatePage() {
         onClick={() => handleCopyLink(item.interview_link)}
       >
         <Copy className="w-4 h-4" />
-        <span>Copy Link</span>
+        <span className="hidden sm:inline">Copy Link</span>
       </Button>
     ) : (
       'No link available'
@@ -144,7 +144,7 @@ export default function CandidatePage() {
         </DialogContent>
       </Dialog>
       <div>
-        <h1 className="text-2xl font-open-sans font-semibold ml-2 mb-4">Overview</h1>
+        <h1 className="text-xl sm:text-2xl font-open-sans font-semibold mb-4">Overview</h1>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 w-full">
           <CardComponent
             heading="Total Candidates"
@@ -169,10 +169,12 @@ export default function CandidatePage() {
           ></CardComponent>
         </div>
         <div className="mt-10">
-          <h1 className="font-roboto text-2xl font-bold leading-[30px] mb-4">
+          <h1 className="font-roboto text-xl sm:text-2xl font-bold leading-[30px] mb-4">
             Candidates
           </h1>
-          <Searchbar value={searchTerm} onChange={handleSearchChange} />
+          <div className="w-full sm:max-w-[300px]">
+            <Searchbar value={searchTerm} onChange={handleSearchChange} />
+          </div>
           <TableComponent
             header={CandidateTableTitle}
             subheader={DATA}

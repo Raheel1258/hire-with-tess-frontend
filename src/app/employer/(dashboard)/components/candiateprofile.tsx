@@ -220,14 +220,14 @@ export default function UserProfile({ data, isSuperAdmin }: UserProfileProps) {
             return (
               <InputBox key={index} label={``}>
                 <p className="w-full font-semibold text-[14px] ">{`Question ${index + 1}: ${question}`}</p>
-                <div className="rounded-full p-3 border mt-6 w-full">
-                  <div className="flex items-center gap-2 ">
+                <div className="rounded-2xl sm:rounded-full p-2 sm:p-3 border mt-6 w-full">
+                  <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
                     {answer?.submission_type === 'audio' && (
                       <>
                         <Waveform recordedVoiceURL={answer.url} />
                         <Button
                           disabled={downloadingStates[question]}
-                          className="bg-[#1E4B8E] text-white hover:bg-[#1E4B9E] cursor-pointer"
+                          className="w-full sm:w-auto bg-[#1E4B8E] text-white hover:bg-[#1E4B9E] cursor-pointer"
                           onClick={() =>
                             handleDownloadAudio(answer.url, `${data.candidate_name}_${question}.mp3`, question)
                           }

@@ -151,9 +151,9 @@ const Waveform: React.FC<WaveformProps> = ({
           aria-label={isThisAudioPlaying ? 'Pause' : 'Play'}
         >
           {isThisAudioPlaying ? (
-            <CirclePause className="w-10 h-8" color="#1e4b8e" />
+            <CirclePause className="w-8 h-6 sm:w-10 sm:h-8 shrink-0" color="#1e4b8e" />
           ) : (
-            <CirclePlay className="w-10 h-8" color="#1e4b8e" />
+            <CirclePlay className="w-8 h-6 sm:w-10 sm:h-8 shrink-0" color="#1e4b8e" />
           )}
         </button>
       </div>

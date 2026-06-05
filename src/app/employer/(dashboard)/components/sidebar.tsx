@@ -82,14 +82,14 @@ export default function Sidebar({ links }: SidebarProps) {
       </aside>
       <LogoutDialogue open={isLogout} onOpenChange={setIsLogout} />
       {/* Mobile Sidebar */}
-      <div className="md:hidden">
+      <div className="fixed top-20 left-4 z-50 md:hidden">
         <Sheet>
           <SheetTrigger asChild>
-            <Button variant="outline" size="icon" className="shrink-0">
+            <Button variant="outline" size="icon" className="shrink-0 shadow-md bg-white">
               <Menu />
             </Button>
           </SheetTrigger>
-          <SheetContent side="left" className="flex flex-col w-[250px] p-6 bg-white">
+          <SheetContent side="left" className="flex flex-col w-[280px] max-w-[85vw] p-6 bg-white">
             <nav className="flex flex-col gap-2 text-sm font-light">
               {links.map(renderLink)}
               <div className='flex flex-col gap-2 mt-2 items-start p-2'>

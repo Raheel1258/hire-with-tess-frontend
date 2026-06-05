@@ -52,13 +52,13 @@ export default function EmployerLayout({ children }: { children: React.ReactNode
           <Link href="/">
             <h1 className="text-xl pr-2 font-semibold text-black">Hirewithtess</h1>
           </Link>
-          <nav className="flex gap-4 ml-auto">
+          <nav className="flex flex-col sm:flex-row gap-2 sm:gap-4 ml-auto">
             {getAuthToken() ? (
-              <div className="flex gap-2">
+              <div className="flex flex-col sm:flex-row gap-2">
                 <Button
                   onClick={handleSignOut}
                   variant='secondary'
-                  className=" py-2 text-white bg-red-500 rounded-lg hover:bg-red-600"
+                  className="w-full sm:w-auto py-2 text-white bg-red-500 rounded-lg hover:bg-red-600"
                 >
                   Sign Out
                 </Button>
@@ -66,7 +66,7 @@ export default function EmployerLayout({ children }: { children: React.ReactNode
                 <Button
                   onClick={DashboardRedirect}
                   variant='secondary'
-                  className="bg-tess-blue text-white py-2 rounded-md hover:bg-[#1E4B8E]-700 cursor-pointer"
+                  className="w-full sm:w-auto bg-tess-blue text-white py-2 rounded-md hover:bg-[#1E4B8E]-700 cursor-pointer"
                 >
                   Dashboard
                 </Button>
@@ -77,7 +77,7 @@ export default function EmployerLayout({ children }: { children: React.ReactNode
 
                   <Button
                     variant="secondary"
-                    className="bg-tess-blue text-white py-2 rounded-md hover:bg-[#1E4B8E]-700 cursor-pointer">
+                    className="w-full sm:w-auto bg-tess-blue text-white py-2 rounded-md hover:bg-[#1E4B8E]-700 cursor-pointer">
                     Login
                   </Button>
                 </Link>

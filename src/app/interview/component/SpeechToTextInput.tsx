@@ -336,7 +336,7 @@ const SpeechRecordingInput: React.FC<SpeechRecordingInputProps> = ({
         <div className="space-y-4">
           {/* Audio Player */}
           {AudioUrl && (
-            <div className="rounded-full p-3 border shadow-xl">
+            <div className="rounded-2xl sm:rounded-full p-2 sm:p-3 border shadow-xl">
               <div className="flex items-center gap-2 w-full">
                 <Waveform
                   recordedVoiceURL={AudioUrl}
@@ -370,7 +370,7 @@ const SpeechRecordingInput: React.FC<SpeechRecordingInputProps> = ({
 
       {/* Recording  Buttons */}
       {!hasRecorded && !AudioUrl && !ScreenShareUrl && activeTool !== 'screen' && (
-        <div className="flex justify-center gap-2 mt-12">
+        <div className="flex flex-wrap justify-center gap-2 sm:gap-3 mt-8 sm:mt-12 w-full">
           {activeTool
             ? tools
               .filter((tool) => tool.key === activeTool)

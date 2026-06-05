@@ -16,16 +16,16 @@ const RecordingControls: React.FC<RecordingControlsProps> = ({
   isSubmitting = false,
 }) => {
   return (
-    <div className="flex justify-center gap-4">
+    <div className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4 w-full max-w-md mx-auto">
       <Button
         variant="outline"
         onClick={onRecordAgain}
         disabled={isSubmitting}
-        className="px-6 border-[#F7941D] text-[#F7941D]"
+        className="w-full sm:w-auto px-6 border-[#F7941D] text-[#F7941D]"
       >
         {recordAgainLabel}
       </Button>
-      <Button onClick={onSaveAndContinue} disabled={isSubmitting}>
+      <Button onClick={onSaveAndContinue} disabled={isSubmitting} className="w-full sm:w-auto">
         {isSubmitting ? (
           <span className="flex items-center gap-2">
             <Loader2 className="w-4 h-4 animate-spin" />

@@ -134,7 +134,7 @@ export default function CustomNotification() {
           )}
         </div>
       </SheetTrigger>
-      <SheetContent className="w-[400px] sm:w-[540px]">
+      <SheetContent className="w-full max-w-[400px] sm:max-w-[540px]">
         <SheetHeader>
           <SheetTitle className="flex items-center justify-between">
             Notifications
