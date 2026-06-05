@@ -90,7 +90,7 @@ export default function UserAccountDetail() {
         ProfileUrl={'/employer/profile'}
       />
       <div className="flex flex-row gap-4 items-center">
-        <h1 className="text-2xl font-semibold text-slate-800">Account Details</h1>
+        <h1 className="text-xl sm:text-2xl font-semibold text-slate-800">Account Details</h1>
       </div>
 
       <Form {...form}>
@@ -100,7 +100,7 @@ export default function UserAccountDetail() {
           className="space-y-8 flex flex-col overflow-auto max-h-[80vh] py-8"
         >
 
-          <div className="flex gap-4 items-start w-full mt-4">
+          <div className="flex flex-col sm:flex-row gap-4 items-start w-full mt-4">
             <FormField
               control={form.control}
               name="firstname"
@@ -139,7 +139,7 @@ export default function UserAccountDetail() {
             />
           </div>
 
-          <div className="flex gap-4 items-start w-full">
+          <div className="flex flex-col sm:flex-row gap-4 items-start w-full">
             <FormField
               control={form.control}
               name="organization"
@@ -176,10 +176,10 @@ export default function UserAccountDetail() {
               )}
             />
           </div>
-          <div className="flex">
+          <div className="flex w-full sm:w-auto">
             <Button
               type="submit"
-              className="leading-[20px] font-roboto cursor-pointer"
+              className="w-full sm:w-auto leading-[20px] font-roboto cursor-pointer"
               disabled={UpdateProfileMutation?.isPending}
             >
               {UpdateProfileMutation?.isPending ? 'Updating...' : 'Update Profile'}

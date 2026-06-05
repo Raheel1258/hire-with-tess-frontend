@@ -107,7 +107,7 @@ export default function JobPosting() {
           }}
         >
           <Copy className="w-4 h-4" />
-          <span>Copy Link</span>
+          <span className="hidden sm:inline">Copy Link</span>
         </Button>
       ) : (
         'No link available'
@@ -154,9 +154,9 @@ export default function JobPosting() {
       </Dialog>
 
       <div>
-        <div className="flex flex-row justify-between items-center mb-4">
-          <h1 className="text-2xl font-open-sans font-semibold ml-2">Overview</h1>
-          <Button onClick={handlePostNewJob} className="font-semibold">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-4">
+          <h1 className="text-xl sm:text-2xl font-open-sans font-semibold">Overview</h1>
+          <Button onClick={handlePostNewJob} className="font-semibold w-full sm:w-auto">
             Posted a New Job
           </Button>
         </div>
@@ -184,9 +184,11 @@ export default function JobPosting() {
         </div>
 
         <div className="mt-6">
-          <div className="flex flex-row justify-between items-center mb-4">
-            <h1 className="font-roboto text-2xl font-bold leading-[30px]">Jobs</h1>
-            <Searchbar value={searchTerm} onChange={handleSearchChange} />
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-4">
+            <h1 className="font-roboto text-xl sm:text-2xl font-bold leading-[30px]">Jobs</h1>
+            <div className="w-full sm:flex-1 sm:max-w-[300px]">
+              <Searchbar value={searchTerm} onChange={handleSearchChange} />
+            </div>
           </div>
           <TableComponent
             header={JobPostingTableTitle}

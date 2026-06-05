@@ -27,13 +27,15 @@ export default function Header() {
 
 
   return (
-    <div className="bg-white flex justify-between h-18 mb-8 p-6">
-      <div className="font-[Space Grotesk] text-[20px]">{organizationName}</div>
-      <div className="flex gap-2 items-center">
+    <div className="bg-white flex flex-wrap items-center justify-between gap-3 mb-4 sm:mb-8 px-4 py-4 sm:p-6">
+      <div className="font-[Space Grotesk] text-base sm:text-xl font-medium truncate max-w-[45vw] sm:max-w-none min-w-0">
+        {organizationName}
+      </div>
+      <div className="flex gap-2 items-center shrink-0">
         <CustomNotification/>
         <div
           onClick={handleNavigation}
-          className="flex w-full sm:w-[184px] h-[50px] border rounded-lg items-center cursor-pointer hover:bg-gray-100 transition"
+          className="flex w-[160px] sm:w-[184px] h-[44px] sm:h-[50px] border rounded-lg items-center cursor-pointer hover:bg-gray-100 transition shrink-0"
         >
           <div className="p-2">
             <Avatar className="w-10 h-10">

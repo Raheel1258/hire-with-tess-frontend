@@ -12,7 +12,7 @@ interface BreadcrumbProps {
 export default function RedirectToDashboard({DashboardTitle,DashboardUrl,ProfileTitle,ProfileUrl,PageTitle}:BreadcrumbProps){
    return(
    <Breadcrumb>
-        <BreadcrumbList>
+        <BreadcrumbList className="flex-wrap gap-1">
             <BreadcrumbItem>
                 <BreadcrumbLink href={DashboardUrl}>{DashboardTitle}</BreadcrumbLink>
             </BreadcrumbItem>

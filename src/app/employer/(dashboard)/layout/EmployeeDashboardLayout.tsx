@@ -17,9 +17,9 @@ export default function DashboardBussinessLayout({
   return (
     <div className="bg-slate-100">
       <Header />
-      <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr] pl-6">
+      <div className="grid min-h-screen w-full grid-cols-1 md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr] px-4 md:px-6">
         <Sidebar links={employeeSidebarLinks} onLogout={handleLogout} />
-        <div className="main-content-area px-4 md:px-2 py-4 overflow-x-hidden">
+        <div className="main-content-area py-4 overflow-x-hidden md:pt-0 pt-14">
           {children}
         </div>
       </div>

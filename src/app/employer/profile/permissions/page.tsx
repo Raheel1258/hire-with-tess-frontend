@@ -42,7 +42,7 @@ export default function UserProfilePermission() {
           DashboardUrl="/employer/home"
           ProfileUrl="/employer/profile"
         />
-        <h1 className="text-2xl font-semibold text-slate-800">Permissions</h1>
+        <h1 className="text-xl sm:text-2xl font-semibold text-slate-800">Permissions</h1>
       </div>
       <Card className="p-4">
         {permissions.map((permission, index) => (
@@ -50,7 +50,7 @@ export default function UserProfilePermission() {
             key={permission.type}
             className={`gap-2 ${index !== permissions.length - 1 ? 'mb-2' : ''}`}
           >
-            <div className="flex flex-row items-center justify-between">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
               <div>
                 <h1 className="font-[open Sans] text-[#1E293B] font-semibold">
                   {permission.name}

@@ -91,7 +91,7 @@ export default function DashboardHome() {
           onClick={() => handleCopyLink(item.interview_link)}
         >
           <Copy className="w-4 h-4" />
-          <span>Copy Link</span>
+          <span className="hidden sm:inline">Copy Link</span>
         </Button>
       ) : (
         'No link available'
@@ -154,7 +154,7 @@ export default function DashboardHome() {
       </Dialog>
       <div>
         <div className="flex flex-row justify-between">
-          <h1 className="text-[24px] font-[roboto] font-semibold ml-2 mb-4">Overview</h1>
+          <h1 className="text-xl sm:text-2xl font-[roboto] font-semibold mb-4">Overview</h1>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 w-full">

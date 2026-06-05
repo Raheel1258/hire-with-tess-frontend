@@ -140,14 +140,14 @@ export default function ProfileSidebar() {
       <DeleteDialogue open={isDeleteOpen} onOpenChange={setIsDeleteOpen} />
       <LogoutDialogue open={isLogout} onOpenChange={setIsLogout} />
 
-      <div className=" top-4 left-4 z-50 md:hidden">
+      <div className="fixed top-20 left-4 z-50 md:hidden">
         <Sheet>
           <SheetTrigger asChild>
-            <Button variant="outline" size="icon" className="shadow">
+            <Button variant="outline" size="icon" className="shadow-md bg-white">
               <Menu />
             </Button>
           </SheetTrigger>
-          <SheetContent side="left" className="w-[250px] bg-white p-6">
+          <SheetContent side="left" className="w-[280px] max-w-[85vw] bg-white p-6">
             <div className="flex flex-col items-center">
               <div className="relative group">
                 <Avatar 
@@ -174,13 +174,29 @@ export default function ProfileSidebar() {
                 />
               </div>
               <div className="text-center mt-4">
-                <h1 className="font-semibold text-[#4B4B4B]">John Doe</h1>
+                <h1 className="font-semibold text-[#4B4B4B]">
+                  {profileInfo?.first_name} {profileInfo?.last_name}
+                </h1>
                 <p className="text-sm font-light">Employer</p>
               </div>
               <hr className="my-4 w-full bg-[#1E4B8E] h-[1px]" />
             </div>
             <nav className="flex flex-col gap-2 text-sm font-light">{renderLinks()}</nav>
             <hr className="my-4 w-full bg-[#1E4B8E] h-[1px]" />
+            <div className="flex flex-col gap-2 mt-2 items-start p-2">
+              <div
+                onClick={() => setIsDeleteOpen(true)}
+                className="flex flex-row gap-4 cursor-pointer"
+              >
+                <Ban /> Delete
+              </div>
+              <div
+                onClick={() => setIsLogout(true)}
+                className="flex flex-row gap-4 mt-2 cursor-pointer"
+              >
+                <LogOut /> Logout
+              </div>
+            </div>
             <DeleteDialogue open={isDeleteOpen} onOpenChange={setIsDeleteOpen} />
             <LogoutDialogue open={isLogout} onOpenChange={setIsLogout} />
           </SheetContent>

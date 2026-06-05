@@ -49,7 +49,7 @@ export default function TableComponent({
   };
 
   return (
-    <div className="w-full overflow-x-auto bg-white border rounded-md">
+    <div className="w-full overflow-x-auto bg-white border rounded-md -mx-4 px-4 sm:mx-0 sm:px-0">
       <div className="min-h-[400px] flex flex-col justify-between">
         <Table className="w-full min-w-[600px]">
           <TableHeader>
