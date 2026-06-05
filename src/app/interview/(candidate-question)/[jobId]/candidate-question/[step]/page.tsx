@@ -39,32 +39,30 @@ export default function InterviewQuestionPage() {
   }, [currentQuestion]);
 
   return (
-    <div className="min-h-screen flex flex-col items-center p-6">
-      <h1 className="text-center text-[30px] mt-6 font-normal text-black leading-[28px] font-spaceGrotesk">
+    <div className="min-h-screen flex flex-col items-center px-4 py-6 sm:p-6 w-full">
+      <h1 className="text-center text-xl sm:text-2xl md:text-[30px] mt-4 sm:mt-6 font-normal text-black leading-tight sm:leading-[28px] font-spaceGrotesk">
         Hirewithtess
       </h1>
 
-      <div className="flex justify-between items-center my-10 w-full max-w-4xl">
+      <div className="flex justify-center items-center my-6 sm:my-10 w-full max-w-4xl overflow-x-auto">
         {!data?.questions ? (
           <Skeleton className="w-full h-10" />
         ) : (
           <Stepper
             currentStep={currentStep}
             totalSteps={totalSteps}
-            circleSize={40}
             lineHeight={4}
-            lineWidth={50}
           />
         )}
       </div>
 
-      <div className="mb-6 flex flex-col items-center sm:items-start sm:text-left text-center gap-0.5 w-10/12">
+      <div className="mb-6 flex flex-col items-center sm:items-start sm:text-left text-center gap-0.5 w-full max-w-4xl px-2 sm:px-0">
         {!currentQuestion ? (
           <Skeleton className="w-full h-6" />
         ) : (
           <>
-            <p className="text-sm font-medium mb-2">{`Question # ${currentStep}`}</p>
-            <h2 className="text-lg font-bold mb-8">{currentQuestion?.text}</h2>
+            <p className="text-xs sm:text-sm font-medium mb-2">{`Question # ${currentStep}`}</p>
+            <h2 className="text-base sm:text-lg font-bold mb-6 sm:mb-8 break-words w-full">{currentQuestion?.text}</h2>
           </>
         )}
 

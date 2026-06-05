@@ -7,11 +7,11 @@ const EmojiRatingSlider = () => {
 
   return (
     <div className="w-full max-w-md mx-auto mt-8">
-      <div className="flex justify-between mb-2">
+      <div className="flex justify-between gap-1 sm:gap-0 mb-2 px-1">
         {emojis.map((emoji, index) => (
           <span
             key={index}
-            className={`text-3xl transition-all duration-200 ${
+            className={`text-2xl sm:text-3xl transition-all duration-200 ${
               rating >= index + 1 ? 'scale-125' : 'scale-100 opacity-70'
             }`}
           >

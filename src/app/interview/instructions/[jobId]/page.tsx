@@ -38,7 +38,7 @@ export default function CandidateInstructions() {
     >
       
       <div className="flex flex-col items-center justify-center px-4 ">
-        <h1 className="font-roboto font-bold text-[22px] sm:text-[26px] text-center">
+        <h1 className="font-roboto font-bold text-lg sm:text-[26px] text-center break-words">
           {data?.job_title} - {data?.company_name}
         </h1>
         <p className="font-roboto text-[14px] sm:text-[16px] font-normal text-[#6F6C90] mt-4 text-center">
@@ -58,7 +58,7 @@ export default function CandidateInstructions() {
 
 
         <div className="py-8 w-full flex justify-center items-center">
-          <Card className="w-full sm:w-[90%] md:w-[669px] border-1 rounded-2xl p-4">
+          <Card className="w-full sm:w-[90%] md:max-w-[669px] border-1 rounded-2xl p-4">
             <h1 className="font-roboto font-bold text-sm sm:text-[16px] leading-[20px] mb-2 text-center">
               Interview Instructions:
             </h1>
@@ -91,7 +91,7 @@ export default function CandidateInstructions() {
           </Link>
         </div>
 
-        <div className="flex flex-col sm:flex-row gap-1 px-2 sm:px-0 text-center sm:text-left mb-8 sm:mb-10">
+        <div className="flex flex-col sm:flex-row gap-1 px-4 sm:px-0 text-center sm:text-left mb-8 sm:mb-10">
           <p className="font-openSans font-bold text-xs sm:text-[16px] text-[#6F6C90]">
             Tip:
           </p>

@@ -39,13 +39,13 @@ export default function InterviewLayout({
   useCard = true,
   buttons = [],
   showJobTitleSeparator = false,
-  titleClassName = 'text-center items-center justify-center text-[30px] mt-6 font-normal text-black leading-[28px] font-spaceGrotesk sm:font-spaceGrotesk sm:font-normal text-[20px] leading-[28px]',
-  subtitleClassName = 'text-center text-[#170F49] items-center justify-center font-bold text-[34px] leading-[46px] mt-6 font-roboto sm:font-bold sm:text-[24px] sm:leading-[46px] font-roboto',
-  descriptionClassName = 'text-center items-center justify-center text-[18px] font-normal text-[#6F6C90] font-openSans sm:font-roboto sm:font-normal sm:text-[16px] sm:leading-[30px]',
+  titleClassName = 'text-center items-center justify-center text-xl sm:text-[30px] mt-4 sm:mt-6 font-normal text-black leading-tight sm:leading-[28px] font-spaceGrotesk',
+  subtitleClassName = 'text-center text-[#170F49] items-center justify-center font-bold text-2xl sm:text-[34px] leading-tight sm:leading-[46px] mt-4 sm:mt-6 font-roboto',
+  descriptionClassName = 'text-center items-center justify-center text-sm sm:text-[18px] font-normal text-[#6F6C90] leading-relaxed sm:leading-[30px] mt-2 sm:mt-0 font-openSans sm:font-roboto px-2 sm:px-0',
   jobTitleClassName = 'capitalize font-roboto font-bold text-xl sm:text-2xl text-center mt-4',
 }: InterviewLayoutProps) {
   const Content = (
-    <div className="w-full border-[1px] mt-6 rounded-[34px] md:p-8 flex flex-col justify-center text-center items-center sm:p-6  shadow-xl">
+    <div className="w-full border-[1px] mt-4 sm:mt-6 rounded-2xl sm:rounded-[34px] p-4 sm:p-6 md:p-8 flex flex-col justify-center text-center items-center shadow-xl">
       {showStepper && (
         <div className="flex flex-col items-center w-full mt-2">
           <div className="flex flex-row justify-center w-full max-w-3xl">
@@ -59,9 +59,9 @@ export default function InterviewLayout({
       <div className="w-full">{children}</div>
 
       {buttons.length > 0 && (
-        <div className="flex justify-end gap-2 mt-6 w-full">
+        <div className="flex flex-col sm:flex-row justify-end gap-2 mt-6 w-full">
           {buttons.map((btn, index) => (
-            <Button key={index} onClick={btn.onClick} className="w-40 cursor-pointer">
+            <Button key={index} onClick={btn.onClick} className="w-full sm:w-40 cursor-pointer">
               {btn.label}
             </Button>
           ))}
@@ -71,7 +71,7 @@ export default function InterviewLayout({
   );
 
   return (
-    <div className="flex flex-col items-center justify-center px-6 md:px-20 py-4 text-center">
+    <div className="flex flex-col items-center justify-center px-4 sm:px-6 md:px-20 py-4 text-center w-full">
       <div>
         {showTitle && <h1 className={titleClassName}>{title}</h1>}
         <span className={jobTitleClassName}>
@@ -84,7 +84,7 @@ export default function InterviewLayout({
       </div>
 
       {showGoogleLogin && (
-        <Button className="w-[528px] h-[64px] font-normal bg-transparent rounded-2xl mt-10 text-black hover:bg-transparent border-2 border-solid border-gray-500 flex items-center justify-center gap-2">
+        <Button className="w-full max-w-[528px] h-14 sm:h-[64px] font-normal bg-transparent rounded-2xl mt-6 sm:mt-10 text-black hover:bg-transparent border-2 border-solid border-gray-500 flex items-center justify-center gap-2">
           <Image src="/images/google.png" alt="Google Icon" width={20} height={20} />
           Continue with Google
         </Button>

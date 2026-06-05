@@ -26,18 +26,18 @@ const ChooseInterviewOption = () => {
     });
   };
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center px-6 py-12 bg-gray-50">
-      <h1 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-4 text-center">
+    <div className="min-h-screen flex flex-col items-center justify-center px-4 sm:px-6 py-8 sm:py-12 bg-gray-50">
+      <h1 className="text-2xl sm:text-4xl font-bold text-gray-800 mb-4 text-center">
         Choose Your Interview Method
       </h1>
-      <p className="text-gray-600 text-center text-lg sm:text-xl max-w-2xl mb-10">
+      <p className="text-gray-600 text-center text-base sm:text-xl max-w-2xl mb-8 sm:mb-10 px-2">
         Take your AI-powered interview directly on the web by answering questions with
         audio and optional screen recording.
       </p>
 
-      <div className="flex flex-wrap justify-center gap-8 w-full max-w-7xl">
+      <div className="flex flex-col sm:flex-row flex-wrap justify-center gap-6 sm:gap-8 w-full max-w-7xl">
         {/* Web Interview Option */}
-        <div className="w-[400px] p-6 border rounded-xl shadow-md bg-white hover:shadow-lg transition">
+        <div className="w-full max-w-[400px] p-4 sm:p-6 border rounded-xl shadow-md bg-white hover:shadow-lg transition">
           <div className="flex items-center gap-3 mb-4">
             <MonitorSpeaker className="text-[#FF8C00]" size={28} />
             <h2 className="text-xl font-semibold text-gray-800">Web Interview</h2>

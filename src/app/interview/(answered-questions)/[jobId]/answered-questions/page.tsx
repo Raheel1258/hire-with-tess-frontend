@@ -89,9 +89,11 @@ export default function AnsweredQuestionList() {
         showStepper={false}
         subtitle="Question Completed"
         description="Great job! Your responses have been recorded successfully"
+        subtitleClassName="font-roboto font-bold text-2xl sm:text-[34px] leading-tight sm:leading-[46px] mt-4 sm:mt-6"
+        descriptionClassName="mt-2 sm:mt-4 text-sm sm:text-base text-[#6F6C90] leading-relaxed sm:leading-[30px] font-roboto font-normal"
       >
-        <div>
-          <div className="flex font-[roboto] text-[24px] font-semibold mb-6">
+        <div className="px-2 sm:px-0 w-full text-left">
+          <div className="font-[roboto] text-lg sm:text-[24px] font-semibold mb-4 sm:mb-6">
             Interview Questions
           </div>
 
@@ -116,20 +118,20 @@ export default function AnsweredQuestionList() {
               const hasResponse = !!matchedResponse;
 
               return (
-                <div key={index} className="mb-6 p-4 border rounded-md shadow">
-                  <div className="flex items-center gap-2 font-normal text-[14px] mb-2">
+                <div key={index} className="mb-4 sm:mb-6 p-3 sm:p-4 border rounded-md shadow">
+                  <div className="flex items-start gap-2 font-normal text-xs sm:text-[14px] mb-2">
                     {hasResponse ? (
-                      <Check className="w-5 h-5 text-[#f7941D]" />
+                      <Check className="w-5 h-5 shrink-0 text-[#f7941D]" />
                     ) : (
-                      <X className="w-5 h-5 text-red-600" />
+                      <X className="w-5 h-5 shrink-0 text-red-600" />
                     )}
-                    <span>{question?.text}</span>
+                    <span className="break-words min-w-0">{question?.text}</span>
                   </div>
 
                   {hasResponse ? (
                     <div className="mb-4 space-y-2">
                       {matchedResponse.content_type.startsWith('audio') && (
-                        <div className="rounded-full p-3 border">
+                        <div className="rounded-2xl sm:rounded-full p-2 sm:p-3 border">
                           <Waveform
                             recordedVoiceURL={matchedResponse.temp_url}
                             seconds={matchedResponse.seconds}
@@ -183,9 +185,15 @@ export default function AnsweredQuestionList() {
 
         </div>
 
-        <Button onClick={onSubmitInterview} className="mt-4 bg-green-600 text-white hover:bg-green-500 hover:border-green-500" disabled={isPending}>
-          {isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Save and Finish'}
-        </Button>
+        <div className="flex justify-center w-full mt-4 px-2 sm:px-0">
+          <Button
+            onClick={onSubmitInterview}
+            className="w-full sm:w-auto min-w-[200px] bg-green-600 text-white hover:bg-green-500 hover:border-green-500"
+            disabled={isPending}
+          >
+            {isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Save and Finish'}
+          </Button>
+        </div>
       </InterviewLayout>
 
       <div className="flex flex-col items-center justify-center mt-6 sm:mt-10 px-4 sm:px-6 pb-8 w-full max-w-2xl mx-auto text-center">

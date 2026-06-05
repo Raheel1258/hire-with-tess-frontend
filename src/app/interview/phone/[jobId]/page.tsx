@@ -12,24 +12,24 @@ export default function PhoneCall() {
   const router = useRouter();
   return (
     <div className="min-h-screen flex flex-col justify-center items-center bg-gray-50 px-4">
-      <div className="bg-white shadow-lg rounded-lg p-8 max-w-md w-full text-center">
-        <h1 className="text-2xl font-bold text-[#FF8C00] mb-2">{companyName}</h1>
-        <h2 className="text-xl font-semibold text-gray-700 mb-4">
+      <div className="bg-white shadow-lg rounded-lg p-6 sm:p-8 max-w-md w-full text-center">
+        <h1 className="text-xl sm:text-2xl font-bold text-[#FF8C00] mb-2">{companyName}</h1>
+        <h2 className="text-lg sm:text-xl font-semibold text-gray-700 mb-4">
           Phone Interview Instructions
         </h2>
 
-        <p className="text-gray-600 mb-4">
+        <p className="text-gray-600 text-sm sm:text-base mb-4">
           Call the number below to begin your AI-powered phone interview.
         </p>
 
         <div className="mb-4">
           <span className="text-sm text-gray-500">Call this number:</span>
-          <p className="text-lg font-medium text-black">{phoneNumber}</p>
+          <p className="text-base sm:text-lg font-medium text-black break-all">{phoneNumber}</p>
         </div>
 
         <div className="mb-4">
           <span className="text-sm text-gray-500">Your Interview ID:</span>
-          <p className="text-lg font-semibold text-[#1E4B8E]">{interviewId}</p>
+          <p className="text-base sm:text-lg font-semibold text-[#1E4B8E] break-all">{interviewId}</p>
         </div>
 
         <p className="text-gray-600 text-sm">
