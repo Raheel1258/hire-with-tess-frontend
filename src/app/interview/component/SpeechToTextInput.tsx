@@ -11,7 +11,7 @@ import Waveform from './Waveform';
 import useVoiceRecorder from '@/Utils/helper/useVoiceRecorder';
 import useUploadFileMutation from '@/Routes/Client/hook/POST/UploadFilehook';
 import { useResponseStore } from '@/store/candidate/responsestore';
-import { startScreenShare } from '@/Utils/helper/useScreenSharing';
+// import { startScreenShare } from '@/Utils/helper/useScreenSharing';
 import RecordingSkelton from './recordingskelton';
 
 type SpeechRecordingInputProps = {

@@ -29,8 +29,8 @@ export default function CandidateInstructions() {
       description="Let's get started. Record your response at your own pace and put your best foot forward!"
       subtitle="Your next opportunity starts here!"
       showTitle={true}
-      subtitleClassName="font-roboto font-bold text-[34px] leading-[46px] mt-8"
-      descriptionClassName="mt-4 text-[#6F6C90] leading-[30px] font-roboto font-normal"
+      subtitleClassName="font-roboto font-bold text-2xl sm:text-[34px] leading-tight sm:leading-[46px] mt-8"
+      descriptionClassName="mt-4 text-sm sm:text-base text-[#6F6C90] leading-relaxed sm:leading-[30px] font-roboto font-normal"
       // jobTitle={data?.job_title}
       // jobCompany={data?.company_name}
       showJobTitleSeparator={true}
@@ -59,10 +59,10 @@ export default function CandidateInstructions() {
 
         <div className="py-8 w-full flex justify-center items-center">
           <Card className="w-full sm:w-[90%] md:w-[669px] border-1 rounded-2xl p-4">
-            <h1 className="font-roboto font-bold text-[16px] leading-[20px] mb-2 text-center">
+            <h1 className="font-roboto font-bold text-sm sm:text-[16px] leading-[20px] mb-2 text-center">
               Interview Instructions:
             </h1>
-            <ul className="list-disc pl-5 font-openSans text-[14px] leading-[26px] text-black text-left">
+            <ul className="list-disc pl-5 font-openSans text-xs sm:text-[14px] leading-[22px] sm:leading-[26px] text-black text-left">
               <li>
                 You will answer a few questions, each requiring an audio response.
               </li>
@@ -91,11 +91,11 @@ export default function CandidateInstructions() {
           </Link>
         </div>
 
-        <div className="flex flex-col sm:flex-row gap-1 px-2 sm:px-0 text-center sm:text-left">
-          <p className="font-openSans font-bold text-[14px] sm:text-[16px] text-[#6F6C90]">
+        <div className="flex flex-col sm:flex-row gap-1 px-2 sm:px-0 text-center sm:text-left mb-8 sm:mb-10">
+          <p className="font-openSans font-bold text-xs sm:text-[16px] text-[#6F6C90]">
             Tip:
           </p>
-          <p className="font-openSans font-normal text-[14px] sm:text-[16px] text-[#6F6C90]">
+          <p className="font-openSans font-normal text-xs sm:text-[16px] text-[#6F6C90]">
             Speak clearly and naturally, as if you're having a conversation. Confidence
             goes a long way!
           </p>

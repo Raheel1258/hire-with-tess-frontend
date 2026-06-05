@@ -30,10 +30,10 @@ interface RecordingProps {
 export default function AnsweredQuestionList() {
   const { jobId } = useParams<{ jobId: string }>();
 
-  const { data,isLoading } = FetchQuestions(jobId);
+  const { data, isLoading } = FetchQuestions(jobId);
   const savedResponses = useResponseStore((state) => state.savedResponses);
 
-  const {interviewId} = useRecordingStore();
+  const { interviewId } = useRecordingStore();
 
   const feedback = useRef<HTMLFormElement>(null);
   const { mutate, isPending, isError } = useSubmitInterview();
@@ -108,7 +108,7 @@ export default function AnsweredQuestionList() {
               </div>
             ))
           ) : (
-            data?.questions.map((question: any, index: number) => {
+            data?.questions.map((question: string, index: number) => {
               const matchedResponse = savedResponses.find(
                 (res) => res.question_text.trim().toLowerCase() === question.text.trim().toLowerCase()
               );
@@ -151,12 +151,12 @@ export default function AnsweredQuestionList() {
                         </div>
                       )} */}
                     </div>
-                  ) 
-                  : (
-                    <p className="text-sm italic text-gray-500 ml-7">
-                      No response recorded.
-                    </p>
-                  )}
+                  )
+                    : (
+                      <p className="text-sm italic text-gray-500 ml-7">
+                        No response recorded.
+                      </p>
+                    )}
                 </div>
               );
             })
@@ -188,24 +188,32 @@ export default function AnsweredQuestionList() {
         </Button>
       </InterviewLayout>
 
-      <div className="flex flex-col items-center justify-center mt-10 text-center">
-        <h1 className="font-[roboto] text-[#170F49] text-[34px] leading-[34px] font-bold">
+      <div className="flex flex-col items-center justify-center mt-6 sm:mt-10 px-4 sm:px-6 pb-8 w-full max-w-2xl mx-auto text-center">
+        <h1 className="font-[roboto] text-[#170F49] text-2xl sm:text-[34px] leading-tight sm:leading-[34px] font-bold">
           Help Us Improve Your Experience
         </h1>
-        <p className="text-[#6F6C90] font-[roboto] text-[18px] font-normal leading-[30px] mt-4">
+        <p className="text-[#6F6C90] font-[roboto] text-base sm:text-[18px] font-normal leading-relaxed sm:leading-[30px] mt-3 sm:mt-4 px-1">
           Share your feedback on the interview process to help us enhance future experiences.
         </p>
 
-        <EmojiRatingSlider />
+        <div className="w-full">
+          <EmojiRatingSlider />
+        </div>
 
-        <form ref={feedback} className="items-center justify-center flex mt-4">
+        <form
+          ref={feedback}
+          className="w-full max-w-xl flex items-center justify-center mt-4"
+        >
           <Textarea
             name="feedback"
             placeholder="What is the main reason for Your rating? (Optional)"
-            className="w-xl h-40 rounded-xl"
+            className="w-full min-h-32 sm:h-40 rounded-xl resize-none"
           />
         </form>
-        <Button onClick={onSubmitFeedback} className="mt-6">
+        <Button
+          onClick={onSubmitFeedback}
+          className="mt-6 w-full sm:w-auto min-w-[200px]"
+        >
           Submit Feedback
         </Button>
       </div>
