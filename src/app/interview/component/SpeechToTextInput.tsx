@@ -39,8 +39,7 @@ const SpeechRecordingInput: React.FC<SpeechRecordingInputProps> = ({
   const [inputTranscript, setInputTranscript] = useState('');
   const [recordedPeaks, setRecordedPeaks] = useState<number[][] | undefined>(undefined);
 
-  // Capture the waveform peaks + accurate duration once the recorded clip is
-  // decoded, so they can be persisted and replayed on the review page.
+
   const handleDecoded = useCallback((peaks: number[][], dur: number) => {
     setRecordedPeaks(peaks);
     if (Number.isFinite(dur) && dur > 0) {
@@ -54,35 +53,30 @@ const SpeechRecordingInput: React.FC<SpeechRecordingInputProps> = ({
   const recordedChunksRef = useRef<Blob[]>([]);
 
   // Hooks
-  const { hasRecorded, setIsPlaying, setActiveType,  } = useRecordingStore();
+  const { hasRecorded, setIsPlaying, setActiveType, } = useRecordingStore();
   const { mutate: uploadFile, isPending: isUploading } = useUploadFileMutation();
   const { resetTranscript } = useSpeechRecognition();
   const { transcript, startSpeechRecognition, stopSpeechRecognition, listening, resetRecording } = useVoiceRecorder();
 
 
 
-// Clear any leftover transcript from the previous question when this question
-// mounts, so the prior answer never leaks into the next input field.
-useEffect(() => {
-  resetTranscript();
-  setInputTranscript('');
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-}, []);
+  useEffect(() => {
+    resetTranscript();
+    setInputTranscript('');
+  }, [resetTranscript]);
 
-// Update transcript
-useEffect(() => {
-  if (transcript) {
-    setInputTranscript(transcript);
-  }
-}, [transcript]);
+  // Update transcript
+  useEffect(() => {
+    if (transcript) {
+      setInputTranscript(transcript);
+    }
+  }, [transcript]);
+
 
   const startVoiceRecording = async () => {
     setIsVoiceRecording(true);
     try {
       setSeconds(0);
-      // Enable the browser's built-in audio processing to suppress background
-      // noise (fans, hum, ambient sound), cancel echo, and normalise volume.
-      // Mono at 48kHz is ideal for speech and keeps the file small.
       const stream = await navigator.mediaDevices.getUserMedia({
         audio: {
           echoCancellation: true,
@@ -90,12 +84,11 @@ useEffect(() => {
           autoGainControl: true,
           channelCount: 1,
           sampleRate: 48000,
+          sampleSize: 16,
         },
       });
       mediaStreamRef.current = stream;
 
-      // Prefer Opus in WebM — efficient and high quality for voice. Fall back to
-      // the browser default if it isn't supported.
       const preferredMimeType = 'audio/webm;codecs=opus';
       const recorderOptions: MediaRecorderOptions = { audioBitsPerSecond: 128000 };
       if (
@@ -116,7 +109,6 @@ useEffect(() => {
       }, 1000);
 
       audioStream.current.onstop = () => {
-        // Use the recorder's real mime type so the blob is labelled correctly.
         const blobType = audioStream.current?.mimeType || 'audio/webm';
         const recordedBlob = new Blob(recordedChunksRef.current, { type: blobType });
         const url = URL.createObjectURL(recordedBlob);
@@ -127,7 +119,9 @@ useEffect(() => {
       };
       audioStream.current.start();
     } catch (error) {
-      toast.error('Error starting voice recording');
+      toast.error('Error starting voice recording', {
+        description: error instanceof Error ? error.message : 'Unknown error',
+      });
     }
   };
   const stopVoiceRecording = () => {
@@ -152,43 +146,45 @@ useEffect(() => {
     }
   };
 
-  const setupMediaRecorder = (stream: MediaStream) => {
-    const recorder = new MediaRecorder(stream, {
-      mimeType: 'video/webm;codecs=vp9',
-      videoBitsPerSecond: 2500000 
-    });
-    audioStream.current = recorder;
 
-    recorder.ondataavailable = (event) => {
-      if (event.data.size > 0) {
-        recordedChunksRef.current.push(event.data);
-      }
-    };
 
-    recorder.onstop = () => {
-      const videoBlob = new Blob(recordedChunksRef.current, { type: 'video/webm' });
-      const screenURL = URL.createObjectURL(videoBlob);
-      setScreenShareUrl(screenURL);
-      useRecordingStore.getState().setScreenURL(screenURL);
-      setIsRecordingStream(false);
-      recordedChunksRef.current = [];
-    };
+  // const setupMediaRecorder = (stream: MediaStream) => {
+  //   const recorder = new MediaRecorder(stream, {
+  //     mimeType: 'video/webm;codecs=vp9',
+  //     videoBitsPerSecond: 2500000
+  //   });
+  //   audioStream.current = recorder;
 
-    recorder.start();
-  };
+  //   recorder.ondataavailable = (event) => {
+  //     if (event.data.size > 0) {
+  //       recordedChunksRef.current.push(event.data);
+  //     }
+  //   };
 
-  const startScreenRecording = async () => {
-    const screenStream = await startScreenShare();
+  //   recorder.onstop = () => {
+  //     const videoBlob = new Blob(recordedChunksRef.current, { type: 'video/webm' });
+  //     const screenURL = URL.createObjectURL(videoBlob);
+  //     setScreenShareUrl(screenURL);
+  //     useRecordingStore.getState().setScreenURL(screenURL);
+  //     setIsRecordingStream(false);
+  //     recordedChunksRef.current = [];
+  //   };
 
-    if (!screenStream) {
-      resetAllState();
-      return;
-    }
+  //   recorder.start();
+  // };
 
-    recordedChunksRef.current = [];
-    setupMediaRecorder(screenStream);
-    setIsRecordingStream(true);
-  };
+  // const startScreenRecording = async () => {
+  //   const screenStream = await startScreenShare();
+
+  //   if (!screenStream) {
+  //     resetAllState();
+  //     return;
+  //   }
+
+  //   recordedChunksRef.current = [];
+  //   setupMediaRecorder(screenStream);
+  //   setIsRecordingStream(true);
+  // };
 
   const handleSaveAndContinue = async () => {
     const { activeType, audioURL, screenURL, currentquestion, interviewId } =
@@ -213,19 +209,14 @@ useEffect(() => {
 
     uploadFile(
       { interview_id: interviewId, data: formData },
-      
+
       {
         onSuccess: (response) => {
           const newEntry = {
             question_text: currentquestion,
             temp_url: response?.temp_url || fileUrl,
             content_type: fileType,
-            // Persist the duration we measured during recording. MediaRecorder
-            // blobs have no duration metadata, so wavesurfer often can't derive
-            // it from the uploaded file — this is the reliable fallback.
             seconds,
-            // Persist the waveform peaks so the bars render on the review page
-            // without re-decoding the remote audio.
             peaks: recordedPeaks,
           };
 
@@ -238,31 +229,31 @@ useEffect(() => {
   };
 
 
-  const resetAllState = () => {
-    if (listening) {
-      stopSpeechRecognition();
-    }
-    stopVoiceRecording();
+  // const resetAllState = () => {
+  //   if (listening) {
+  //     stopSpeechRecognition();
+  //   }
+  //   stopVoiceRecording();
 
-    setAudioUrl('');
-    setScreenShareUrl(null);
-    setRecordedPeaks(undefined);
+  //   setAudioUrl('');
+  //   setScreenShareUrl(null);
+  //   setRecordedPeaks(undefined);
 
-    setSeconds(0);
-    setIsPlaying(false);
-    setIsVoiceRecording(false);
-    setIsRecordingStream(false);
-    setActiveTool(null);
+  //   setSeconds(0);
+  //   setIsPlaying(false);
+  //   setIsVoiceRecording(false);
+  //   setIsRecordingStream(false);
+  //   setActiveTool(null);
 
-    if (mediaStreamRef.current) {
-      mediaStreamRef.current.getTracks().forEach((track) => track.stop());
-      mediaStreamRef.current = null;
-    }
+  //   if (mediaStreamRef.current) {
+  //     mediaStreamRef.current.getTracks().forEach((track) => track.stop());
+  //     mediaStreamRef.current = null;
+  //   }
 
-    recordedChunksRef.current = [];
-    resetTranscript();
-    setInputTranscript('');
-  };
+  //   recordedChunksRef.current = [];
+  //   resetTranscript();
+  //   setInputTranscript('');
+  // };
 
   const handleRestartRecording = async () => {
     if (audioStream.current) {
