@@ -5,7 +5,6 @@ import React, { useRef } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { customformSchema, FormValidator } from '@/schema/customform.schema';
-import Image from 'next/image';
 import useHomeStore from '@/store/Employer/home.store';
 import Link from 'next/link';
 import InterviewLayout from '@/components/layout/InterviewLayout';
@@ -74,19 +73,20 @@ export default function InterviewForm() {
         description="Your AI-powered Job breakdown — sharp, clear, and ready to impress."
         showGoogleLogin={false}
         useCard={false}
+        contentClassName="max-sm:px-3 max-sm:py-4 max-sm:overflow-x-clip"
       >
-        <div className=" text-center pt-10 pb-10 w-full ">
+        <div className="w-full min-w-0 max-w-full pt-4 pb-4 text-center sm:pt-10 sm:pb-10">
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(onSubmit)}
               ref={ref}
-              className="space-y-8 px-4"
+              className="mx-auto w-full min-w-0 max-w-2xl space-y-6 px-0 sm:space-y-8 sm:px-4"
             >
               <FormField
                 control={form.control}
                 name="jobTitle"
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className="w-full min-w-0 max-w-full">
                     <CustomInputForm
                       {...field}
                       name="jobTitle"
@@ -100,7 +100,7 @@ export default function InterviewForm() {
                 control={form.control}
                 name="jobType"
                 render={() => (
-                  <FormItem>
+                  <FormItem className="w-full min-w-0 max-w-full">
                   <CustomInputForm
                     name="jobType"
                     label="Job Type"
@@ -113,7 +113,7 @@ export default function InterviewForm() {
                 control={form.control}
                 name="companyName"
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className="w-full min-w-0 max-w-full">
                     <CustomInputForm
                       {...field}
                       name="companyName"
@@ -127,7 +127,7 @@ export default function InterviewForm() {
                 control={form.control}
                 name="location"
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className="w-full min-w-0 max-w-full">
                     <CustomInputForm
                       {...field}
                       name="location"
@@ -141,7 +141,7 @@ export default function InterviewForm() {
                 control={form.control}
                 name="salary"
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className="w-full min-w-0 max-w-full">
                     <CustomInputForm
                       {...field}
                       name="salary"
@@ -152,11 +152,11 @@ export default function InterviewForm() {
                   </FormItem>
                 )}
               />
-              <div className="flex justify-end sm:justify-end items-center gap-4">
-                <Link href={`/interview/generate-questions/${jobId}`}>
+              <div className="flex flex-col-reverse sm:flex-row justify-end items-stretch sm:items-center gap-3 sm:gap-4">
+                <Link href={`/interview/generate-questions/${jobId}`} className="w-full sm:w-auto">
                   <Button
                     variant={'secondary'}
-                    className=" sm:w-auto cursor-pointer"
+                    className="w-full sm:w-auto cursor-pointer"
                     type="button"
                   >
                     Back
@@ -166,7 +166,7 @@ export default function InterviewForm() {
                   type="submit"
                   disabled={generateMutation.isPending || !jobId}
                   onClick={handleReviewClick}
-                  className=" cursor-pointer"
+                  className="w-full sm:w-auto cursor-pointer"
                 >
                   {generateMutation.isPending ?  <Loader2 className='animate-spin' /> : 'Review Details'}
                 </Button>

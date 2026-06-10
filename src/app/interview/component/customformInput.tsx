@@ -34,19 +34,8 @@ const SalaryRangeInput = React.forwardRef<HTMLInputElement, any>(
       onChange({ target: { value: combined } });
     };
 
-    const baseInputStyle: React.CSSProperties = {
-      width: 110,
-      minWidth: 0,
-      border: 'none',
-      outline: 'none',
-      background: 'transparent',
-      color: 'black',
-      fontSize: 16,
-      fontWeight: 400,
-    };
-
     return (
-      <div style={{ display: 'flex', alignItems: 'center', gap: 8, width: '100%', justifyContent: 'flex-start' }}>
+      <div className="flex w-full min-w-0 items-center gap-2 sm:w-auto sm:justify-start">
         <input
           ref={ref}
           value={formatNumber(minRaw)}
@@ -54,21 +43,224 @@ const SalaryRangeInput = React.forwardRef<HTMLInputElement, any>(
           readOnly={readOnly}
           disabled={disabled}
           onChange={(e) => fire(e.target.value, maxRaw)}
-          style={{ ...baseInputStyle, textAlign: 'right' }}
+          className="min-w-0 flex-1 border-none bg-transparent text-base font-normal text-black outline-none text-right sm:w-[110px] sm:flex-none"
         />
-        <span style={{ color: 'gray' }}>-</span>
+        <span className="shrink-0 text-gray-500">-</span>
         <input
           value={formatNumber(maxRaw)}
           placeholder="To"
           readOnly={readOnly}
           disabled={disabled}
           onChange={(e) => fire(minRaw, e.target.value)}
-          style={{ ...baseInputStyle, textAlign: 'left' }}
+          className="min-w-0 flex-1 border-none bg-transparent text-base font-normal text-black outline-none text-left sm:w-[110px] sm:flex-none"
         />
       </div>
     );
   },
 );
+
+interface SalaryFieldProps {
+  name: string;
+  label: string;
+  currencyName: string;
+  salaryTypeName: string;
+  readOnly?: boolean;
+  currencyValue?: string;
+  salaryTypeValue?: string;
+  value?: string | number;
+}
+
+const SalaryField: React.FC<SalaryFieldProps> = ({
+  name,
+  label,
+  currencyName,
+  salaryTypeName,
+  readOnly,
+  currencyValue,
+  salaryTypeValue,
+  value,
+}) => {
+  const { control } = useFormContext();
+
+  const salaryTypeSelect = (fullWidth = false) => (
+    <Controller
+      name={salaryTypeName}
+      control={control}
+      defaultValue={salaryTypeValue}
+      render={({ field: salaryTypeField }) => (
+        <div className={fullWidth ? 'w-full min-w-0' : 'shrink-0'}>
+          <Select
+            onValueChange={salaryTypeField.onChange}
+            value={salaryTypeValue || salaryTypeField.value}
+            disabled={readOnly}
+          >
+            <SelectTrigger
+              className={
+                fullWidth
+                  ? '!w-full min-w-0 max-w-full text-black text-sm font-normal'
+                  : 'w-[120px] text-black text-base font-normal'
+              }
+            >
+              <SelectValue placeholder={salaryTypeValue || 'Per Hour'} />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="per_hour" className="text-black">
+                Per Hour
+              </SelectItem>
+              <SelectItem value="per_month" className="text-black">
+                Per Month
+              </SelectItem>
+              <SelectItem value="per_year" className="text-black">
+                Per Year
+              </SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+      )}
+    />
+  );
+
+  const currencySelect = (fullWidth = false) => (
+    <Controller
+      name={currencyName}
+      control={control}
+      defaultValue={currencyValue}
+      render={({ field: currencyField }) => (
+        <div className={fullWidth ? 'w-full min-w-0' : 'shrink-0'}>
+          <Select
+            onValueChange={currencyField.onChange}
+            value={currencyValue || currencyField.value}
+            disabled={readOnly}
+          >
+            <SelectTrigger
+              className={
+                fullWidth
+                  ? '!w-full min-w-0 max-w-full text-black text-sm font-normal'
+                  : 'w-[100px] text-black text-base font-normal'
+              }
+            >
+              <SelectValue placeholder={currencyValue || 'USD'} />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="USD" className="text-black">
+                USD
+              </SelectItem>
+              <SelectItem value="PKR" className="text-black">
+                PKR
+              </SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+      )}
+    />
+  );
+
+  const rangeBadge = (compact = false) => (
+    <div
+      className={
+        compact
+          ? 'flex h-9 w-full items-center justify-center rounded-md border border-input bg-background px-2 py-2 text-sm font-normal text-black'
+          : 'flex h-9 w-[100px] shrink-0 items-center justify-center rounded-md border border-input bg-background px-3 py-2 text-base font-normal text-black'
+      }
+      aria-label="Salary mode"
+    >
+      Range
+    </div>
+  );
+
+  const textFieldSx = {
+    width: '100%',
+    '& .MuiOutlinedInput-root': {
+      height: '60px',
+      borderRadius: '14px',
+      fontSize: '16px',
+      fontWeight: 400,
+    },
+    '& .MuiInputBase-input': {
+      color: 'black',
+      '&::placeholder': {
+        color: 'gray',
+        opacity: 1,
+        fontSize: '14px',
+        fontWeight: 400,
+      },
+    },
+    '& .MuiInputBase-input.Mui-disabled': {
+      WebkitTextFillColor: 'black',
+      color: 'black',
+      opacity: 1,
+    },
+    '& .MuiInputLabel-root': {
+      color: 'gray',
+      transition: 'color 0.2s',
+    },
+    '& .MuiInputLabel-root.Mui-focused': {
+      color: 'black',
+    },
+    '& .MuiInputLabel-root.MuiInputLabel-shrink': {
+      color: 'black',
+    },
+    '&:hover .MuiOutlinedInput-notchedOutline': {
+      borderColor: 'gray',
+    },
+  };
+
+  return (
+    <Controller
+      name={name}
+      control={control}
+      defaultValue={value || ''}
+      render={({ field, fieldState }) => (
+        <Box sx={{ width: '100%', minWidth: 0, maxWidth: '100%' }}>
+          <div className="flex w-full min-w-0 max-w-full flex-col gap-2 sm:hidden">
+            <label className="block text-left text-sm font-normal text-black">{label}</label>
+            {salaryTypeSelect(true)}
+            {currencySelect(true)}
+            <div className="flex h-[60px] w-full min-w-0 max-w-full items-center rounded-[14px] border border-gray-300 px-3">
+              <SalaryRangeInput
+                value={field.value}
+                onChange={field.onChange}
+                readOnly={readOnly}
+                disabled={readOnly}
+              />
+            </div>
+            {fieldState.error?.message && (
+              <p className="text-left text-sm text-red-500">{fieldState.error.message}</p>
+            )}
+          </div>
+
+          <div className="hidden sm:block">
+            <TextField
+              {...field}
+              fullWidth
+              label={label}
+              autoComplete="off"
+              variant="outlined"
+              type="text"
+              error={!!fieldState.error}
+              helperText={fieldState.error?.message || ''}
+              slotProps={{ inputLabel: { shrink: true } }}
+              InputProps={{
+                readOnly,
+                inputComponent: SalaryRangeInput as any,
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <div className="flex gap-2">
+                      {salaryTypeSelect()}
+                      {currencySelect()}
+                      {rangeBadge()}
+                    </div>
+                  </InputAdornment>
+                ),
+              }}
+              sx={textFieldSx}
+            />
+          </div>
+        </Box>
+      )}
+    />
+  );
+};
 
 interface CustomInputProps {
   name: string;
@@ -110,13 +302,115 @@ const CustomInputForm: React.FC<CustomInputProps> = ({
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const actualType = type === 'password' ? (isPasswordVisible ? 'text' : 'password') : type;
 
+  if (jobTypeName) {
+    return (
+      <Controller
+        name={jobTypeName}
+        control={control}
+        render={({ field, fieldState }) => (
+          <>
+            <div className="w-full min-w-0 max-w-full sm:hidden">
+              <label className="mb-2 block text-left text-sm font-normal text-black">{label}</label>
+              <Select onValueChange={field.onChange} value={field.value}>
+                <SelectTrigger className="!h-[60px] !w-full min-w-0 max-w-full rounded-[14px] text-base text-black">
+                  <SelectValue placeholder="Job Type" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Onsite" className="text-black">
+                    Onsite
+                  </SelectItem>
+                  <SelectItem value="Hybrid" className="text-black">
+                    Hybrid
+                  </SelectItem>
+                  <SelectItem value="Remote" className="text-black">
+                    Remote
+                  </SelectItem>
+                </SelectContent>
+              </Select>
+              {fieldState.error?.message && (
+                <p className="mt-1 text-left text-sm text-red-500">{fieldState.error.message}</p>
+              )}
+            </div>
+
+            <Box sx={{ width: '100%' }} className="hidden sm:block">
+              <TextField
+                label={label}
+                value=""
+                autoComplete="off"
+                variant="outlined"
+                fullWidth
+                error={!!fieldState.error}
+                helperText={fieldState.error?.message || ''}
+                slotProps={{ inputLabel: { shrink: true } }}
+                InputProps={{
+                  readOnly: true,
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <FormControl sx={{ minWidth: 140 }}>
+                        <Select onValueChange={field.onChange} value={field.value}>
+                          <SelectTrigger className="w-[140px] text-black">
+                            <SelectValue placeholder="Job Type" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="Onsite" className="text-black">
+                              Onsite
+                            </SelectItem>
+                            <SelectItem value="Hybrid" className="text-black">
+                              Hybrid
+                            </SelectItem>
+                            <SelectItem value="Remote" className="text-black">
+                              Remote
+                            </SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </FormControl>
+                    </InputAdornment>
+                  ),
+                }}
+                sx={{
+                  '& .MuiOutlinedInput-root': {
+                    height: '60px',
+                    borderRadius: '14px',
+                    fontSize: '16px',
+                    fontWeight: 400,
+                  },
+                  '& .MuiInputLabel-root': {
+                    color: 'gray',
+                  },
+                  '& .MuiInputLabel-root.MuiInputLabel-shrink': {
+                    color: 'black',
+                  },
+                }}
+              />
+            </Box>
+          </>
+        )}
+      />
+    );
+  }
+
+  if (name === 'salary' && currencyName && salaryTypeName) {
+    return (
+      <SalaryField
+        name={name}
+        label={label}
+        currencyName={currencyName}
+        salaryTypeName={salaryTypeName}
+        readOnly={readOnly}
+        currencyValue={currencyValue}
+        salaryTypeValue={salaryTypeValue}
+        value={value}
+      />
+    );
+  }
+
   return (
     <Controller
       name={name}
       control={control}
       defaultValue={value || ''}
       render={({ field, fieldState }) => (
-        <Box sx={{ width: '100%', position: 'relative' }}>
+        <Box sx={{ width: '100%', minWidth: 0, maxWidth: '100%', position: 'relative' }}>
           <TextField
             {...field}
             autoFocus={isEditable}
