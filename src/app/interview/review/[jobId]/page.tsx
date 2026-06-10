@@ -15,7 +15,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import SignupDialogue from '@/app/interview/component/signupDialogue';
+import LoginDialogue from '@/app/interview/component/loginDialogue';
 import CustomInputForm from '@/app/interview/component/customformInput';
 import { useRouter } from 'next/navigation';
 import { useParams } from 'next/navigation';
@@ -244,11 +244,11 @@ export default function InterviewReview() {
           ) : (
             <Dialog>
               <DialogTrigger asChild>
-                <Button className="w-40">Sign up to Continue</Button>
+                <Button className="w-40">Log In to Continue</Button>
               </DialogTrigger>
-              <DialogContent className="items-center bg-white shadow-2xl rounded-lg w-5xl">
+              <DialogContent className="items-center bg-white shadow-2xl rounded-lg w-5xl max-sm:max-w-[calc(100vw-2rem)] max-sm:p-4">
                 <DialogTitle></DialogTitle>
-                <SignupDialogue jobId={jobId} />
+                <LoginDialogue />
               </DialogContent>
             </Dialog>
           )}
