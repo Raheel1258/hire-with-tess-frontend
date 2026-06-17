@@ -1,10 +1,20 @@
 'use client';
 
+import { useEffect } from 'react';
 import { CheckCircle } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import Link from 'next/link';
 
 export default function Finished() {
+  useEffect(() => {
+    window.history.pushState(null, '', window.location.href);
+
+    const handlePopState = () => {
+      window.history.pushState(null, '', window.location.href);
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#f8fafc] to-[#e2e8f0] px-4">
       <div className="bg-white p-6 sm:p-8 rounded-2xl shadow-lg max-w-xl w-full text-center">

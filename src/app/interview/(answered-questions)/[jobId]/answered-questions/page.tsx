@@ -2,21 +2,17 @@
 import { useRecordingStore } from '@/store/candidate/Recording.store';
 import FetchQuestions from '@/Routes/Client/hook/GET/FetchQuestions.hook';
 import InterviewLayout from '@/components/layout/InterviewLayout';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import Waveform from '@/app/interview/component/Waveform';
 import { Check, CirclePlay, Loader2, X } from 'lucide-react';
 import EmojiRatingSlider from '@/app/interview/component/emojislider';
-import { useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Textarea } from '@/components/ui/textarea';
 import useSubmitInterview from '@/Routes/Client/hook/POST/SubmitInterviewhook';
 import { SubmitInterviewPayload } from '@/Types/EmployerDashboard/useresponse';
 import { useResponseStore } from '@/store/candidate/responsestore';
-import { useState } from 'react';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
-import router from 'next/router';
-import { useAudioStore } from '@/store/candidate/audio.store';
-import useCandidateInfoStore from '@/store/candidate/userinfo';
 import { toast } from 'sonner';
 import { Skeleton } from '@/components/ui/skeleton';
 
@@ -29,9 +25,12 @@ interface RecordingProps {
 
 export default function AnsweredQuestionList() {
   const { jobId } = useParams<{ jobId: string }>();
+  const router = useRouter();
 
   const { data, isLoading } = FetchQuestions(jobId);
   const savedResponses = useResponseStore((state) => state.savedResponses);
+  const interviewSubmitted = useResponseStore((state) => state.interviewSubmitted);
+  const totalSteps = data?.questions?.length ?? 0;
 
   const { interviewId } = useRecordingStore();
 
@@ -39,13 +38,20 @@ export default function AnsweredQuestionList() {
   const { mutate, isPending, isError } = useSubmitInterview();
   const [openVideoURL, setOpenVideoURL] = useState<string | null>(null);
 
+  useEffect(() => {
+    if (interviewSubmitted) {
+      router.replace('/interview/finished');
+      return;
+    }
 
-  const EmptyStore = () => {
-    useResponseStore.getState().clearUserResponses();
-    useRecordingStore.getState().ResetRecording();
-    useAudioStore.getState().ResetAudioStore();
-    useCandidateInfoStore.getState().ResetUserInfoStore();
-  }
+    if (totalSteps === 0) return;
+
+    if (savedResponses.length < totalSteps) {
+      const allowedStep = savedResponses.length + 1;
+      router.replace(`/interview/${jobId}/candidate-question/${allowedStep}`);
+    }
+  }, [interviewSubmitted, jobId, router, savedResponses.length, totalSteps]);
+
 
   const onSubmitFeedback = async () => {
     const form = feedback.current;
@@ -56,6 +62,11 @@ export default function AnsweredQuestionList() {
   };
 
   const onSubmitInterview = async () => {
+    if (interviewSubmitted) {
+      router.replace('/interview/finished');
+      return;
+    }
+
     if (!interviewId) {
       toast.error('Interview ID is missing!')
       return;
@@ -71,16 +82,10 @@ export default function AnsweredQuestionList() {
       return acc;
     }, {} as Record<string, string>);
 
-    const payload: SubmitInterviewPayload = {
+    mutate({
       interview_id: interviewId,
-      data: questions_data,
-      onsuccess: () => {
-        EmptyStore();
-        router.push('/interview/finished');
-      }
-    };
-
-    mutate(payload);
+      data: questions_data as unknown as SubmitInterviewPayload,
+    });
   };
   return (
     <>
