@@ -30,20 +30,20 @@ function AdminSignIn() {
     };
 
     return (
-        <div className="flex items-center justify-center p-2 sm:p-10 w-full">
-            <div className="w-full ">
-                <Card className="items-center justify-center p-4 sm:p-8 ">
+        <div className="flex items-center justify-center p-2 sm:p-10 w-full min-h-screen">
+            <div className="w-full">
+                <Card className="items-center justify-center p-4 sm:p-8">
                     <h1 className="text-center mb-2 text-xl sm:text-2xl font-normal">
                         Hirewithtess
                     </h1>
-                    <h1 className="font-[roboto] font-medium text-2xl text-center">
+                    <h1 className="font-medium text-2xl text-center">
                         System Access - Sign In
                     </h1>
-                    <p className="text-[#606778] text-lg font-semibold font-[roboto] text-center">
+                    <p className="text-[#606778] text-lg font-semibold text-center">
                         Manage job postings,employers and platform setting in one place
                     </p>
 
-                    <div className="mt-10">
+                    <div className="mt-10 w-full sm:w-fit">
                         <Form {...form}>
                             <form
                                 onSubmit={form.handleSubmit(onSubmit)}
@@ -85,7 +85,7 @@ function AdminSignIn() {
                                         <Checkbox id="terms" required />
                                         <label
                                             htmlFor="terms"
-                                            className="text-sm font-openSans text-[12px] font-sm text-[#1B2559] leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                            className="text-sm text-[12px] font-sm text-[#1B2559] leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                         >
                                             Remember me
                                         </label>

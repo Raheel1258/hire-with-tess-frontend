@@ -1,10 +1,9 @@
 'use client';
-import {  Copy, BriefcaseBusiness, Users } from 'lucide-react';
+import { Copy, BriefcaseBusiness, Users } from 'lucide-react';
 import {
   Dialog,
   DialogClose,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
@@ -25,6 +24,7 @@ import StatusBadge from '@/app/employer/(dashboard)/components/status.badge';
 import CustomJobDetailDialogue from '@/app/employer/(dashboard)/components/jobdetaildialogue';
 import OverviewStore from '@/store/EmployeeDashboard/dashboard/overview/overview.store';
 import UseGETJobBYID from '@/Routes/Employer/hooks/GET/candidates/GetJobByID.hook';
+import DeleteJobDialogue from '@/app/employer/(dashboard)/components/deletejobdialogue';
 
 export default function AdminJobPosting() {
   const TITLE = [
@@ -38,7 +38,6 @@ export default function AdminJobPosting() {
     'Job Posted Date',
     'Interview Link',
     'Total Interviews',
-
   ];
   const {
     isDialogOpen,
@@ -50,17 +49,18 @@ export default function AdminJobPosting() {
   } = JobStore();
   const [currentPage, setCurrentPage] = useState(1);
   const { data: jobdata } = UseDashboardCardStats();
-  const { data: JobPostedTableData, isLoading: tableLoading } = UseGetAllJob({ page: currentPage });
+  const { data: JobPostedTableData, isLoading: tableLoading } = UseGetAllJob({
+    page: currentPage,
+  });
   const deleteJobMutation = UseDeleteJobByID();
   const updatejobstatus = UseUpdateJobStatus();
   const { data: jobDetails } = UseGETJobBYID(postedjobdata.id);
 
-
- 
-  const { selectedCandidate, setSelectedCandidate } =
-    OverviewStore();
+  const { selectedCandidate, setSelectedCandidate } = OverviewStore();
 
   const [isInterviewDialogOpen, setIsInterviewDialogOpen] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [jobToDelete, setJobToDelete] = useState<{ id: string; title: string } | null>(null);
 
   const filteredJobs = JobPostedTableData?.items?.filter((item: { job_title: string }) =>
     item?.job_title?.toLowerCase()?.includes(searchTerm.toLowerCase()),
@@ -88,21 +88,35 @@ export default function AdminJobPosting() {
         {item?.job_title}
       </div>,
       <div key={`company-name-${item.id}`} className="truncate">
-        {item?.company_name ? item?.company_name : <StatusBadge className=" text-red-500 bg-red-100 text-center" status={"Not Provided"}/>}
+        {item?.company_name ? (
+          item?.company_name
+        ) : (
+          <StatusBadge
+            className="text-red-500 bg-red-100 text-center"
+            status={'Not Provided'}
+          />
+        )}
       </div>,
       <StatusBadge status={item.status} key={`status-${item.id}`} />,
       <div key={`shortlisted-${item.id}`} className="text-center">
-      {item?.shortlisted_stats?.shortlisted}
-    </div>,
-    <div key={`shortlisted-ratio-${item.id}`} className="text-center">
-      {item?.shortlisted_stats?.shortlist_ratio}
-    </div>,
-    <div key={`job-type-${item.id}`} className="truncate">
-      {item?.job_type ? item?.job_type : <StatusBadge className=" text-red-500 bg-red-100 text-center" status={"Not Provided"}/>}
-    </div>,
-    <div key={`job-posted-date-${item.id}`} className="text-center">
-      {new Date(item.created_at).toLocaleDateString()}
-    </div>,
+        {item?.shortlisted_stats?.shortlisted}
+      </div>,
+      <div key={`shortlisted-ratio-${item.id}`} className="text-center">
+        {item?.shortlisted_stats?.shortlist_ratio}
+      </div>,
+      <div key={`job-type-${item.id}`} className="truncate">
+        {item?.job_type ? (
+          item?.job_type
+        ) : (
+          <StatusBadge
+            className="text-red-500 bg-red-100 text-center"
+            status={'Not Provided'}
+          />
+        )}
+      </div>,
+      <div key={`job-posted-date-${item.id}`} className="text-center">
+        {new Date(item.created_at).toLocaleDateString()}
+      </div>,
 
       item?.interview_link ? (
         <Button
@@ -118,25 +132,24 @@ export default function AdminJobPosting() {
         'No link available'
       ),
       <Button
-      variant="ghost"
-      size="sm"
-      className=" w-10 flex items-center gap-2 bg-green-100 border-2 border-green-400"
-      key={item.id}
-      onClick={() => {
-        setSelectedCandidate(item.id);
-        setIsInterviewDialogOpen(true); 
-      }}
-    >
-      <span>{item.total_interviews}</span>
-    </Button>,
-    
+        variant="ghost"
+        size="sm"
+        className="w-10 flex items-center gap-2 bg-green-100 border-2 border-green-400"
+        key={item.id}
+        onClick={() => {
+          setSelectedCandidate(item.id);
+          setIsInterviewDialogOpen(true);
+        }}
+      >
+        <span>{item.total_interviews}</span>
+      </Button>,
     ]) || [];
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
   };
 
-  const deleteJob = async (rowIndex: number) => {
+  const requestDeleteJob = (rowIndex: number) => {
     if (!filteredJobs || filteredJobs.length === 0) {
       toast.error('No jobs available to delete');
       return;
@@ -148,15 +161,24 @@ export default function AdminJobPosting() {
 
     const job = filteredJobs[rowIndex];
 
-    if (!job || !job.id) {
+    if (!job?.id) {
       toast.error('Invalid job data');
       return;
     }
 
-    const jobIds = filteredJobs?.map((item: { id: string }) => item.id) ?? [];
-    const jobId = jobIds[rowIndex];
+    setJobToDelete({ id: job.id, title: job.job_title });
+    setIsDeleteDialogOpen(true);
+  };
 
-    deleteJobMutation.mutate(jobId);
+  const confirmDeleteJob = () => {
+    if (!jobToDelete) return;
+
+    deleteJobMutation.mutate(jobToDelete.id, {
+      onSuccess: () => {
+        setIsDeleteDialogOpen(false);
+        setJobToDelete(null);
+      },
+    });
   };
 
   const handleViewJob = (rowIndex: number) => {
@@ -169,36 +191,54 @@ export default function AdminJobPosting() {
   return (
     <>
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Posted Job Details</DialogTitle>
-            <DialogDescription />
+        <DialogContent className="flex w-[calc(100vw-2rem)] max-h-[90vh] max-w-lg flex-col gap-0 overflow-hidden rounded-2xl border-0 p-0 shadow-2xl sm:max-w-2xl md:max-w-3xl lg:max-w-4xl">
+          <DialogHeader className="shrink-0 border-b border-slate-100 px-5 py-4 pr-12 sm:px-6">
+            <DialogTitle className="text-lg font-semibold tracking-tight text-slate-900">
+              Posted Job Details
+            </DialogTitle>
           </DialogHeader>
-          <JobpProfile data={jobDetails} />
+          <div className="overflow-y-auto px-5 py-5 sm:px-6 sm:py-6">
+            <JobpProfile data={jobDetails} />
+          </div>
           <DialogClose asChild />
         </DialogContent>
       </Dialog>
-      
+
       <Dialog open={isInterviewDialogOpen} onOpenChange={setIsInterviewDialogOpen}>
-        <DialogContent>
-          <DialogHeader>
+        <DialogContent className="flex w-[calc(100vw-2rem)] max-h-[90vh] max-w-lg flex-col gap-0 overflow-hidden rounded-2xl border-0 p-0 shadow-2xl sm:max-w-2xl md:max-w-3xl lg:max-w-4xl">
+          <DialogHeader className="shrink-0 border-b border-slate-100 px-5 py-4 pr-12 sm:px-6">
+            <DialogTitle className="text-lg font-semibold tracking-tight text-slate-900">
+              Interview Details
+            </DialogTitle>
           </DialogHeader>
-          <DialogTitle>Interview Details</DialogTitle>
-          {selectedCandidate && (
-            <CustomJobDetailDialogue 
-              jobId={selectedCandidate}
-              isOpen={isInterviewDialogOpen}
-              onClose={() => {
-                setIsInterviewDialogOpen(false);
-                setSelectedCandidate(''); 
-              }}
-            />
-          )}
+          <div className="overflow-y-auto px-5 py-5 sm:px-6 sm:py-6">
+            {selectedCandidate && (
+              <CustomJobDetailDialogue
+                jobId={selectedCandidate}
+                isOpen={isInterviewDialogOpen}
+                onClose={() => {
+                  setIsInterviewDialogOpen(false);
+                  setSelectedCandidate('');
+                }}
+              />
+            )}
+          </div>
+          <DialogClose asChild />
         </DialogContent>
       </Dialog>
+      <DeleteJobDialogue
+        open={isDeleteDialogOpen}
+        onOpenChange={(open) => {
+          setIsDeleteDialogOpen(open);
+          if (!open) setJobToDelete(null);
+        }}
+        jobTitle={jobToDelete?.title}
+        onConfirm={confirmDeleteJob}
+        isPending={deleteJobMutation.isPending}
+      />
       <div>
-        <h1 className="text-[24px] font-[roboto] font-semibold ml-2 mb-4">Overview</h1>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 w-full">
+        <h1 className="text-[24px] font-semibold ml-2 mb-4">Overview</h1>
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 w-full">
           <CardComponent
             heading="Open Job Listings"
             subheading={jobdata?.active_jobs}
@@ -221,20 +261,22 @@ export default function AdminJobPosting() {
             icon={<BriefcaseBusiness size={20} strokeWidth={1.5} color="#f7941D" />}
           ></CardComponent>
         </div>
-        <h1 className="font-[roboto] mt-2 text-[24px] font-semibold leading-[30px] mb-4">
-          Job Posting
-        </h1>
-        <Searchbar value={searchTerm} onChange={handleSearchChange} />
+        <div className='flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 sm:my-8 my-6'>
+          <h1 className="text-[24px] font-semibold leading-[30px]">
+            Job Posting
+          </h1>
+          <Searchbar value={searchTerm} onChange={handleSearchChange} />
+        </div>
         <TableComponent
           header={TITLE}
           subheader={DATA}
           paginationstart={JobPostedTableData?.current_page}
           paginationend={JobPostedTableData?.pages}
           onPageChange={(page: number) => setCurrentPage(page)}
-          onDelete={deleteJob}
+          onDelete={requestDeleteJob}
           showTrashIcon={true}
           showEyeIcon={true}
-          onView={handleViewJob} 
+          onView={handleViewJob}
           isLoading={tableLoading}
         />
       </div>

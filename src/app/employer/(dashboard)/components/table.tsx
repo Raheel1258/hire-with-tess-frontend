@@ -7,7 +7,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { Eye, Trash } from 'lucide-react';
+import { Eye, Loader2, Trash } from 'lucide-react';
 
 interface TableProps {
   header: string[];
@@ -17,11 +17,51 @@ interface TableProps {
   showTrashIcon?: boolean;
   showEyeIcon?: boolean;
   onDelete?: (rowIndex: number) => void;
-  onView?: (rowIndex: number) => void; 
+  onView?: (rowIndex: number) => void;
   onPageChange?: (page: number) => void;
   isLoading?: boolean;
 }
 
+function ActionIcons({
+  rowIndex,
+  showEyeIcon,
+  showTrashIcon,
+  onView,
+  onDelete,
+}: {
+  rowIndex: number;
+  showEyeIcon: boolean;
+  showTrashIcon: boolean;
+  onView?: (rowIndex: number) => void;
+  onDelete?: (rowIndex: number) => void;
+}) {
+  if (!showEyeIcon && !showTrashIcon) return null;
+
+  return (
+    <div className="flex items-center gap-3">
+      {showEyeIcon && (
+        <button
+          type="button"
+          onClick={() => onView?.(rowIndex)}
+          className="rounded-md p-1 text-[#f7941D] transition-colors hover:bg-orange-50"
+          aria-label="View details"
+        >
+          <Eye className="h-4 w-4" />
+        </button>
+      )}
+      {showTrashIcon && (
+        <button
+          type="button"
+          onClick={() => onDelete?.(rowIndex)}
+          className="rounded-md p-1 text-[#f7941D] transition-colors hover:bg-orange-50"
+          aria-label="Delete"
+        >
+          <Trash className="h-4 w-4" />
+        </button>
+      )}
+    </div>
+  );
+}
 
 export default function TableComponent({
   header,
@@ -31,89 +71,88 @@ export default function TableComponent({
   showTrashIcon = false,
   showEyeIcon = false,
   onDelete,
-  onView, 
+  onView,
   onPageChange,
   isLoading = false,
 }: TableProps) {
+  const hasExtraActionColumn = showTrashIcon || showEyeIcon;
+  const totalColumns = header.length + (hasExtraActionColumn ? 1 : 0);
+  const currentPage = paginationstart || 1;
+  const totalPages = Math.max(paginationend || 1, 1);
 
   const handlePreviousPage = () => {
-    if (paginationstart > 1 && onPageChange) {
-      onPageChange(paginationstart - 1);
+    if (currentPage > 1 && onPageChange) {
+      onPageChange(currentPage - 1);
     }
   };
 
   const handleNextPage = () => {
-    if (paginationstart < paginationend && onPageChange) {
-      onPageChange(paginationstart + 1);
+    if (currentPage < totalPages && onPageChange) {
+      onPageChange(currentPage + 1);
     }
   };
 
   return (
-    <div className="w-full overflow-x-auto bg-white border rounded-md -mx-4 px-4 sm:mx-0 sm:px-0">
-      <div className="min-h-[400px] flex flex-col justify-between">
-        <Table className="w-full min-w-[600px]">
+    <div className="w-full min-w-0 overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm">
+      <div className="w-full overflow-x-auto [-webkit-overflow-scrolling:touch]">
+        <Table className="w-full min-w-[640px]">
           <TableHeader>
-            <TableRow>
+            <TableRow className="border-b border-gray-200 bg-gray-50/80 hover:bg-gray-50/80">
               {header.map((head, index) => (
                 <TableHead
                   key={index}
-                  className="text-left font-roboto font-medium text-[#535862] whitespace-nowrap"
+                  className="whitespace-nowrap px-3 py-3 text-left text-xs font-semibold uppercase tracking-wide text-[#535862] md:px-4 md:text-sm md:normal-case md:tracking-normal"
                 >
                   {head}
                 </TableHead>
               ))}
-              {(showTrashIcon || showEyeIcon) && (
-                <TableHead className="text-left font-roboto text-[#535862] whitespace-nowrap">
+              {hasExtraActionColumn && (
+                <TableHead className="whitespace-nowrap px-3 py-3 text-left text-xs font-semibold uppercase tracking-wide text-[#535862] md:px-4 md:text-sm md:normal-case md:tracking-normal">
                   Action
                 </TableHead>
               )}
             </TableRow>
           </TableHeader>
 
-          <TableBody className="border-t">
+          <TableBody>
             {isLoading ? (
               <TableRow>
-                <TableCell
-                  colSpan={header.length + (showTrashIcon ? 1 : 0)}
-                  className="text-center py-8"
-                >
-                  Loading...
+                <TableCell colSpan={totalColumns} className="h-48 text-center">
+                  <div className="flex items-center justify-center gap-2 text-sm text-gray-500">
+                    <Loader2 className="h-5 w-5 animate-spin text-[#f7941D]" />
+                    Loading...
+                  </div>
                 </TableCell>
               </TableRow>
             ) : subheader.length === 0 ? (
               <TableRow>
-                <TableCell
-                  colSpan={header.length + (showTrashIcon ? 1 : 0)}
-                  className="text-center py-8"
-                >
+                <TableCell colSpan={totalColumns} className="h-48 text-center text-sm text-gray-500">
                   No data available
                 </TableCell>
               </TableRow>
             ) : (
               subheader.map((row, rowIndex) => (
-                <TableRow key={rowIndex}>
+                <TableRow
+                  key={rowIndex}
+                  className="border-b border-gray-100 transition-colors hover:bg-orange-50/30"
+                >
                   {row.map((cell, cellIndex) => (
                     <TableCell
                       key={cellIndex}
-                      className="font-normal font-open-sans whitespace-nowrap"
+                      className="whitespace-nowrap px-3 py-3 font-normal text-sm text-gray-900 md:px-4"
                     >
                       {cell}
                     </TableCell>
                   ))}
-                  {(showTrashIcon || showEyeIcon) && (
-                    <TableCell className="flex items-center gap-3">
-                      {showEyeIcon && (
-                        <Eye
-                          className="w-4 h-4 text-[#f7941D] cursor-pointer"
-                          onClick={() => onView?.(rowIndex)}
-                        />
-                      )}
-                      {showTrashIcon && (
-                        <Trash
-                          className="w-4 h-4 text-[#f7941D] cursor-pointer"
-                          onClick={() => onDelete?.(rowIndex)}
-                        />
-                      )}
+                  {hasExtraActionColumn && (
+                    <TableCell className="whitespace-nowrap px-3 py-3 md:px-4">
+                      <ActionIcons
+                        rowIndex={rowIndex}
+                        showEyeIcon={showEyeIcon}
+                        showTrashIcon={showTrashIcon}
+                        onView={onView}
+                        onDelete={onDelete}
+                      />
                     </TableCell>
                   )}
                 </TableRow>
@@ -121,28 +160,32 @@ export default function TableComponent({
             )}
           </TableBody>
         </Table>
+      </div>
 
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center px-4 py-4 border-t mt-6 gap-2 sm:gap-0">
-          <div className="flex space-x-2">
-            <Button
-              variant="outline"
-              onClick={handlePreviousPage}
-              disabled={paginationstart <= 1 || isLoading}
-            >
-              Previous
-            </Button>
-            <Button
-              variant="outline"
-              onClick={handleNextPage}
-              disabled={paginationstart >= paginationend || isLoading}
-            >
-              Next
-            </Button>
-          </div>
-          <div className="text-sm text-gray-500 sm:text-right">
-            Page {paginationstart} of {paginationend}
-          </div>
+      <div className="flex flex-col gap-3 border-t border-gray-100 bg-gray-50/50 px-3 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-4">
+        <div className="flex w-full gap-2 sm:w-auto">
+          <Button
+            variant="outline"
+            size="sm"
+            className="flex-1 sm:flex-none"
+            onClick={handlePreviousPage}
+            disabled={currentPage <= 1 || isLoading}
+          >
+            Previous
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            className="flex-1 sm:flex-none"
+            onClick={handleNextPage}
+            disabled={currentPage >= totalPages || isLoading}
+          >
+            Next
+          </Button>
         </div>
+        <p className="text-center text-sm text-gray-500 sm:text-right">
+          Page {currentPage} of {totalPages}
+        </p>
       </div>
     </div>
   );

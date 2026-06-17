@@ -11,7 +11,6 @@ import {
   Dialog,
   DialogClose,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
@@ -68,7 +67,6 @@ export default function CandidatePage() {
     );
   };
 
-
   const DATA = (filteredJobs ?? []).map((item: CandidateItem) => [
     item?.id,
     item?.candidate_name,
@@ -76,7 +74,7 @@ export default function CandidatePage() {
     new Date(item.created_at).toLocaleDateString(),
 
     <StatusBadge status={item.status} key={`status-${item.id}`} />,
- 
+
     item?.interview_link ? (
       <Button
         variant="ghost"
@@ -94,9 +92,12 @@ export default function CandidatePage() {
 
     item.ai_score !== null ? (
       <Button
-       variant="ghost"
-      size="sm"
-       className="bg-orange-100 text-orange-400 w-10 flex items-center gap-2 border-2 border-orange-300">{item.ai_score}</Button>
+        variant="ghost"
+        size="sm"
+        className="bg-orange-100 text-orange-400 w-10 flex items-center gap-2 border-2 border-orange-300"
+      >
+        {item.ai_score}
+      </Button>
     ) : analyzingInterviewId === item.id ? (
       <Button size="sm" className="text-xs flex items-center gap-2" disabled>
         <Loader
@@ -104,8 +105,7 @@ export default function CandidatePage() {
           style={{
             background: 'conic-gradient(#f7941D, white, #1E4B8E)',
             maskImage: 'radial-gradient(closest-side, transparent 60%, black 61%)',
-            WebkitMaskImage:
-              'radial-gradient(closest-side, transparent 60%, black 61%)',
+            WebkitMaskImage: 'radial-gradient(closest-side, transparent 60%, black 61%)',
           }}
         />
       </Button>
@@ -134,18 +134,23 @@ export default function CandidatePage() {
   return (
     <>
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Candidates Details</DialogTitle>
-            <DialogDescription></DialogDescription>
+        <DialogContent className="flex w-[calc(100vw-2rem)] max-h-[90vh] max-w-lg flex-col gap-0 overflow-hidden rounded-2xl border-0 p-0 shadow-2xl sm:max-w-2xl md:max-w-3xl lg:max-w-5xl">
+          <DialogHeader className="shrink-0 border-b border-slate-100 px-5 py-4 pr-12 sm:px-6">
+            <DialogTitle className="text-lg font-semibold tracking-tight text-slate-900">
+              Candidate Details
+            </DialogTitle>
           </DialogHeader>
-          <UserProfile data={selectedCandidate} />
+          <div className="overflow-y-auto px-5 py-5 sm:px-6 sm:py-6">
+            <UserProfile data={selectedCandidate} />
+          </div>
           <DialogClose asChild></DialogClose>
         </DialogContent>
       </Dialog>
       <div>
-        <h1 className="text-xl sm:text-2xl font-open-sans font-semibold mb-4">Overview</h1>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 w-full">
+        <h1 className="text-xl sm:text-2xl font-open-sans font-semibold mb-4">
+          Overview
+        </h1>
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 w-full">
           <CardComponent
             heading="Total Candidates"
             subheading={candidatestats?.total_candidates}
@@ -169,11 +174,13 @@ export default function CandidatePage() {
           ></CardComponent>
         </div>
         <div className="mt-10">
-          <h1 className="font-roboto text-xl sm:text-2xl font-bold leading-[30px] mb-4">
-            Candidates
-          </h1>
-          <div className="w-full sm:max-w-[300px]">
-            <Searchbar value={searchTerm} onChange={handleSearchChange} />
+          <div className='flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 sm:my-8 my-6'>
+            <h1 className="font-roboto text-xl sm:text-2xl font-semibold leading-[30px]">
+              Candidates
+            </h1>
+            <div className="w-full sm:max-w-[300px]">
+              <Searchbar value={searchTerm} onChange={handleSearchChange} />
+            </div>
           </div>
           <TableComponent
             header={CandidateTableTitle}

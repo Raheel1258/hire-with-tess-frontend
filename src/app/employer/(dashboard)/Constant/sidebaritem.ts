@@ -1,24 +1,20 @@
-export const employeeSidebarLinks = [
+import { Briefcase, LayoutDashboard, Users } from 'lucide-react';
+import type { SidebarNavItem } from '@/components/sidebar/types';
+
+export const employeeSidebarLinks: SidebarNavItem[] = [
   {
-    img: '/images/comboshape.png',
+    icon: LayoutDashboard,
     label: 'Dashboard',
     route: '/employer/home',
   },
-
   {
-    img: '/images/community.png',
+    icon: Briefcase,
     label: 'Job Posting',
     route: '/employer/job-posting',
   },
   {
-    img: '/images/users.png',
+    icon: Users,
     label: 'Candidates',
     route: '/employer/candidate',
   },
-  // {
-
-  //     img: "/images/Logout.png",
-  //     label: 'Log Out',
-  //     route: '/login'
-  // },
 ];

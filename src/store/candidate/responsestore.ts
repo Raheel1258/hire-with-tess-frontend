@@ -14,12 +14,14 @@ interface RecordingState {
   temp_url: string;
   content_type: string;
   savedResponses: SavedResponse[];
+  interviewSubmitted: boolean;
 
   setQuestionText: (val: string) => void;
   setTempUrl: (val: string) => void;
   setContent_type: (val: string) => void;
   addResponse: (response: SavedResponse) => void;
   getResponseByQuestion: (question: string) => SavedResponse | undefined;
+  completeInterview: () => void;
 }
 
 export const useResponseStore = create<RecordingState>()(
@@ -30,6 +32,7 @@ export const useResponseStore = create<RecordingState>()(
         temp_url: '',
         content_type: '',
         savedResponses: [],
+        interviewSubmitted: false,
 
         setQuestionText: (val) => set({ question_text: val }),
         setTempUrl: (val) => set({ temp_url: val }),
@@ -47,10 +50,23 @@ export const useResponseStore = create<RecordingState>()(
         },
 
         clearUserResponses: () => {
-          set({ savedResponses: [] });
-          set({ question_text: '' });
-          set({ temp_url: '' });
-          set({ content_type: '' });
+          set({
+            savedResponses: [],
+            question_text: '',
+            temp_url: '',
+            content_type: '',
+            interviewSubmitted: false,
+          });
+        },
+
+        completeInterview: () => {
+          set({
+            savedResponses: [],
+            question_text: '',
+            temp_url: '',
+            content_type: '',
+            interviewSubmitted: true,
+          });
         },
       }),
       {

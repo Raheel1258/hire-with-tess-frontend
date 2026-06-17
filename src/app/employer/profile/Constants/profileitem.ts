@@ -1,34 +1,32 @@
-export const sidebarProfileItem = [
+import { LayoutDashboard, Shield, UserCircle } from 'lucide-react';
+import type { SidebarNavItem } from '@/components/sidebar/types';
+
+export const sidebarProfileItem: SidebarNavItem[] = [
   {
-    img: '/images/dashboard.png',
+    icon: LayoutDashboard,
     label: 'Dashboard',
     route: '/employer/home',
   },
   {
-    img: '/images/accountdetail.png',
+    icon: UserCircle,
     label: 'Account Details',
     route: '/employer/profile/account-details',
   },
   {
-    img: '/images/user.png',
+    icon: Shield,
     label: 'Permissions',
     route: '/employer/profile/permissions',
   },
-  {
-    img: '/images/user.png',
-    label: 'Subscriptions',
-    route: '/employer/profile/subscription',
-  },
 ];
 
-export const sidebarProfileItemSuperAdmin = [
+export const sidebarProfileItemSuperAdmin: SidebarNavItem[] = [
   {
-    img: '/images/dashboard.png',
+    icon: LayoutDashboard,
     label: 'Dashboard',
     route: '/admin/home',
   },
   {
-    img: '/images/accountdetail.png',
+    icon: UserCircle,
     label: 'Account Details',
     route: '/admin/profile/account-details',
   },

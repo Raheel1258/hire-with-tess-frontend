@@ -12,10 +12,10 @@ function LoginDialogueContent() {
   return (
     <div className="w-full min-w-0 max-w-full max-sm:py-2 sm:py-4">
       <div className="flex flex-col items-center justify-center text-center max-sm:px-2">
-        <h1 className="font-[roboto] font-medium max-sm:text-lg max-sm:leading-snug sm:text-[24px] w-full sm:w-[607px]">
+        <h1 className="font-medium max-sm:text-lg max-sm:leading-snug sm:text-[24px] w-full sm:w-[607px]">
           Log In to Share Your AI-Generated Interview
         </h1>
-        <p className="font-[roboto] font-[400] max-sm:text-sm max-sm:leading-relaxed sm:text-[16px] sm:leading-[24px] text-[#606778] mt-2 w-full sm:w-[642px]">
+        <p className="font-[400] max-sm:text-sm max-sm:leading-relaxed sm:text-[16px] sm:leading-[24px] text-[#606778] mt-2 w-full sm:w-[642px]">
           Easily create interviews and manage candidates
         </p>
       </div>

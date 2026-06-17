@@ -10,7 +10,9 @@ import {
   SelectItem,
 } from '@/components/ui/select';
 import FormControl from '@mui/material/FormControl';
+import FormHelperText from '@mui/material/FormHelperText';
 import { useSkillStore } from '@/store/Employer/InputStore';
+import { cn } from '@/lib/utils';
 import React, { useRef, useState } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
 
@@ -20,6 +22,9 @@ const formatNumber = (s: string) => {
 };
 
 const cleanNumber = (s: string) => s.replace(/[^\d]/g, '');
+
+const salaryAmountInputClass =
+  'h-[52px] w-full rounded-[10px] border border-gray-200 bg-white px-3 text-base font-normal text-black outline-none transition-colors placeholder:text-slate-400 focus:border-[#1E4B8E] focus:ring-2 focus:ring-[#1E4B8E]/20 disabled:cursor-not-allowed disabled:bg-slate-50';
 
 const SalaryRangeInput = React.forwardRef<HTMLInputElement, any>(
   function SalaryRangeInput(props, ref) {
@@ -35,25 +40,34 @@ const SalaryRangeInput = React.forwardRef<HTMLInputElement, any>(
     };
 
     return (
-      <div className="flex w-full min-w-0 items-center gap-2 sm:w-auto sm:justify-start">
-        <input
-          ref={ref}
-          value={formatNumber(minRaw)}
-          placeholder="From"
-          readOnly={readOnly}
-          disabled={disabled}
-          onChange={(e) => fire(e.target.value, maxRaw)}
-          className="min-w-0 flex-1 border-none bg-transparent text-base font-normal text-black outline-none text-right sm:w-[110px] sm:flex-none"
-        />
-        <span className="shrink-0 text-gray-500">-</span>
-        <input
-          value={formatNumber(maxRaw)}
-          placeholder="To"
-          readOnly={readOnly}
-          disabled={disabled}
-          onChange={(e) => fire(minRaw, e.target.value)}
-          className="min-w-0 flex-1 border-none bg-transparent text-base font-normal text-black outline-none text-left sm:w-[110px] sm:flex-none"
-        />
+      <div className="grid w-full grid-cols-1 gap-3 sm:grid-cols-2">
+        <div className="flex min-w-0 flex-col gap-1.5">
+          <label className="text-xs font-medium text-slate-500">Min amount</label>
+          <input
+            ref={ref}
+            type="text"
+            inputMode="numeric"
+            value={formatNumber(minRaw)}
+            placeholder="e.g. 50,000"
+            readOnly={readOnly}
+            disabled={disabled}
+            onChange={(e) => fire(e.target.value, maxRaw)}
+            className={salaryAmountInputClass}
+          />
+        </div>
+        <div className="flex min-w-0 flex-col gap-1.5">
+          <label className="text-xs font-medium text-slate-500">Max amount</label>
+          <input
+            type="text"
+            inputMode="numeric"
+            value={formatNumber(maxRaw)}
+            placeholder="e.g. 80,000"
+            readOnly={readOnly}
+            disabled={disabled}
+            onChange={(e) => fire(minRaw, e.target.value)}
+            className={salaryAmountInputClass}
+          />
+        </div>
       </div>
     );
   },
@@ -155,68 +169,32 @@ const SalaryField: React.FC<SalaryFieldProps> = ({
     />
   );
 
-  const rangeBadge = (compact = false) => (
-    <div
-      className={
-        compact
-          ? 'flex h-9 w-full items-center justify-center rounded-md border border-input bg-background px-2 py-2 text-sm font-normal text-black'
-          : 'flex h-9 w-[100px] shrink-0 items-center justify-center rounded-md border border-input bg-background px-3 py-2 text-base font-normal text-black'
-      }
-      aria-label="Salary mode"
-    >
-      Range
-    </div>
-  );
-
-  const textFieldSx = {
-    width: '100%',
-    '& .MuiOutlinedInput-root': {
-      height: '60px',
-      borderRadius: '14px',
-      fontSize: '16px',
-      fontWeight: 400,
-    },
-    '& .MuiInputBase-input': {
-      color: 'black',
-      '&::placeholder': {
-        color: 'gray',
-        opacity: 1,
-        fontSize: '14px',
-        fontWeight: 400,
-      },
-    },
-    '& .MuiInputBase-input.Mui-disabled': {
-      WebkitTextFillColor: 'black',
-      color: 'black',
-      opacity: 1,
-    },
-    '& .MuiInputLabel-root': {
-      color: 'gray',
-      transition: 'color 0.2s',
-    },
-    '& .MuiInputLabel-root.Mui-focused': {
-      color: 'black',
-    },
-    '& .MuiInputLabel-root.MuiInputLabel-shrink': {
-      color: 'black',
-    },
-    '&:hover .MuiOutlinedInput-notchedOutline': {
-      borderColor: 'gray',
-    },
-  };
-
   return (
     <Controller
       name={name}
       control={control}
       defaultValue={value || ''}
+      rules={{ required: 'Salary is required.' }}
       render={({ field, fieldState }) => (
         <Box sx={{ width: '100%', minWidth: 0, maxWidth: '100%' }}>
-          <div className="flex w-full min-w-0 max-w-full flex-col gap-2 sm:hidden">
-            <label className="block text-left text-sm font-normal text-black">{label}</label>
-            {salaryTypeSelect(true)}
-            {currencySelect(true)}
-            <div className="flex h-[60px] w-full min-w-0 max-w-full items-center rounded-[14px] border border-gray-300 px-3">
+          <label className="mb-2 block text-left text-sm font-normal text-black">
+            {label}
+            {!readOnly && <span className="ml-0.5 text-red-500">*</span>}
+          </label>
+
+          <div
+            className={cn(
+              'flex w-full min-w-0 max-w-full flex-col gap-3 rounded-[14px] border px-3 py-3',
+              fieldState.error ? 'border-red-500' : 'border-gray-300',
+            )}
+          >
+            <div className="flex w-full min-w-0 flex-col gap-2 sm:flex-row">
+              {salaryTypeSelect(true)}
+              {currencySelect(true)}
+            </div>
+
+            <div className="flex w-full min-w-0 flex-col gap-2">
+              <p className="text-xs font-medium text-slate-500">Salary range</p>
               <SalaryRangeInput
                 value={field.value}
                 onChange={field.onChange}
@@ -224,38 +202,13 @@ const SalaryField: React.FC<SalaryFieldProps> = ({
                 disabled={readOnly}
               />
             </div>
-            {fieldState.error?.message && (
-              <p className="text-left text-sm text-red-500">{fieldState.error.message}</p>
-            )}
           </div>
 
-          <div className="hidden sm:block">
-            <TextField
-              {...field}
-              fullWidth
-              label={label}
-              autoComplete="off"
-              variant="outlined"
-              type="text"
-              error={!!fieldState.error}
-              helperText={fieldState.error?.message || ''}
-              slotProps={{ inputLabel: { shrink: true } }}
-              InputProps={{
-                readOnly,
-                inputComponent: SalaryRangeInput as any,
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <div className="flex gap-2">
-                      {salaryTypeSelect()}
-                      {currencySelect()}
-                      {rangeBadge()}
-                    </div>
-                  </InputAdornment>
-                ),
-              }}
-              sx={textFieldSx}
-            />
-          </div>
+          {fieldState.error?.message && (
+            <FormHelperText error sx={{ mx: 0, mt: '4px' }}>
+              {fieldState.error.message}
+            </FormHelperText>
+          )}
         </Box>
       )}
     />

@@ -52,7 +52,7 @@ export default function SignupForm() {
         ref={ref}
         className="space-y-8 flex flex-col items-center overflow-auto max-h-[80vh] py-8" // Added padding-y
       >
-        <div className="flex gap-4 items-start w-full mt-4 ">
+        <div className="flex gap-4 items-start w-full mt-4">
           <FormField
             control={form.control}
             name="firstname"
@@ -89,7 +89,7 @@ export default function SignupForm() {
           />
         </div>
 
-        <div className="flex gap-4 items-start w-full ">
+        <div className="flex gap-4 items-start w-full">
           <FormField
             control={form.control}
             name="organization"
@@ -125,7 +125,7 @@ export default function SignupForm() {
           />
         </div>
 
-        <div className="flex gap-4 items-start w-full ">
+        <div className="flex gap-4 items-start w-full">
           <FormField
             control={form.control}
             name="password"
@@ -166,7 +166,7 @@ export default function SignupForm() {
           <Checkbox id="terms" required={true} />
           <label
             htmlFor="terms"
-            className="text-sm font-openSans text-[16px] font-normal text-[#1B2559] leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            className="text-sm text-[16px] font-normal text-[#1B2559] leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
           >
             I agree to the Terms of Service and acknowledge you have read our Privacy
             Policy
@@ -176,7 +176,7 @@ export default function SignupForm() {
         <div className="flex justify-center w-full">
           <Button
             type="submit"
-            className="w-full sm:w-[528px] h-[64px] leading-[20px] font-roboto cursor-pointer rounded-2xl max-w-[90%]"
+            className="w-full sm:w-[528px] h-[64px] leading-[20px] cursor-pointer rounded-2xl max-w-[90%]"
             disabled={signupMutation.isPending}
           >
             {signupMutation.isPending ? 'Signing Up...' : 'Sign Up to Continue'}

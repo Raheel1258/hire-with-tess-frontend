@@ -29,19 +29,19 @@ export default function CandidateInstructions() {
       description="Let's get started. Record your response at your own pace and put your best foot forward!"
       subtitle="Your next opportunity starts here!"
       showTitle={true}
-      subtitleClassName="font-roboto font-bold text-2xl sm:text-[34px] leading-tight sm:leading-[46px] mt-8"
-      descriptionClassName="mt-4 text-sm sm:text-base text-[#6F6C90] leading-relaxed sm:leading-[30px] font-roboto font-normal"
+      subtitleClassName=" font-bold text-2xl sm:text-[34px] leading-tight sm:leading-[46px] mt-8"
+      descriptionClassName="mt-4 text-sm sm:text-base text-[#6F6C90] leading-relaxed sm:leading-[30px] font-normal"
       // jobTitle={data?.job_title}
       // jobCompany={data?.company_name}
       showJobTitleSeparator={true}
       
     >
       
-      <div className="flex flex-col items-center justify-center px-4 ">
-        <h1 className="font-roboto font-bold text-lg sm:text-[26px] text-center break-words">
+      <div className="flex flex-col items-center justify-center px-4">
+        <h1 className="font-bold text-lg sm:text-[26px] text-center break-words">
           {data?.job_title} - {data?.company_name}
         </h1>
-        <p className="font-roboto text-[14px] sm:text-[16px] font-normal text-[#6F6C90] mt-4 text-center">
+        <p className="text-[14px] sm:text-[16px] font-normal text-[#6F6C90] mt-4 text-center">
           Take your time, be yourself, and show what you can do!
         </p>
 
@@ -59,10 +59,10 @@ export default function CandidateInstructions() {
 
         <div className="py-8 w-full flex justify-center items-center">
           <Card className="w-full sm:w-[90%] md:max-w-[669px] border-1 rounded-2xl p-4">
-            <h1 className="font-roboto font-bold text-sm sm:text-[16px] leading-[20px] mb-2 text-center">
+            <h1 className="font-bold text-sm sm:text-[16px] leading-[20px] mb-2 text-center">
               Interview Instructions:
             </h1>
-            <ul className="list-disc pl-5 font-openSans text-xs sm:text-[14px] leading-[22px] sm:leading-[26px] text-black text-left">
+            <ul className="list-disc pl-5 text-xs sm:text-[14px] leading-[22px] sm:leading-[26px] text-black text-left">
               <li>
                 You will answer a few questions, each requiring an audio response.
               </li>
@@ -92,10 +92,10 @@ export default function CandidateInstructions() {
         </div>
 
         <div className="flex flex-col sm:flex-row gap-1 px-4 sm:px-0 text-center sm:text-left mb-8 sm:mb-10">
-          <p className="font-openSans font-bold text-xs sm:text-[16px] text-[#6F6C90]">
+          <p className="font-bold text-xs sm:text-[16px] text-[#6F6C90]">
             Tip:
           </p>
-          <p className="font-openSans font-normal text-xs sm:text-[16px] text-[#6F6C90]">
+          <p className="font-normal text-xs sm:text-[16px] text-[#6F6C90]">
             Speak clearly and naturally, as if you're having a conversation. Confidence
             goes a long way!
           </p>

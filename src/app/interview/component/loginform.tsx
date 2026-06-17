@@ -111,8 +111,8 @@ export default function LoginForm({ jobId, variant = 'page' }: LoginFormProps) {
               htmlFor={rememberMeCheckboxId}
               className={
                 isDialog
-                  ? 'text-sm font-openSans max-sm:text-xs sm:text-[16px] font-normal text-[#1B2559] leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'
-                  : 'text-sm font-openSans text-[12px] font-sm text-[#1B2559] leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'
+                  ? 'text-sm max-sm:text-xs sm:text-[16px] font-normal text-[#1B2559] leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'
+                  : 'text-sm text-[12px] font-sm text-[#1B2559] leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'
               }
             >
               Remember me

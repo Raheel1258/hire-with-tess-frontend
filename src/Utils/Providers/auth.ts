@@ -1,10 +1,20 @@
 import EmployeeAuthStore from '@/store/Auth/auth.store';
 
+const AUTH_COOKIE_MAX_AGE = 60 * 60 * 24;
+
+const getCookieFlags = (maxAge: number) => {
+  const secure =
+    typeof window !== 'undefined' && window.location.protocol === 'https:' ? '; secure' : '';
+  return `path=/; max-age=${maxAge}; samesite=strict${secure}`;
+};
+
 export const setAuthToken = (token: string, role: string) => {
   if (typeof window !== 'undefined') {
     localStorage.setItem('accessToken', token);
-    document.cookie = `accessToken=${token}; path=/; max-age=${60 * 60 * 24}; secure; samesite=strict`;
-    document.cookie = `userRole=${role}; path=/; max-age=${60 * 60 * 24}; secure; samesite=strict`;
+    localStorage.setItem('userRole', role);
+    const flags = getCookieFlags(AUTH_COOKIE_MAX_AGE);
+    document.cookie = `accessToken=${token}; ${flags}`;
+    document.cookie = `userRole=${role}; ${flags}`;
   }
   EmployeeAuthStore.getState().setAccessToken(token);
   EmployeeAuthStore.getState().setUserRole(role);
@@ -13,11 +23,40 @@ export const setAuthToken = (token: string, role: string) => {
 export const clearAuthToken = () => {
   if (typeof window !== 'undefined') {
     localStorage.removeItem('accessToken');
-    document.cookie = 'accessToken=; path=/; max-age=0';
-    document.cookie = 'userRole=; path=/; max-age=0';
+    localStorage.removeItem('userRole');
+    localStorage.removeItem('organizationName');
+    const flags = getCookieFlags(0);
+    document.cookie = `accessToken=; ${flags}`;
+    document.cookie = `userRole=; ${flags}`;
   }
   EmployeeAuthStore.getState().clearAccessToken();
   EmployeeAuthStore.getState().clearUserRole();
+};
+
+export const setOrganizationName = (name: string) => {
+  if (typeof window !== 'undefined' && name.trim()) {
+    localStorage.setItem('organizationName', name.trim());
+  }
+};
+
+export const getOrganizationName = () => {
+  if (typeof window !== 'undefined') {
+    return localStorage.getItem('organizationName') ?? '';
+  }
+  return '';
+};
+
+const getRoleFromCookie = () => {
+  if (typeof document === 'undefined') return '';
+  const match = document.cookie.match(/(?:^|;\s*)userRole=([^;]*)/);
+  return match?.[1] ?? '';
+};
+
+export const logoutAndRedirect = () => {
+  clearAuthToken();
+  if (typeof window !== 'undefined') {
+    window.location.href = '/';
+  }
 };
 
 export const getAuthToken = () => {
@@ -36,7 +75,7 @@ export const getAuthRole = () => {
     return (
       localStorage.getItem('userRole') ||
       EmployeeAuthStore.getState().userRole ||
-      getAuthCookie()
+      getRoleFromCookie()
     );
   }
   return EmployeeAuthStore.getState().userRole;

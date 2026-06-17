@@ -102,8 +102,8 @@ function InterviewForm() {
         useCard={false}
       >
         
-        <div className="flex flex-col ">
-          <div className="flex items-start mt-4 ">
+        <div className="flex flex-col">
+          <div className="flex items-start mt-4">
             <Image
               src="/images/AIAvatar.png"
               alt="bot"
@@ -117,7 +117,7 @@ function InterviewForm() {
                   {responsibilities.length > 0 && (
                     <div>
                       <div className="flex justify-between items-center mb-2">
-                        <h3 className="text-[14px] font-openSans text-black font-semibold">
+                        <h3 className="text-[14px] text-black font-semibold">
                           Responsibilities
                         </h3>
                         {!isEditable ? (
@@ -144,7 +144,7 @@ function InterviewForm() {
                         )}
                       </div>
                       {!isEditable ? (
-                        <ul className="list-disc pl-5 text-[14px] font-openSans text-black">
+                        <ul className="list-disc pl-5 text-[14px] text-black">
                           {responsibilities.map((item, idx) => (
                             <li key={idx}>{item}</li>
                           ))}
@@ -155,17 +155,17 @@ function InterviewForm() {
                           onChange={(e) =>
                             setResponsibilities(e.target.value.split('\n'))
                           }
-                          className="w-full h-40 p-2 border rounded-xl resize-none font-openSans text-[14px]"
+                          className="w-full h-40 p-2 border rounded-xl resize-none text-[14px]"
                         />
                       )}
                     </div>
                   )}
                   <div>
-                    <h3 className="text-[14px] font-openSans text-black mb-2 font-semibold">
+                    <h3 className="text-[14px] text-black mb-2 font-semibold">
                       Requirements
                     </h3>
                     {!isEditable ? (
-                      <ul className="list-disc pl-5 text-[14px] font-openSans text-black">
+                      <ul className="list-disc pl-5 text-[14px] text-black">
                         {requirements.map((item, idx) => (
                           <li key={idx}>{item}</li>
                         ))}
@@ -174,7 +174,7 @@ function InterviewForm() {
                       <Textarea
                         value={requirements.join('\n')}
                         onChange={(e) => setRequirements(e.target.value.split('\n'))}
-                        className="w-full h-40 p-2 border rounded-xl resize-none font-openSans text-[14px]"
+                        className="w-full h-40 p-2 border rounded-xl resize-none text-[14px]"
                       />
                     )}
                   </div>
@@ -194,8 +194,8 @@ function InterviewForm() {
               className="shrink-0 w-8 h-8 sm:w-10 sm:h-10"
             />
              {/* Skills List */}
-            <Card className="w-full rounded-2xl p-4 sm:p-6 ">
-            <h1 className="text-[14px] font-openSans text-black text-left font-semibold">AI Powered Skills:</h1>
+            <Card className="w-full rounded-2xl p-4 sm:p-6">
+            <h1 className="text-[14px] text-black text-left font-semibold">AI Powered Skills:</h1>
               <div className="flex items-center justify-between flex-wrap gap-2 w-full">
                 <div className="flex flex-wrap gap-2 flex-grow">
                   {skills.map((item, index) => (
@@ -204,7 +204,7 @@ function InterviewForm() {
                         value={item}
                         readOnly={!isEditable}
                         onChange={(e) => handleSkillChange(e.target.value, index)}
-                        className="pr-10 border-[#E2E8F0] rounded-3xl text-black font-openSans"
+                        className="pr-10 border-[#E2E8F0] rounded-3xl text-black"
                       />
                       {isEditable && (
                         <button
@@ -233,7 +233,7 @@ function InterviewForm() {
                           value={newSkill}
                           onChange={(e) => setNewSkill(e.target.value)}
                           placeholder="Enter skill"
-                          className="w-full sm:w-48 h-10 p-2 border rounded-xl font-openSans text-[14px]"
+                          className="w-full sm:w-48 h-10 p-2 border rounded-xl text-[14px]"
                         />
                         <Button
                           variant="ghost"

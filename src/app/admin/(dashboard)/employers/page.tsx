@@ -79,7 +79,7 @@ export default function EmployersList() {
         </DialogContent>
       </Dialog>
     <div>
-      <h1 className="font-[roboto] text-[24px] font-semibold leading-[30px] mb-4">
+      <h1 className="text-[24px] font-semibold leading-[30px] mb-4">
         Employers 
       </h1>
       <TableComponent

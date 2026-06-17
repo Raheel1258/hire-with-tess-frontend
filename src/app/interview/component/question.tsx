@@ -65,8 +65,7 @@ export default function Question({ questions, showImage = true }: QuestionProps)
                   />
 
                 ) : (
-                  <p className="w-full h-[68px] rounded-[14px] border-1 text-black bg-white p-2 flex items-center 
-                  ">
+                  <p className="w-full h-[68px] rounded-[14px] border-1 text-black bg-white p-2 flex items-center">
                     {question.text}
                   </p>
                 )}

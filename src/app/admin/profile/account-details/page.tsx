@@ -35,7 +35,7 @@ export default function UserAccountDetail() {
         email: profileInfo.email || '',
       });
     }
-  }, [profileInfo]);
+  }, [profileInfo, form]);
 
   const ref = useRef<HTMLFormElement>(null);
 
@@ -50,98 +50,101 @@ export default function UserAccountDetail() {
   };
 
   return (
-    <div>
-      <h1 className="text-24 font-semibold">Account Details</h1>
-      <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          ref={ref}
-          className="space-y-8 flex flex-col overflow-auto max-h-[80vh] py-8"
-        >
-          <div className="flex gap-4 items-start w-3xl mt-4">
-            <FormField
-              control={form.control}
-              name="firstname"
-              render={({ field }) => (
-                <FormItem className="w-full">
-                  <FormControl>
-                    <CustomInputForm
-                      {...field}
-                      name="firstname"
-                      type="text"
-                      label="First Name"
-                      placeholder="John"
-                    />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="lastname"
-              render={({ field }) => (
-                <FormItem className="w-full">
-                  <FormControl>
-                    <CustomInputForm
-                      {...field}
-                      name="lastname"
-                      type="text"
-                      label="Last Name"
-                      placeholder="Doe"
-                    />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-          </div>
+    <div className="min-w-0 w-full space-y-4">
+      <h1 className="text-xl font-semibold text-slate-800 sm:text-2xl">Account Details</h1>
 
-          <div className="flex gap-4 items-start w-3xl">
-            <FormField
-              control={form.control}
-              name="organization"
-              render={({ field }) => (
-                <FormItem className="w-full">
-                  <FormControl>
-                    <CustomInputForm
-                      {...field}
-                      name="organization"
-                      label="Organization Name"
-                      placeholder="King Palm"
-                    />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem className="w-full">
-                  <FormControl>
-                    <CustomInputForm
-                      {...field}
-                      name="email"
-                      type="email"
-                      label="Email"
-                      placeholder="john.doe@gmail.com"
-                    />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-          </div>
+      <div className="rounded-xl border border-slate-200 bg-white p-4 sm:p-6">
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            ref={ref}
+            className="flex w-full flex-col space-y-6"
+          >
+            <div className="flex w-full flex-col items-stretch gap-4 lg:flex-row lg:items-start">
+              <FormField
+                control={form.control}
+                name="firstname"
+                render={({ field }) => (
+                  <FormItem className="w-full min-w-0">
+                    <FormControl>
+                      <CustomInputForm
+                        {...field}
+                        name="firstname"
+                        type="text"
+                        label="First Name"
+                        placeholder="John"
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="lastname"
+                render={({ field }) => (
+                  <FormItem className="w-full min-w-0">
+                    <FormControl>
+                      <CustomInputForm
+                        {...field}
+                        name="lastname"
+                        type="text"
+                        label="Last Name"
+                        placeholder="Doe"
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+            </div>
 
-          <div className="flex">
-            <Button
-              type="submit"
-              className="leading-[20px] font-roboto cursor-pointer"
-              disabled={UpdateProfileMutation.isPending}
-            >
-              {UpdateProfileMutation.isPending ? 'Updating...' : 'Update Profile'}
-            </Button>
-          </div>
-        </form>
-      </Form>
+            <div className="flex w-full flex-col items-stretch gap-4 lg:flex-row lg:items-start">
+              <FormField
+                control={form.control}
+                name="organization"
+                render={({ field }) => (
+                  <FormItem className="w-full min-w-0">
+                    <FormControl>
+                      <CustomInputForm
+                        {...field}
+                        name="organization"
+                        label="Organization Name"
+                        placeholder="King Palm"
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem className="w-full min-w-0">
+                    <FormControl>
+                      <CustomInputForm
+                        {...field}
+                        name="email"
+                        type="email"
+                        label="Email"
+                        placeholder="john.doe@gmail.com"
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            <div className="flex w-full lg:w-auto">
+              <Button
+                type="submit"
+                className="w-full cursor-pointer leading-[20px] lg:w-auto"
+                disabled={UpdateProfileMutation.isPending}
+              >
+                {UpdateProfileMutation.isPending ? 'Updating...' : 'Update Profile'}
+              </Button>
+            </div>
+          </form>
+        </Form>
+      </div>
     </div>
   );
 }

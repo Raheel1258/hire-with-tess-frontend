@@ -5,6 +5,7 @@ interface SuperAdminCandidate {
     job_title: string;
     created_at: string;
     status: string;
+    ai_score?: number | null;
   }
 
   export default SuperAdminCandidate;
