@@ -21,7 +21,7 @@ export default function AudiVideodialogue ({answer}: {answer: AudiVideodialogueP
           <p className="w-full font-normal text-[14px]">{question}</p>
           <div className="rounded-full p-3 border mt-6 w-full">
 
-            <div className="flex items-center gap-2 ">
+            <div className="flex items-center gap-2">
               {answer?.submission_type === 'audio' && (
                 <Waveform recordedVoiceURL={answer.url} />
               )}

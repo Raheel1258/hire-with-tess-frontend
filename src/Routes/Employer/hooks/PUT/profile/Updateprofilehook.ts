@@ -2,12 +2,19 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { UpdateProfile } from '@/Routes/Employer/Api/employer.route';
 import { toast } from 'sonner';
 import { AxiosError } from 'axios';
+import { setOrganizationName } from '@/Utils/Providers/auth';
 export default function UseUpdateProfileHook() {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: UpdateProfile,
-    onSuccess: () => {
+    onSuccess: (_data, variables) => {
+      if (variables instanceof FormData) {
+        const orgName = variables.get('organization_name');
+        if (typeof orgName === 'string') {
+          setOrganizationName(orgName);
+        }
+      }
       toast.success('Profile updated successfully');
       queryClient.invalidateQueries({ queryKey: ['profileinfo'] });
     },

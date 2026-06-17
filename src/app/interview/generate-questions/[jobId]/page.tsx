@@ -149,15 +149,15 @@ export default function Questionnaire() {
           <ul className="space-y-3 sm:space-y-4 w-full min-w-0">
             {Aiquestions.length === 0 ? (
               <>
-                <li className="flex items-start gap-2 sm:gap-4 w-full min-w-0">
+                <li className="flex items-center gap-2 sm:gap-4 w-full min-w-0">
                   <Skeleton className="w-8 h-8 sm:w-10 sm:h-10 rounded-full shrink-0" />
                   <Skeleton className="flex-1 min-w-0 h-[68px] rounded-[14px]" />
                 </li>
-                <li className="flex items-start gap-2 sm:gap-4 w-full min-w-0">
+                <li className="flex items-center gap-2 sm:gap-4 w-full min-w-0">
                   <Skeleton className="w-8 h-8 sm:w-10 sm:h-10 rounded-full shrink-0" />
                   <Skeleton className="flex-1 min-w-0 h-[68px] rounded-[14px]" />
                 </li>
-                <li className="flex items-start gap-2 sm:gap-4 w-full min-w-0">
+                <li className="flex items-center gap-2 sm:gap-4 w-full min-w-0">
                   <Skeleton className="w-8 h-8 sm:w-10 sm:h-10 rounded-full shrink-0" />
                   <Skeleton className="flex-1 min-w-0 h-[68px] rounded-[14px]" />
                 </li>
@@ -172,64 +172,74 @@ export default function Questionnaire() {
                   return (
                     <li
                       key={index}
-                      className="flex items-start gap-2 sm:gap-4 w-full min-w-0"
+                      className="flex items-center gap-2 sm:gap-4 w-full min-w-0"
                     >
                       <Image
                         src="/images/AIAvatar.png"
                         alt="bot"
                         width={40}
                         height={40}
-                        className="shrink-0 w-8 h-8 sm:w-10 sm:h-10 mt-2 sm:mt-0"
+                        className="shrink-0 w-8 h-8 sm:w-10 sm:h-10"
                       />
-                      <div className="relative flex-1 min-w-0">
+                      <div
+                        className={`flex flex-1 min-w-0 gap-2 sm:gap-3 rounded-[14px] border bg-white p-2.5 sm:p-3 ${
+                          isEditing ? 'items-start' : 'items-center'
+                        }`}
+                      >
                         {isEditing ? (
                           <Textarea
                             value={question.text}
                             onChange={(e) => handleTextChange(index, e.target.value)}
-                            className="w-full min-h-[80px] sm:h-[100px] rounded-[14px] border text-black bg-white p-2 pr-10 sm:pr-12 text-sm sm:text-base"
+                            className="min-w-0 flex-1 min-h-[80px] sm:min-h-[68px] resize-none border-0 bg-transparent p-0 text-sm sm:text-base text-black shadow-none focus-visible:ring-0"
                             autoFocus
                           />
                         ) : (
-                          <p className="w-full min-h-[56px] sm:min-h-[68px] rounded-[14px] border text-black bg-white py-2.5 px-3 pr-10 sm:p-2 sm:pr-12 text-sm sm:text-base leading-snug break-words">
+                          <p className="min-w-0 flex-1 text-sm sm:text-base leading-snug break-words text-black">
                             <span className="font-semibold mr-1">{index + 1}.</span>
                             {question.text}
                           </p>
                         )}
-                        <div className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 flex items-center gap-2">
+                        <div className="flex shrink-0 items-center gap-1.5 sm:gap-2 self-center">
                           {isEditing ? (
                             hasChanged ? (
-                              <Check
-                                size={18}
-                                color="green"
+                              <button
+                                type="button"
                                 onClick={saveChanges}
-                                className="cursor-pointer shrink-0"
-                              />
+                                className="rounded-md p-1 cursor-pointer text-green-600 transition-colors hover:bg-green-50"
+                                aria-label="Save changes"
+                              >
+                                <Check size={18} />
+                              </button>
                             ) : (
-                              <X
-                                size={18}
-                                color="orange"
+                              <button
+                                type="button"
                                 onClick={cancelEditing}
-                                className="cursor-pointer shrink-0"
-                              />
+                                className="rounded-md p-1 cursor-pointer text-[#f7941D] transition-colors hover:bg-orange-50"
+                                aria-label="Cancel editing"
+                              >
+                                <X size={18} />
+                              </button>
                             )
                           ) : (
-                            <Pencil
-                              size={18}
-                              color="#718096"
+                            <button
+                              type="button"
                               onClick={() => startEditing(index)}
-                              className="cursor-pointer shrink-0"
-                            />
+                              className="rounded-md p-1 cursor-pointer text-[#718096] transition-colors hover:bg-slate-100"
+                              aria-label={`Edit question ${index + 1}`}
+                            >
+                              <Pencil size={18} />
+                            </button>
                           )}
+                          <button
+                            type="button"
+                            onClick={() => handleRemoveQuestion(index)}
+                            className="rounded-md p-1 cursor-pointer text-red-500 transition-colors hover:bg-red-50"
+                            aria-label={`Remove question ${index + 1}`}
+                          >
+                            <Trash size={18} />
+                          </button>
                         </div>
                       </div>
-                      <button
-                        type="button"
-                        onClick={() => handleRemoveQuestion(index)}
-                        className="shrink-0 mt-2.5 sm:mt-0 p-1 cursor-pointer text-red-500 hover:scale-110 transition-all duration-300"
-                        aria-label={`Remove question ${index + 1}`}
-                      >
-                        <Trash size={18} />
-                      </button>
                     </li>
                   );
                 })}
@@ -237,42 +247,47 @@ export default function Questionnaire() {
             )}
 
             {manualQuestion && (
-              <div className="flex items-start gap-2 sm:gap-4 w-full min-w-0">
+              <div className="flex items-center gap-2 sm:gap-4 w-full min-w-0">
                 <Image
                   src="/images/AIAvatar.png"
                   alt="bot"
                   width={40}
                   height={40}
-                  className="shrink-0 w-8 h-8 sm:w-10 sm:h-10 mt-2"
+                  className="shrink-0 w-8 h-8 sm:w-10 sm:h-10"
                 />
-                <div className="relative flex-1 min-w-0">
+                <div className="flex flex-1 min-w-0 items-start gap-2 sm:gap-3 rounded-[14px] border bg-white p-2.5 sm:p-3">
                   <Textarea
                     value={newQuestionText}
                     onChange={handleNewQuestionChange}
-                    className="w-full min-h-[80px] sm:h-[100px] rounded-[14px] border text-black bg-white p-2 pr-10 sm:pr-12 text-sm sm:text-base"
+                    className="min-w-0 flex-1 min-h-[80px] sm:min-h-[68px] resize-none border-0 bg-transparent p-0 text-sm sm:text-base text-black shadow-none focus-visible:ring-0"
                     placeholder="Enter your question here..."
                     autoFocus
                   />
-                  {newQuestionText.trim() ? (
-                    <Check
-                      size={18}
-                      color="green"
-                      onClick={handleAddNewQuestion}
-                      className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 cursor-pointer shrink-0"
-                    />
-                  ) : (
-                    <X
-                      size={18}
-                      color="orange"
-                      onClick={() => {
-                        cancelEditing();
-                        setManualQuestion(false);
-                      }}
-                      className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 cursor-pointer shrink-0"
-                    />
-                  )}
+                  <div className="flex shrink-0 items-center self-center">
+                    {newQuestionText.trim() ? (
+                      <button
+                        type="button"
+                        onClick={handleAddNewQuestion}
+                        className="rounded-md p-1 cursor-pointer text-green-600 transition-colors hover:bg-green-50"
+                        aria-label="Add question"
+                      >
+                        <Check size={18} />
+                      </button>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          cancelEditing();
+                          setManualQuestion(false);
+                        }}
+                        className="rounded-md p-1 cursor-pointer text-[#f7941D] transition-colors hover:bg-orange-50"
+                        aria-label="Cancel adding question"
+                      >
+                        <X size={18} />
+                      </button>
+                    )}
+                  </div>
                 </div>
-                <div className="shrink-0 w-[26px]" aria-hidden="true" />
               </div>
             )}
           </ul>

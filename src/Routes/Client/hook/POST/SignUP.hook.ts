@@ -3,7 +3,7 @@ import { SignUp } from '@/Routes/Client/Api/api.routes';
 import { toast } from 'sonner';
 import { AxiosError } from 'axios';
 import { useRouter } from 'next/navigation';
-import { setAuthToken } from '@/Utils/Providers/auth';
+import { setAuthToken, setOrganizationName } from '@/Utils/Providers/auth';
 import useHomeStore from '@/store/Employer/home.store';
 
 export default function useSignupMutation(jobId?: string) {
@@ -24,6 +24,7 @@ export default function useSignupMutation(jobId?: string) {
       if (response?.access_token) {
         setAuthToken(response.access_token, 'admin');
         setCompanyName(response.user.organization_name);
+        setOrganizationName(response.user.organization_name);
         toast.success('Welcome! Your account has been created successfully.',{
           duration: 3000,
           position: 'bottom-right',

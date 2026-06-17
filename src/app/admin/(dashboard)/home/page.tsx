@@ -9,7 +9,7 @@ import { Dialog, DialogContent, DialogHeader, DialogClose } from '@/components/u
 import UserProfile from '@/app/employer/(dashboard)/components/candiateprofile';
 import OverviewStore from '@/store/EmployeeDashboard/dashboard/overview/overview.store';
 import { Loader } from 'lucide-react';
-import { DialogDescription, DialogTitle } from '@radix-ui/react-dialog';
+import { DialogTitle } from '@radix-ui/react-dialog';
 import { useState } from 'react';
 import Interviewplatform from '@/app/employer/(dashboard)/components/interviewplatform';
 
@@ -103,18 +103,21 @@ export default function AdminDashboardHome() {
   return (
     <>
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Interview Details</DialogTitle>
-            <DialogDescription></DialogDescription>
+        <DialogContent className="flex w-[calc(100vw-2rem)] max-h-[90vh] max-w-lg flex-col gap-0 overflow-hidden rounded-2xl border-0 p-0 shadow-2xl sm:max-w-2xl md:max-w-3xl lg:max-w-5xl">
+          <DialogHeader className="shrink-0 border-b border-slate-100 px-5 py-4 pr-12 sm:px-6">
+            <DialogTitle className="text-lg font-semibold tracking-tight text-slate-900">
+              Interview Details
+            </DialogTitle>
           </DialogHeader>
-          <UserProfile data={selectedCandidate} isSuperAdmin={true} />
+          <div className="overflow-y-auto px-5 py-5 sm:px-6 sm:py-6">
+            <UserProfile data={selectedCandidate} isSuperAdmin={true} />
+          </div>
           <DialogClose asChild></DialogClose>
         </DialogContent>
       </Dialog>
       <div>
-        <h1 className="text-[24px] font-[roboto] font-semibold ml-2 mb-4">Overview</h1>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 w-full">
+        <h1 className="text-[24px] font-semibold ml-2 mb-4">Overview</h1>
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 w-full">
           <CardComponent
             heading="Open Job Listings"
             subheading={interviewCardData?.active_jobs}
@@ -138,7 +141,7 @@ export default function AdminDashboardHome() {
           ></CardComponent>
         </div>
         <div className="mt-10">
-          <h1 className="font-[roboto] text-[24px] font-semibold leading-[30px] mb-4">
+          <h1 className="text-[24px] font-semibold leading-[30px] mb-4">
             {' '}
             Latest Interview
           </h1>

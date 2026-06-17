@@ -41,9 +41,8 @@ module.exports = {
         'section-padding-lg': '4rem',
       },
       fontFamily: {
-        roboto: ['var(--font-roboto)', 'Roboto', 'sans-serif'],
+        sans: ['var(--font-open-sans)', 'Open Sans', 'ui-sans-serif', 'system-ui', 'sans-serif'],
         'open-sans': ['var(--font-open-sans)', 'Open Sans', 'sans-serif'],
-        'space-grotesk': ['var(--font-space-grotesk)', 'Space Grotesk', 'sans-serif'],
       },
       fontSize: {
         'xs': ['0.75rem', { lineHeight: '1rem' }],

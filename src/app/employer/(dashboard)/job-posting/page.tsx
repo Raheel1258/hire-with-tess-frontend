@@ -9,7 +9,6 @@ import {
   Dialog,
   DialogClose,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
@@ -24,7 +23,10 @@ import { useState } from 'react';
 import handleCopyLink from '@/Utils/helper/copylink';
 import CustomJobDetailDialogue from '@/app/employer/(dashboard)/components/jobdetaildialogue';
 import UseGETJobBYID from '@/Routes/Employer/hooks/GET/candidates/GetJobByID.hook';
+import UseDeleteJobByID from '@/Routes/Employer/hooks/DELETE/DeleteJobById.hook';
+import DeleteJobDialogue from '@/app/employer/(dashboard)/components/deletejobdialogue';
 import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 
 export default function JobPosting() {
   const {
@@ -47,11 +49,12 @@ export default function JobPosting() {
   };
   const { data: JobPostedTableData } = UseGetAllJob({ page: currentPage });
   const updatejobstatus = UseUpdateJobStatus();
+  const deleteJobMutation = UseDeleteJobByID();
   const { data: jobDetails } = UseGETJobBYID(postedjobdata.id);
 
- 
-  
   const [isInterviewDialogOpen, setIsInterviewDialogOpen] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [jobToDelete, setJobToDelete] = useState<{ id: string; title: string } | null>(null);
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
@@ -86,16 +89,16 @@ export default function JobPosting() {
       item?.job_type,
       new Date(item.created_at).toLocaleDateString(),
       <Button
-        variant="ghost"
+        variant="link"
         size="sm"
-        className="w-10 flex items-center gap-2 bg-green-100 border-2 border-green-400"
-        key={item.id}
+        key={`interviews-${item.id}`}
+        className="h-auto cursor-pointer p-0 text-xs font-medium text-[#1E4B8E] hover:text-[#1E4B8E] hover:underline"
         onClick={() => {
           setSelectedCandidate(item.id);
-          setIsInterviewDialogOpen(true); 
+          setIsInterviewDialogOpen(true);
         }}
       >
-        <span>{item.total_interviews}</span>
+        View Details
       </Button>,
       item?.interview_link ? (
         <Button
@@ -123,44 +126,89 @@ export default function JobPosting() {
     }
   };
 
+  const requestDeleteJob = (rowIndex: number) => {
+    if (!filteredJobs?.length) {
+      toast.error('No jobs available to delete');
+      return;
+    }
+
+    const job = filteredJobs[rowIndex];
+    if (!job?.id) {
+      toast.error('Invalid job data');
+      return;
+    }
+
+    setJobToDelete({ id: job.id, title: job.job_title });
+    setIsDeleteDialogOpen(true);
+  };
+
+  const confirmDeleteJob = () => {
+    if (!jobToDelete) return;
+
+    deleteJobMutation.mutate(jobToDelete.id, {
+      onSuccess: () => {
+        setIsDeleteDialogOpen(false);
+        setJobToDelete(null);
+      },
+    });
+  };
+
   return (
     <>
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Posted Job Details</DialogTitle>
-            <DialogDescription />
+        <DialogContent className="flex w-[calc(100vw-2rem)] max-h-[90vh] max-w-lg flex-col gap-0 overflow-hidden rounded-2xl border-0 p-0 shadow-2xl sm:max-w-2xl md:max-w-3xl lg:max-w-4xl">
+          <DialogHeader className="shrink-0 border-b border-slate-100 px-5 py-4 pr-12 sm:px-6">
+            <DialogTitle className="text-lg font-semibold tracking-tight text-slate-900">
+              Posted Job Details
+            </DialogTitle>
           </DialogHeader>
-          <JobpProfile data={jobDetails} />
+          <div className="overflow-y-auto px-5 py-5 sm:px-6 sm:py-6">
+            <JobpProfile data={jobDetails} />
+          </div>
           <DialogClose asChild />
         </DialogContent>
       </Dialog>
       <Dialog open={isInterviewDialogOpen} onOpenChange={setIsInterviewDialogOpen}>
-        <DialogContent>
-          <DialogHeader>
+        <DialogContent className="flex w-[calc(100vw-2rem)] max-h-[90vh] max-w-lg flex-col gap-0 overflow-hidden rounded-2xl border-0 p-0 shadow-2xl sm:max-w-2xl md:max-w-3xl lg:max-w-4xl">
+          <DialogHeader className="shrink-0 border-b border-slate-100 px-5 py-4 pr-12 sm:px-6">
+            <DialogTitle className="text-lg font-semibold tracking-tight text-slate-900">
+              Interview Details
+            </DialogTitle>
           </DialogHeader>
-          <DialogTitle>Interview Details</DialogTitle>
-          {selectedCandidate && (
-            <CustomJobDetailDialogue 
-              jobId={selectedCandidate}
-              isOpen={isInterviewDialogOpen}
-              onClose={() => {
-                setIsInterviewDialogOpen(false);
-                setSelectedCandidate(''); 
-              }}
-            />
-          )}
+          <div className="overflow-y-auto px-5 py-5 sm:px-6 sm:py-6">
+            {selectedCandidate && (
+              <CustomJobDetailDialogue
+                jobId={selectedCandidate}
+                isOpen={isInterviewDialogOpen}
+                onClose={() => {
+                  setIsInterviewDialogOpen(false);
+                  setSelectedCandidate('');
+                }}
+              />
+            )}
+          </div>
+          <DialogClose asChild />
         </DialogContent>
       </Dialog>
+      <DeleteJobDialogue
+        open={isDeleteDialogOpen}
+        onOpenChange={(open) => {
+          setIsDeleteDialogOpen(open);
+          if (!open) setJobToDelete(null);
+        }}
+        jobTitle={jobToDelete?.title}
+        onConfirm={confirmDeleteJob}
+        isPending={deleteJobMutation.isPending}
+      />
 
       <div>
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-4">
-          <h1 className="text-xl sm:text-2xl font-open-sans font-semibold">Overview</h1>
+          <h1 className="text-xl sm:text-2xl font-semibold">Overview</h1>
           <Button onClick={handlePostNewJob} className="font-semibold w-full sm:w-auto">
-            Posted a New Job
+            Post a New Job
           </Button>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 w-full">
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 w-full">
           <CardComponent
             heading="Total Job"
             subheading={jobdata?.total_jobs}
@@ -184,8 +232,8 @@ export default function JobPosting() {
         </div>
 
         <div className="mt-6">
-          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-4">
-            <h1 className="font-roboto text-xl sm:text-2xl font-bold leading-[30px]">Jobs</h1>
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 sm:my-8 my-6">
+            <h1 className="text-[24px] font-semibold leading-[30px]">Jobs</h1>
             <div className="w-full sm:flex-1 sm:max-w-[300px]">
               <Searchbar value={searchTerm} onChange={handleSearchChange} />
             </div>
@@ -196,9 +244,10 @@ export default function JobPosting() {
             paginationstart={JobPostedTableData?.current_page}
             paginationend={JobPostedTableData?.pages}
             onPageChange={(page: number) => setCurrentPage(page)}
-            showTrashIcon={false}
+            showTrashIcon={true}
             showEyeIcon={true}
             onView={handleViewJob}
+            onDelete={requestDeleteJob}
           />
         </div>
       </div>

@@ -45,7 +45,7 @@ const chartConfig = {
 export function PieChartComponent() {
   return (
     <Card className="flex flex-col">
-      <CardHeader className=" pb-0">
+      <CardHeader className="pb-0">
         <CardTitle>Popular Job Categories</CardTitle>
       </CardHeader>
       <CardContent className="flex-1 pb-0 min-h-[200px] w-sm">

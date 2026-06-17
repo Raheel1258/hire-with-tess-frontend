@@ -31,13 +31,13 @@ export default function AdminDashboardLayout() {
   const logout = () => setAccessToken('');
 
   return (
-    <div className=" bg-slate-100">
+    <div className="bg-slate-100">
       {/* Header */}
       <div className="bg-white flex flex-row justify-between h-[101px] mb-8 p-8">
-        <div className="flex-row flex justify-between font-[Space Grotesk] font-normal text-[20px]">
+        <div className="flex-row flex justify-between font-normal text-[20px]">
           Hirewithtess
         </div>
-        <div className="gap-2 flex flex-row ">
+        <div className="gap-2 flex flex-row">
           <div className="relative w-2xl">
             <Search className="absolute left-2 top-2.5 h-4 max-w-xl text-muted-foreground" />
             <Input
@@ -52,7 +52,7 @@ export default function AdminDashboardLayout() {
           <div className="flex flex-row w-[184px] h-[50px] rounded-xl border items-center">
             <div className="w-10 h-10 bg-[#A2A1A8] rounded-xl" />
             <div className="flex flex-col justify-center pl-2">
-              <h1 className="font-[Roboto] text-lg font-bold leading-none">John Doe</h1>
+              <h1 className="text-lg font-bold leading-none">John Doe</h1>
               <p className="text-sm text-[#A2A1A8] leading-none">Employee</p>
             </div>
           </div>
@@ -60,10 +60,10 @@ export default function AdminDashboardLayout() {
       </div>
 
       {/* Sidebar + Main Content */}
-      <div className="grid  min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr] gap-x-6 px-6">
+      <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr] gap-x-6 px-6">
         {/* Sidebar */}
         <div className="hidden bg-white border-r md:block mt-2 rounded-xl p-4">
-          <nav className="grid items-start gap-2 text-sm font-medium ">
+          <nav className="grid items-start gap-2 text-sm font-medium">
             {navItems.map(({ href, icon: Icon, label }) => (
               <Link
                 key={href}
@@ -82,7 +82,7 @@ export default function AdminDashboardLayout() {
         {/* Main Content */}
         <div className="flex flex-col bg-white border p-4 rounded-xl mt-2">
           <div className="flex items-center justify-between mb-4">
-            <h1 className="text-[24px] font-[open sans] font-semibold ml-4">Overview</h1>
+            <h1 className="text-[24px] font-semibold ml-4">Overview</h1>
             <Sheet>
               <SheetTrigger asChild>
                 <Button variant="outline" size="icon" className="shrink-0 md:hidden">

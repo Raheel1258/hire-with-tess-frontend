@@ -87,7 +87,7 @@ const VerifyOtp = () => {
             />
           </div>
 
-          <Button type="submit" className="w-full  text-white py-2 rounded-xl">
+          <Button type="submit" className="w-full text-white py-2 rounded-xl">
             Reset Password
           </Button>
         </form>

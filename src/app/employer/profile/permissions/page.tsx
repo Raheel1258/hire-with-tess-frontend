@@ -37,10 +37,10 @@ export default function UserProfilePermission() {
       <div className="space-y-2">
         <RedirectToDashboard
           DashboardTitle="Dashboard"
-          ProfileTitle="Profile"
+          ProfileTitle="Account Details"
           PageTitle="Permissions"
           DashboardUrl="/employer/home"
-          ProfileUrl="/employer/profile"
+          ProfileUrl="/employer/profile/account-details"
         />
         <h1 className="text-xl sm:text-2xl font-semibold text-slate-800">Permissions</h1>
       </div>
@@ -52,7 +52,7 @@ export default function UserProfilePermission() {
           >
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
               <div>
-                <h1 className="font-[open Sans] text-[#1E293B] font-semibold">
+                <h1 className="text-[#1E293B] font-semibold">
                   {permission.name}
                 </h1>
                 <p className="font-thin text-sm">

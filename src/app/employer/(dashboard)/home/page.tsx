@@ -10,7 +10,6 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogDescription,
   DialogClose,
 } from '@/components/ui/dialog';
 import UserProfile from '../components/candiateprofile';
@@ -143,21 +142,24 @@ export default function DashboardHome() {
   return (
     <>
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Interview Details</DialogTitle>
-            <DialogDescription></DialogDescription>
+        <DialogContent className="flex w-[calc(100vw-2rem)] max-h-[90vh] max-w-lg flex-col gap-0 overflow-hidden rounded-2xl border-0 p-0 shadow-2xl sm:max-w-2xl md:max-w-3xl lg:max-w-5xl">
+          <DialogHeader className="shrink-0 border-b border-slate-100 px-5 py-4 pr-12 sm:px-6">
+            <DialogTitle className="text-lg font-semibold tracking-tight text-slate-900">
+              Interview Details
+            </DialogTitle>
           </DialogHeader>
-          <UserProfile data={selectedCandidate} />
+          <div className="overflow-y-auto px-5 py-5 sm:px-6 sm:py-6">
+            <UserProfile data={selectedCandidate} />
+          </div>
           <DialogClose asChild></DialogClose>
         </DialogContent>
       </Dialog>
       <div>
         <div className="flex flex-row justify-between">
-          <h1 className="text-xl sm:text-2xl font-[roboto] font-semibold mb-4">Overview</h1>
+          <h1 className="text-xl sm:text-2xl font-semibold mb-4">Overview</h1>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 w-full">
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 w-full">
           <CardComponent
             heading="Open Job Listings"
             subheading={interviewCardData?.active_jobs}
@@ -181,7 +183,7 @@ export default function DashboardHome() {
           ></CardComponent>
         </div>
         <div className="mt-10">
-          <h1 className="font-[roboto] text-[24px] font-semibold leading-[30px] mb-4">
+          <h1 className="text-[24px] font-semibold leading-[30px] mb-4">
             {' '}
             Latest Interview
           </h1>

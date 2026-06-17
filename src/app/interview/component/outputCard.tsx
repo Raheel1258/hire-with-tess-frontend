@@ -102,7 +102,7 @@ export default function OutputCard({
   return (
     <div className={`flex flex-col gap-4 ${containerPadding}`}>
       {showHeading && (
-        <h1 className="font-roboto font-semibold text-[20px] leading-[30px]">
+        <h1 className="font-semibold text-[20px] leading-[30px]">
           AI Powered Response
         </h1>
       )}
@@ -117,7 +117,7 @@ export default function OutputCard({
             {res.length > 0 && (
               <div>
                 <div className="flex justify-between items-center mb-2">
-                  <h3 className="text-[14px] font-openSans text-black font-semibold">Responsibilities</h3>
+                  <h3 className="text-[14px] text-black font-semibold">Responsibilities</h3>
                   {!isEditable ? (
                     showEditIcon && (
                       <Pencil size={18} color="#718096" onClick={() => setIsEditable(true)} className="cursor-pointer" />
@@ -130,14 +130,14 @@ export default function OutputCard({
                 </div>
 
                 {!isEditable ? (
-                  <ul className="list-disc pl-5 text-[14px] font-openSans text-black">
+                  <ul className="list-disc pl-5 text-[14px] text-black">
                     {res.map((item, idx) => <li key={idx}>{item}</li>)}
                   </ul>
                 ) : (
                   <textarea
                   value={responsibilities.join('\n')}
                   onChange={e => setResponsibilities(e.target.value.split('\n'))}
-                    className="w-full h-40 p-2 border rounded-md resize-none font-openSans text-[14px]"
+                    className="w-full h-40 p-2 border rounded-md resize-none text-[14px]"
                   />
                 )}
               </div>
@@ -146,16 +146,16 @@ export default function OutputCard({
             {/* Requirements */}
             {req.length > 0 && (
               <div>
-                <h3 className="text-[14px] font-openSans text-black mb-2 font-semibold">Requirements</h3>
+                <h3 className="text-[14px] text-black mb-2 font-semibold">Requirements</h3>
                 {!isEditable ? (
-                  <ul className="list-disc pl-5 text-[14px] font-openSans text-black">
+                  <ul className="list-disc pl-5 text-[14px] text-black">
                     {req.map((item, idx) => <li key={idx}>{item}</li>)}
                   </ul>
                 ) : (
                   <textarea
                     value={requirements.join('\n')}
                     onChange={e => setRequirements(e.target.value.split('\n'))}
-                    className="w-full h-40 p-2 border rounded-md resize-none font-openSans text-[14px]"
+                    className="w-full h-40 p-2 border rounded-md resize-none text-[14px]"
                   />
                 )}
               </div>
@@ -166,8 +166,8 @@ export default function OutputCard({
 
       {/* Skills */}
       {skills.length > 0 && (
-          <Card className="w-full rounded-2xl p-4 sm:p-6 ">
-            <h1 className="text-base font-openSans text-black text-left font-semibold">Skills:</h1>
+          <Card className="w-full rounded-2xl p-4 sm:p-6">
+            <h1 className="text-base text-black text-left font-semibold">Skills:</h1>
         <div className="flex items-start gap-4">
           {showAvatar && (
             <Image src={avatarSrc} alt="bot" width={40} height={40} className="shrink-0" />
@@ -180,7 +180,7 @@ export default function OutputCard({
                   value={item}
                   readOnly={!isEditable}
                   onChange={(e) => handleSkillChange(e.target.value, index)}
-                  className="pr-10 border-[#E2E8F0] rounded-3xl text-black font-openSans"
+                  className="pr-10 border-[#E2E8F0] rounded-3xl text-black"
                 />
                 {isEditable && (
                   <button

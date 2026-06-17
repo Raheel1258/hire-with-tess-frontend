@@ -29,7 +29,7 @@ export default function InterviewForm() {
       jobType: jobType,
       companyName: companyName || companyNameStore,
       location: location,
-      salary: salary || '0',
+      salary: salary || '',
       currency: 'USD',
       salaryType: 'per_hour',
     },
@@ -43,7 +43,7 @@ export default function InterviewForm() {
       job_type: data.jobType || '',
       company_name: data.companyName || '',
       location: data.location || '',
-      salary: data.salary || '0',
+      salary: data.salary,
       currency: data.currency || '',
       salary_type: data.salaryType || '',
     });
@@ -60,7 +60,7 @@ export default function InterviewForm() {
       job_type: formData.jobType,
       company_name: formData.companyName,
       location: formData.location,
-      salary: formData.salary || '0',
+      salary: formData.salary,
       currency: formData.currency,
       salary_type: formData.salaryType,
     });

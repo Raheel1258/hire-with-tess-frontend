@@ -29,7 +29,7 @@ export default function Questionaire() {
             {response.length > 0 ? (
               <Button
                 onClick={onSubmit}
-                className="bg-transparent text-black mt-8 border  hover:border-white hover:text-white rounded-2xl"
+                className="bg-transparent text-black mt-8 border hover:border-white hover:text-white rounded-2xl"
                 disabled={questionmutation.isPending}
               >
                 {questionmutation.isPending ? 'Regenerating...' : 'Regenerate Response'}

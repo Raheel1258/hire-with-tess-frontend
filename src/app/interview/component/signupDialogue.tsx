@@ -53,10 +53,10 @@ export default function SignupDialogue() {
   return (
     <div className="py-4">
       <div className="flex flex-col items-center justify-center text-center">
-        <h1 className="font-[roboto] font-medium text-[20px] sm:text-[24px]  w-full sm:w-[607px]">
+        <h1 className="font-medium text-[20px] sm:text-[24px] w-full sm:w-[607px]">
           Sign Up to Share Your AI-Generated Interview
         </h1>
-        <p className="font-[roboto] font-[400] text-[14px] sm:text-[16px] leading-[24px] text-[#606778] mt-2 w-full sm:w-[642px]">
+        <p className="font-[400] text-[14px] sm:text-[16px] leading-[24px] text-[#606778] mt-2 w-full sm:w-[642px]">
           Get started with a 60-day free trial - no credit required!
         </p>
 
@@ -66,7 +66,7 @@ export default function SignupDialogue() {
       <div className="w-full mt-4">
         {/* <div className="relative flex items-center justify-center w-full mt-2 mb-2">
           <hr className="w-full h-[1px] bg-[#CBCAD7] border-0 rounded-sm" />
-          <div className="absolute px-4 font-openSans font-normal text-[18px] space-x-[28px] bg-white text-gray-600 left-1/2 transform -translate-x-1/2">
+          <div className="absolute px-4 font-normal text-[18px] space-x-[28px] bg-white text-gray-600 left-1/2 transform -translate-x-1/2">
             Or
           </div>
         </div> */}
@@ -78,7 +78,7 @@ export default function SignupDialogue() {
               ref={ref}
               className="space-y-8 flex flex-col items-center overflow-auto max-h-[80vh] py-8" // Added padding-y
             >
-              <div className="flex flex-col sm:flex-row gap-4 items-start w-full mt-4 ">
+              <div className="flex flex-col sm:flex-row gap-4 items-start w-full mt-4">
                 <FormField
                   control={form.control}
                   name="firstname"
@@ -115,7 +115,7 @@ export default function SignupDialogue() {
                 />
               </div>
 
-              <div className="flex flex-col sm:flex-row gap-4 items-start w-full ">
+              <div className="flex flex-col sm:flex-row gap-4 items-start w-full">
                 <FormField
                   control={form.control}
                   name="organization"
@@ -151,7 +151,7 @@ export default function SignupDialogue() {
                 />
               </div>
 
-              <div className="flex flex-col sm:flex-row gap-4 items-start w-full ">
+              <div className="flex flex-col sm:flex-row gap-4 items-start w-full">
                 <FormField
                   control={form.control}
                   name="password"
@@ -192,7 +192,7 @@ export default function SignupDialogue() {
                 <Checkbox id="terms" required={true} />
                 <label
                   htmlFor="terms"
-                  className="text-sm font-openSans text-[16px] font-normal text-[#1B2559] leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                  className="text-sm text-[16px] font-normal text-[#1B2559] leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                 >
                   I agree to the Terms of Service and acknowledge you have read our
                   Privacy Policy
@@ -203,7 +203,7 @@ export default function SignupDialogue() {
 
                 {/* <GoogleLoginButton redirectTo="/" /> */}
                 <Button
-                  className=" sm:w-3xs h-11 mt-4 cursor-pointer p-2 hover:bg-gray-100 hover:text-black"
+                  className="sm:w-3xs h-11 mt-4 cursor-pointer p-2 hover:bg-gray-100 hover:text-black"
                   type="submit"
                   disabled={signupMutation.isPending}
                 >

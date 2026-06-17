@@ -53,10 +53,10 @@ export default function Subscriptions() {
 
   return (
     <div>
-      <h1 className="text-[24px] font-[open sans] font-semibold ml-2 mb-4">
+      <h1 className="text-[24px] font-semibold ml-2 mb-4">
         Subscriptions
       </h1>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 w-full">
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 w-full">
         <CardComponent
           heading="Active Subscriptions"
           subheading={String(statsData?.total_active_subscriptions || 0)}
@@ -79,10 +79,12 @@ export default function Subscriptions() {
         />
       </div>
       <div className="mt-10">
-        <h1 className="font-[roboto] text-[24px] font-bold leading-[30px] mb-4">
-          Employer Subscription Overview
-        </h1>
-        <Searchbar value={searchValue} onChange={(e) => setSearchValue(e.target.value)} />
+        <div className='flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 sm:my-8 my-6'>
+          <h1 className="text-[24px] font-semibold leading-[30px]">
+            Employer Subscription Overview
+          </h1>
+          <Searchbar value={searchValue} onChange={(e) => setSearchValue(e.target.value)} />
+        </div>
 
         <TableComponent
           header={TITLE}

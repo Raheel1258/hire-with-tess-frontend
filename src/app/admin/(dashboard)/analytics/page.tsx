@@ -10,11 +10,11 @@ export default function Analytics() {
   const {data: analysisdata} = useAnalyses();
 
   return (
-    <div>
-      <h1 className="text-[24px] font-[open sans] font-semibold ml-2 mb-4">
+    <div className="min-w-0 w-full">
+      <h1 className="mb-4 ml-2 text-[24px] font-semibold">
         Analytics
       </h1>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 w-full">
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 w-full">
         <CardComponent
           heading=" Total Job Posting "
           subheading={analysisdata?.total_job_postings}
@@ -70,13 +70,11 @@ export default function Analytics() {
           }
         ></CardComponent>
       </div>
-      <h1 className="font-[roboto] text-[24px] font-bold leading-[30px] mt-6">
-        {" "}
+      <h2 className="mt-6 text-[24px] font-semibold leading-[30px]">
         Job Market Insights
-      </h1>
-      <div className="mt-6 flex flex-row gap-4">
+      </h2>
+      <div className="mt-6 w-full min-w-0">
         <ChartComponent />
-        {/* <PieChartComponent /> */}
       </div>
     </div>
   );

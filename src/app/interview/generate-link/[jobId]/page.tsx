@@ -70,12 +70,12 @@ export default function GenerateLink() {
     <InterviewLayout
       subtitle="Your AI Interview is Ready!"
       description="Share the Interview link with candidates and start collecting responses"
-      subtitleClassName="font-roboto font-bold text-[34px] mt-6 text-center"
-      descriptionClassName="font-roboto font-normal text-[18px] mt-4 text-[#6F6C90] text-center"
+      subtitleClassName=" font-bold text-[34px] mt-6 text-center"
+      descriptionClassName=" font-normal text-[18px] mt-4 text-[#6F6C90] text-center"
       useCard={false}
       showStepper={false}
     >
-      <div className=" flex flex-col sm:w-[384px] mx-auto px-4 mb-8">
+      <div className="flex flex-col sm:w-[384px] mx-auto px-4 mb-8">
       <p className="text-gray-600 mb-4">
           Call the number below to begin phone interview.
         </p>
@@ -88,10 +88,10 @@ export default function GenerateLink() {
           <span className="text-sm text-gray-500">Your Job ID:</span>
           <p className="text-lg font-semibold text-[#1E4B8E]">{interviewId}</p>
         </div>
-        <h1 className="font-[roboto] leading-[46px] font-semibold text-xl text-center">
+        <h1 className="leading-[46px] font-semibold text-xl text-center">
           Interview Link
         </h1>
-        <p className="font-openSans font-normal text-[16px] leading-[16px] text-center text-[#6F6C90] mt-2">
+        <p className="font-normal text-[16px] leading-[16px] text-center text-[#6F6C90] mt-2">
           Copy and share the link with candidates
         </p>
 
@@ -149,10 +149,10 @@ export default function GenerateLink() {
         </div>
 
         <div className="items-center text-center flex flex-col">
-          <h1 className="w-full sm:w-[680px] h-[46px] font-roboto text-xl leading-[46px] font-bold">
+          <h1 className="w-full sm:w-[680px] h-[46px] text-xl leading-[46px] font-bold">
             QR Code
           </h1>
-          <p className="w-full sm:w-[427px] h-[30px] font-openSans text-[16px] leading-[30px] font-normal text-gray-600 mb-4">
+          <p className="w-full sm:w-[427px] h-[30px] text-[16px] leading-[30px] font-normal text-gray-600 mb-4">
             Candidates can scan this QR Code to access the interview
           </p>
 
@@ -176,7 +176,7 @@ export default function GenerateLink() {
             <Button
               onClick={handleDownloadQR}
               disabled={!interviewLink}
-              className="flex items-center justify-center gap-2 sm:gap-3 font-roboto text-[14px] sm:text-[16px] md:text-[18px] font-bold w-[90%] sm:w-[180px] md:w-[212px] h-[50px] sm:h-[60px] md:h-[65px] rounded-[14px] bg-[#1E4B8E] mt-8 sm:mt-11 text-white px-4 sm:px-6 cursor-pointer"
+              className="flex items-center justify-center gap-2 sm:gap-3 text-[14px] sm:text-[16px] md:text-[18px] font-bold w-[90%] sm:w-[180px] md:w-[212px] h-[50px] sm:h-[60px] md:h-[65px] rounded-[14px] bg-[#1E4B8E] mt-8 sm:mt-11 text-white px-4 sm:px-6 cursor-pointer"
             >
               <Download className="w-4 h-4 sm:w-5 sm:h-5" /> Download
             </Button>

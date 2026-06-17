@@ -52,8 +52,8 @@ export function DropDownCustomStatus({ Status, updateStatus }: StatusProps) {
           value={selectedStatus}
           onValueChange={handleStatusChange}
         >
-          <DropdownMenuRadioItem className=" text-green-800 border-green-400" value="active">Active</DropdownMenuRadioItem>
-          <DropdownMenuRadioItem className=" text-red-800 border-red-400" value="closed">Closed</DropdownMenuRadioItem>
+          <DropdownMenuRadioItem className="text-green-800 border-green-400" value="active">Active</DropdownMenuRadioItem>
+          <DropdownMenuRadioItem className="text-red-800 border-red-400" value="closed">Closed</DropdownMenuRadioItem>
         </DropdownMenuRadioGroup>
       </DropdownMenuContent>
     </DropdownMenu>

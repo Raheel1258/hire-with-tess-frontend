@@ -40,10 +40,10 @@ export default function InterviewLayout({
   useCard = true,
   buttons = [],
   showJobTitleSeparator = false,
-  titleClassName = 'text-center items-center justify-center text-xl sm:text-[30px] mt-4 sm:mt-6 font-normal text-black leading-tight sm:leading-[28px] font-spaceGrotesk',
-  subtitleClassName = 'text-center text-[#170F49] items-center justify-center font-bold text-2xl sm:text-[34px] leading-tight sm:leading-[46px] mt-4 sm:mt-6 font-roboto',
-  descriptionClassName = 'text-center items-center justify-center text-sm sm:text-[18px] font-normal text-[#6F6C90] leading-relaxed sm:leading-[30px] mt-2 sm:mt-0 font-openSans sm:font-roboto px-2 sm:px-0',
-  jobTitleClassName = 'capitalize font-roboto font-bold text-xl sm:text-2xl text-center mt-4',
+  titleClassName = 'text-center items-center justify-center text-xl sm:text-[30px] mt-4 sm:mt-6 font-normal text-black leading-tight sm:leading-[28px]',
+  subtitleClassName = 'text-center text-[#170F49] items-center justify-center font-bold text-2xl sm:text-[34px] leading-tight sm:leading-[46px] mt-4 sm:mt-6',
+  descriptionClassName = 'text-center items-center justify-center text-sm sm:text-[18px] font-normal text-[#6F6C90] leading-relaxed sm:leading-[30px] mt-2 sm:mt-0 px-2 sm:px-0',
+  jobTitleClassName = 'capitalize font-bold text-xl sm:text-2xl text-center mt-4',
   contentClassName = '',
 }: InterviewLayoutProps) {
   const Content = (

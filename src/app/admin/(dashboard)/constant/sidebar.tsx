@@ -1,39 +1,42 @@
-export const adminSidebarLinks = [
+import {
+  BarChart3,
+  Briefcase,
+  Building2,
+  CreditCard,
+  LayoutDashboard,
+  Users,
+} from 'lucide-react';
+import type { SidebarNavItem } from '@/components/sidebar/types';
+
+export const adminSidebarLinks: SidebarNavItem[] = [
   {
-    img: '/images/comboshape.png',
+    icon: LayoutDashboard,
     label: 'Dashboard',
     route: '/admin/home',
   },
-
   {
-    img: '/images/community.png',
+    icon: Briefcase,
     label: 'Job Posting',
     route: '/admin/job-posting',
   },
   {
-    img: '/images/users.png',
+    icon: Building2,
     label: 'Employers',
     route: '/admin/employers',
   },
   {
-    img: '/images/users.png',
+    icon: Users,
     label: 'Candidates',
     route: '/admin/candidate',
   },
   {
-    img: '/images/users.png',
+    icon: CreditCard,
     label: 'Subscriptions',
     route: '/admin/subscriptions',
   },
   {
-    img: '/images/users.png',
+    icon: BarChart3,
     label: 'Analytics',
     route: '/admin/analytics',
   },
-  // {
-
-  //     img: "/images/Logout.png",
-  //     label: 'Log Out',
-  //     route: '/login'
-  // },
 ];

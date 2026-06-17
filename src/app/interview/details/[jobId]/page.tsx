@@ -114,8 +114,8 @@ export default function CandidatesDetails() {
       useCard={false}
       subtitle="Start Your Interview"
       description="Fill in your details to begin your interview"
-      subtitleClassName="font-roboto font-bold text-2xl sm:text-[34px] leading-tight sm:leading-[46px] mt-4 sm:mt-6"
-      descriptionClassName="mt-2 sm:mt-4 text-sm sm:text-base text-[#6F6C90] leading-relaxed sm:leading-[30px] font-roboto font-normal"
+      subtitleClassName=" font-bold text-2xl sm:text-[34px] leading-tight sm:leading-[46px] mt-4 sm:mt-6"
+      descriptionClassName="mt-2 sm:mt-4 text-sm sm:text-base text-[#6F6C90] leading-relaxed sm:leading-[30px] font-normal"
     >
       <FormProvider {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} ref={ref} className="space-y-8 px-4">
@@ -145,7 +145,7 @@ export default function CandidatesDetails() {
                       </div>
                     </div>
                   ) : (
-                    <FormLabel className="text-[#1E4B8E] border h-10 p-1 rounded ">
+                    <FormLabel className="text-[#1E4B8E] border h-10 p-1 rounded">
                       Upload Resume
                     </FormLabel>
                   )}
@@ -209,7 +209,7 @@ export default function CandidatesDetails() {
                       paddingLeft: '48px',
                       outline: 'none',
                       boxSizing: 'border-box',
-                      fontFamily: "'Roboto', 'Helvetica', 'Arial', sans-serif",
+                      fontFamily: "var(--font-open-sans), 'Open Sans', sans-serif",
                     }}
                     containerStyle={{
                       width: '100%',
@@ -238,7 +238,7 @@ export default function CandidatesDetails() {
           <div className="flex justify-center w-full">
             <Button
               type="submit"
-              className="w-full sm:w-[381px] h-12 sm:h-[64px] leading-[20px] font-roboto cursor-pointer rounded-2xl"
+              className="w-full sm:w-[381px] h-12 sm:h-[64px] leading-[20px] cursor-pointer rounded-2xl"
               disabled={mutation.isPending}
             >
               {mutation.isPending ? 'Submitting...' : 'Start Interview'}

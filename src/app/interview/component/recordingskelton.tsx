@@ -11,7 +11,7 @@ export default function RecordingSkelton(){
       <Skeleton className="w-full h-10 mb-4" />
      </div>
      <Skeleton className="h-[125px] w-full rounded-xl" />
-     <div className=" flex flex-col mt-8 items-center justify-center">
+     <div className="flex flex-col mt-8 items-center justify-center">
       <Skeleton className="w-20 h-20 rounded-full z-10 relative" />
      </div>
     </div>

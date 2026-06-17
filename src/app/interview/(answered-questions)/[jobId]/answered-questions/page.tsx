@@ -89,11 +89,11 @@ export default function AnsweredQuestionList() {
         showStepper={false}
         subtitle="Question Completed"
         description="Great job! Your responses have been recorded successfully"
-        subtitleClassName="font-roboto font-bold text-2xl sm:text-[34px] leading-tight sm:leading-[46px] mt-4 sm:mt-6"
-        descriptionClassName="mt-2 sm:mt-4 text-sm sm:text-base text-[#6F6C90] leading-relaxed sm:leading-[30px] font-roboto font-normal"
+        subtitleClassName=" font-bold text-2xl sm:text-[34px] leading-tight sm:leading-[46px] mt-4 sm:mt-6"
+        descriptionClassName="mt-2 sm:mt-4 text-sm sm:text-base text-[#6F6C90] leading-relaxed sm:leading-[30px] font-normal"
       >
         <div className="px-2 sm:px-0 w-full text-left">
-          <div className="font-[roboto] text-lg sm:text-[24px] font-semibold mb-4 sm:mb-6">
+          <div className="text-lg sm:text-[24px] font-semibold mb-4 sm:mb-6">
             Interview Questions
           </div>
 
@@ -142,7 +142,7 @@ export default function AnsweredQuestionList() {
                       )}
                       {/* {matchedResponse.content_type.startsWith('video') && (
                         <div className="flex items-center justify-between p-4 border rounded-full">
-                          <span className="text-sm font-medium text-[#1E4B8E] ">
+                          <span className="text-sm font-medium text-[#1E4B8E]">
                             Screen Recorded Video
                           </span>
                           <div
@@ -197,10 +197,10 @@ export default function AnsweredQuestionList() {
       </InterviewLayout>
 
       <div className="flex flex-col items-center justify-center mt-6 sm:mt-10 px-4 sm:px-6 pb-8 w-full max-w-2xl mx-auto text-center">
-        <h1 className="font-[roboto] text-[#170F49] text-2xl sm:text-[34px] leading-tight sm:leading-[34px] font-bold">
+        <h1 className="text-[#170F49] text-2xl sm:text-[34px] leading-tight sm:leading-[34px] font-bold">
           Help Us Improve Your Experience
         </h1>
-        <p className="text-[#6F6C90] font-[roboto] text-base sm:text-[18px] font-normal leading-relaxed sm:leading-[30px] mt-3 sm:mt-4 px-1">
+        <p className="text-[#6F6C90] text-base sm:text-[18px] font-normal leading-relaxed sm:leading-[30px] mt-3 sm:mt-4 px-1">
           Share your feedback on the interview process to help us enhance future experiences.
         </p>
 

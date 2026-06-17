@@ -40,7 +40,7 @@ export default function InterviewQuestionPage() {
 
   return (
     <div className="min-h-screen flex flex-col items-center px-4 py-6 sm:p-6 w-full">
-      <h1 className="text-center text-xl sm:text-2xl md:text-[30px] mt-4 sm:mt-6 font-normal text-black leading-tight sm:leading-[28px] font-spaceGrotesk">
+      <h1 className="text-center text-xl sm:text-2xl md:text-[30px] mt-4 sm:mt-6 font-normal text-black leading-tight sm:leading-[28px]">
         Hirewithtess
       </h1>
 
