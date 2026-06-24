@@ -2,9 +2,15 @@
 
 import LoginForm from '@/app/interview/component/loginform';
 import { Card } from '@/components/ui/card';
+import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import { Suspense } from 'react';
+import { buildAuthHref } from '@/Utils/helper/authredirect';
 
 function EmployeeSignIn() {
+  const searchParams = useSearchParams();
+  const signupHref = buildAuthHref('/signup', { returnTo: searchParams.get('returnTo') });
+
   return (
     <div className="flex items-center justify-center p-2 sm:p-10 w-full min-h-screen">
       <div className="w-full items-center justify-center">
@@ -21,6 +27,12 @@ function EmployeeSignIn() {
 
           <div className="mt-10 w-full sm:w-fit">
             <LoginForm />
+            <p className="mt-6 text-sm text-gray-500 text-center">
+              Don&apos;t have an account?{' '}
+              <Link href={signupHref} className="text-[#F7941D] hover:underline">
+                Sign up
+              </Link>
+            </p>
           </div>
         </Card>
       </div>

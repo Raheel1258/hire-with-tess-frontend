@@ -5,6 +5,7 @@ import useHomeStore from '@/store/Employer/home.store';
 import { Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { Suspense } from 'react';
+import { buildAuthHref } from '@/Utils/helper/authredirect';
 
 function LoginDialogueContent() {
   const jobId = useHomeStore((state) => state.jobId);
@@ -28,7 +29,7 @@ function LoginDialogueContent() {
           Don&apos;t have an account?{' '}
           <Link
             className="text-[#F7941D]"
-            href={jobId ? `/signup?returnTo=/interview/review/${jobId}` : '/signup'}
+            href={buildAuthHref('/signup', { jobId })}
           >
             Sign up
           </Link>

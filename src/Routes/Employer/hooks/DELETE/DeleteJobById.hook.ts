@@ -28,9 +28,11 @@ export default function UseDeleteJobByID() {
     },
     onSuccess: async (job_id: string) => {
       toast.success('Job deleted successfully');
-      // Invalidate and refetch
       await queryClient.invalidateQueries({ queryKey: ['jobs'] });
       await queryClient.invalidateQueries({ queryKey: ['jobstats'] });
+      await queryClient.invalidateQueries({ queryKey: ['overiewstats'] });
+      await queryClient.invalidateQueries({ queryKey: ['candidatestats'] });
+      await queryClient.invalidateQueries({ queryKey: ['analyses'] });
     },
     onError: (error, job_id, context) => {
       // Revert the optimistic update
@@ -44,9 +46,11 @@ export default function UseDeleteJobByID() {
       });
     },
     onSettled: () => {
-      // Always refetch after error or success
       queryClient.invalidateQueries({ queryKey: ['jobs'] });
       queryClient.invalidateQueries({ queryKey: ['jobstats'] });
+      queryClient.invalidateQueries({ queryKey: ['overiewstats'] });
+      queryClient.invalidateQueries({ queryKey: ['candidatestats'] });
+      queryClient.invalidateQueries({ queryKey: ['analyses'] });
     },
   });
 }
