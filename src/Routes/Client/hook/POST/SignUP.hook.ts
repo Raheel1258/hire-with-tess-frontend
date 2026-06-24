@@ -5,17 +5,18 @@ import { AxiosError } from 'axios';
 import { useRouter } from 'next/navigation';
 import { setAuthToken, setOrganizationName } from '@/Utils/Providers/auth';
 import useHomeStore from '@/store/Employer/home.store';
+import { getInterviewReviewPath, getValidReturnTo } from '@/Utils/helper/authredirect';
 
 export default function useSignupMutation(jobId?: string) {
   const router = useRouter();
   const { setCompanyName } = useHomeStore();
 
   const redirectTo =
-    typeof window !== 'undefined' && window.location.search.includes('returnTo=')
-      ? new URLSearchParams(window.location.search).get('returnTo')!
-      : jobId
-        ? `/interview/review/${jobId}`
-        : '/';
+    typeof window !== 'undefined'
+      ? getValidReturnTo(new URLSearchParams(window.location.search).get('returnTo')) ??
+        getInterviewReviewPath(jobId) ??
+        '/'
+      : getInterviewReviewPath(jobId) ?? '/';
 
   return useMutation({
     mutationFn: SignUp,

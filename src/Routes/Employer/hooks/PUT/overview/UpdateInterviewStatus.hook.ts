@@ -9,6 +9,12 @@ export default function UseUpdateInterviewStatus() {
       UpdateInterviewStatusByID(interview_id, status),
     onSuccess: (_, { interview_id }) => {
       queryClient.invalidateQueries({ queryKey: ['interview', interview_id] });
+      queryClient.invalidateQueries({ queryKey: ['interviews'] });
+      queryClient.invalidateQueries({ queryKey: ['overiewstats'] });
+      queryClient.invalidateQueries({ queryKey: ['jobs'] });
+      queryClient.invalidateQueries({ queryKey: ['jobstats'] });
+      queryClient.invalidateQueries({ queryKey: ['candidatestats'] });
+      queryClient.invalidateQueries({ queryKey: ['analyses'] });
     },
     onError: async (error) => {
       const axiosError = error as AxiosError<{ detail: string }>;

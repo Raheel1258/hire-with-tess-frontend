@@ -13,6 +13,7 @@ import { useForm } from 'react-hook-form';
 import z from 'zod';
 import { Loader2 } from 'lucide-react';
 import Link from 'next/link';
+import { buildAuthHref } from '@/Utils/helper/authredirect';
 import { GoogleLoginButton } from './googleloginbtn';
 
 export default function SignupDialogue() {
@@ -219,7 +220,7 @@ export default function SignupDialogue() {
         </div>
         <p className="text-sm text-gray-500 text-center">
           Already have an account?{' '}
-          <Link className="text-[#F7941D]" href={`/login?returnTo=/interview/review/${jobId}`}>Login</Link>
+          <Link className="text-[#F7941D]" href={buildAuthHref('/login', { jobId })}>Login</Link>
         </p>
       </div>
     </div>

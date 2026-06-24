@@ -6,7 +6,7 @@ const HomeTableTile=[
         'Interview Status',
         'Interview Link',
         'Platform',
-        'AI Score',
+        'AI Score (%)',
         'Action',
       ];
 
