@@ -4,6 +4,7 @@ import { AxiosError } from 'axios';
 import { toast } from 'sonner';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { setAuthToken } from '@/Utils/Providers/auth';
+import { getInterviewReviewPath, getValidReturnTo } from '@/Utils/helper/authredirect';
 
 interface LoginResponse {
   access_token: string;
@@ -25,7 +26,7 @@ export default function useLoginMutation(jobId?: string) {
     mutationFn: EmployerLogin,
     onSuccess: (data) => {
       const { access_token, role } = data;
-      const returnTo = searchParams.get('returnTo');
+      const returnTo = getValidReturnTo(searchParams.get('returnTo'));
     
       if (!access_token) {
         toast.error('You are not authenticated.');
@@ -40,9 +41,9 @@ export default function useLoginMutation(jobId?: string) {
         return;
       }
     
-      //  go to review page if jobId is present
-      if (jobId) {
-        router.push(`/interview/review/${jobId}`);
+      const reviewPath = getInterviewReviewPath(jobId);
+      if (reviewPath) {
+        router.push(reviewPath);
         return;
       }
     
