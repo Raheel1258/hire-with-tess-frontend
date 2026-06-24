@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import { getAuthToken, getAuthRole } from '../Providers/auth';
+import { getValidReturnTo } from './authredirect';
 
 export function useLoginRedirect() {
   const router = useRouter();
@@ -10,7 +11,7 @@ export function useLoginRedirect() {
   useEffect(() => {
     const token = getAuthToken();
     const role = getAuthRole();
-    const returnTo = searchParams.get('returnTo');
+    const returnTo = getValidReturnTo(searchParams.get('returnTo'));
 
     if (pathname === '/login' && token) {
       if (returnTo) {

@@ -11,6 +11,11 @@ export default function UseUpdateJobStatus() {
 
     onSuccess: (_, { job_id }) => {
       queryClient.invalidateQueries({ queryKey: ['status', job_id] });
+      queryClient.invalidateQueries({ queryKey: ['jobs'] });
+      queryClient.invalidateQueries({ queryKey: ['jobstats'] });
+      queryClient.invalidateQueries({ queryKey: ['overiewstats'] });
+      queryClient.invalidateQueries({ queryKey: ['candidatestats'] });
+      queryClient.invalidateQueries({ queryKey: ['analyses'] });
     },
 
     onError: async (error) => {

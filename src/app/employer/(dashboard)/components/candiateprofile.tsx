@@ -19,7 +19,6 @@ import {
   XCircle,
   type LucideIcon,
 } from 'lucide-react';
-import { useQueryClient } from '@tanstack/react-query';
 import StatusBadge from './status.badge';
 import Interviewplatform from './interviewplatform';
 import downloadAudio from '@/Utils/helper/aduioDownloader';
@@ -87,7 +86,6 @@ export default function UserProfile({ data, isSuperAdmin = false }: UserProfileP
   const [isRejecting, setIsRejecting] = useState(false);
   const [isPending, setIsPending] = useState(false);
   const [downloadingStates, setDownloadingStates] = useState<Record<string, boolean>>({});
-  const queryClient = useQueryClient();
 
   if (!data) return null;
   const answers = data.answers;
@@ -129,8 +127,6 @@ export default function UserProfile({ data, isSuperAdmin = false }: UserProfileP
               : 'rejected'
         } successfully`,
       );
-
-      await queryClient.invalidateQueries({ queryKey: ['interviews'] });
     } catch {
       toast.error('Failed to update status');
     } finally {

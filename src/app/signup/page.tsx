@@ -13,9 +13,17 @@ import { useForm } from 'react-hook-form';
 import z from 'zod';
 import { Loader2 } from 'lucide-react';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
+import { buildAuthHref } from '@/Utils/helper/authredirect';
+import { Suspense } from 'react';
 
-export default function Signup() {
+function SignupContent() {
   const jobId = useHomeStore((state) => state.jobId);
+  const searchParams = useSearchParams();
+  const loginHref = buildAuthHref('/login', {
+    jobId,
+    returnTo: searchParams.get('returnTo'),
+  });
 
   const form = useForm<z.infer<typeof signupFormSchema>>({
     resolver: zodResolver(signupFormSchema),
@@ -238,14 +246,19 @@ export default function Signup() {
         </div>
         <p className="text-sm text-gray-500 text-center">
           Already have an account?{' '}
-          <Link
-            href={`/login?returnTo=/interview/review/${jobId}`}
-            className="text-[#F7941D]"
-          >
+          <Link href={loginHref} className="text-[#F7941D]">
             Login
           </Link>
         </p>
       </div>
     </div>
+  );
+}
+
+export default function Signup() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <SignupContent />
+    </Suspense>
   );
 }

@@ -4,9 +4,13 @@ import TableComponent from '@/app/employer/(dashboard)/components/table';
 import { useState } from 'react';
 import { useGetEmployers } from '@/Routes/Admin/hook/GET/employer/Getemployer';
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogHeader, DialogTitle ,DialogContent } from '@/components/ui/dialog';
-import OverviewStore from '@/store/EmployeeDashboard/dashboard/overview/overview.store';
-import useGetCandidateJobs from '@/Routes/Admin/hook/GET/candidate/GetCandidate.hook';
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import CustomEmployeDialogue from '../component/CustomEmployerDialogue';
 import { SuperAdminEmployer } from '@/Types/Admin/employer';
 import TITLE from '../constant/employerTitle';
@@ -14,12 +18,8 @@ import TITLE from '../constant/employerTitle';
 export default function EmployersList() {
   const [currentPage, setCurrentPage] = useState(1);
   const { data: employersData, isLoading } = useGetEmployers({ page: currentPage });
-  const { selectedCandidate, setSelectedCandidate } = OverviewStore();
-  const [isInterviewDialogOpen, setIsInterviewDialogOpen] = useState(false);
-  const { data: candidateJobs,  } = useGetCandidateJobs(selectedCandidate);
-
-
-
+  const [isJobsDialogOpen, setIsJobsDialogOpen] = useState(false);
+  const [selectedEmployer, setSelectedEmployer] = useState<SuperAdminEmployer | null>(null);
 
   const DATA =
     employersData?.items.map((employer: SuperAdminEmployer) => [
@@ -33,17 +33,17 @@ export default function EmployersList() {
         {employer.organization_name}
       </div>,
       <Button
-      variant="ghost"
-      size="sm"
-      className="w-10 flex items-center gap-2 bg-green-100 border-2 border-green-400"
-      key={employer.id}
-      onClick={() => {
-        setSelectedCandidate(employer.id);
-        setIsInterviewDialogOpen(true); 
-      }}
-    >
-      <span>{employer.stats.total_jobs}</span>
-    </Button>,
+        variant="ghost"
+        size="sm"
+        className="w-10 flex items-center gap-2 bg-green-100 border-2 border-green-400"
+        key={employer.id}
+        onClick={() => {
+          setSelectedEmployer(employer);
+          setIsJobsDialogOpen(true);
+        }}
+      >
+        <span>{employer.stats.total_jobs}</span>
+      </Button>,
       <Badge
         key={`employer-subscription-${employer.id}`}
         className={`${
@@ -61,36 +61,47 @@ export default function EmployersList() {
 
   return (
     <>
-       <Dialog open={isInterviewDialogOpen} onOpenChange={setIsInterviewDialogOpen}>
-        <DialogContent>
-          <DialogHeader>
+      <Dialog
+        open={isJobsDialogOpen}
+        onOpenChange={(open) => {
+          setIsJobsDialogOpen(open);
+          if (!open) setSelectedEmployer(null);
+        }}
+      >
+        <DialogContent className="flex w-[calc(100vw-2rem)] max-h-[90vh] max-w-lg flex-col gap-0 overflow-hidden rounded-2xl border-0 p-0 shadow-2xl sm:max-w-2xl md:max-w-3xl lg:max-w-4xl">
+          <DialogHeader className="shrink-0 border-b border-slate-100 px-5 py-4 pr-12 sm:px-6">
+            <DialogTitle className="text-lg font-semibold tracking-tight text-slate-900">
+              Posted Jobs
+            </DialogTitle>
+            {selectedEmployer && (
+              <p className="text-sm text-slate-500">
+                {selectedEmployer.name}
+                {selectedEmployer.organization_name
+                  ? ` · ${selectedEmployer.organization_name}`
+                  : ''}
+              </p>
+            )}
           </DialogHeader>
-          <DialogTitle>Interview Details</DialogTitle>
-          {selectedCandidate && candidateJobs && (
-            <CustomEmployeDialogue 
-              jobId={selectedCandidate}
-              isOpen={isInterviewDialogOpen}
-              onClose={() => {
-                setIsInterviewDialogOpen(false);
-                setSelectedCandidate(''); 
-              }}
-            />
-          )}
+          <div className="overflow-y-auto px-5 py-5 sm:px-6 sm:py-6">
+            {selectedEmployer && (
+              <CustomEmployeDialogue employerId={selectedEmployer.id} />
+            )}
+          </div>
+          <DialogClose asChild />
         </DialogContent>
       </Dialog>
-    <div>
-      <h1 className="text-[24px] font-semibold leading-[30px] mb-4">
-        Employers 
-      </h1>
-      <TableComponent
-        header={TITLE}
-        subheader={DATA}
-        paginationstart={employersData?.current_page ?? 1}
-        paginationend={employersData?.pages ?? 0}
-        onPageChange={(page: number) => setCurrentPage(page)}
-        isLoading={isLoading}
-      />
-    </div>
+
+      <div>
+        <h1 className="text-[24px] font-semibold leading-[30px] mb-4">Employers</h1>
+        <TableComponent
+          header={TITLE}
+          subheader={DATA}
+          paginationstart={employersData?.current_page ?? 1}
+          paginationend={employersData?.pages ?? 0}
+          onPageChange={(page: number) => setCurrentPage(page)}
+          isLoading={isLoading}
+        />
+      </div>
     </>
   );
 }
